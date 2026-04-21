@@ -62,7 +62,7 @@ export function Header({ theme, setTheme }: HeaderProps) {
       >
         <div className="site-header-row">
           <a href={isHome ? '#top' : '/'} className="brand" data-cursor="link" aria-label="Home">
-            <img src={logoImage}/>
+            <img src={logoImage} className="brand-logo" alt="" />
             <span className="brand-text">ADRYANN FELIX</span>
             <span className="overline brand-role">SOFTWARE ENGINEER</span>
           </a>

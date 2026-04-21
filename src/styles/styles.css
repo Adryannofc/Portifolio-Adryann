@@ -279,6 +279,15 @@
   transition: transform 420ms var(--ease-out);
 }
 .brand:hover .brand-mark { transform: rotate(45deg); }
+.brand-logo {
+  display: block;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.site-header.island .brand-logo { width: 32px; height: 32px; }
 .brand-text { letter-spacing: 0.02em; }
 .brand-role { margin-left: 10px; opacity: 0.8; }
 
