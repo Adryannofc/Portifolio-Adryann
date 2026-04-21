@@ -4,6 +4,7 @@ import { useLiveClock } from '../hooks/useLiveClock';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { Overline, ULink } from './primitives';
 
+import logoImage from '../../public/images/Logo-adryann.svg';
 type Theme = 'dark' | 'light';
 
 interface HeaderProps {
@@ -61,7 +62,7 @@ export function Header({ theme, setTheme }: HeaderProps) {
       >
         <div className="site-header-row">
           <a href={isHome ? '#top' : '/'} className="brand" data-cursor="link" aria-label="Home">
-            <span className="brand-mark" aria-hidden />
+            <img src={logoImage}/>
             <span className="brand-text">ADRYANN FELIX</span>
             <span className="overline brand-role">SOFTWARE ENGINEER</span>
           </a>

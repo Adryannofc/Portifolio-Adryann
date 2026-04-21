@@ -1,9 +1,24 @@
 import type { CSSProperties } from 'react';
+import { useRef, useEffect } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { Overline } from './primitives';
 
 export function Hero() {
   const ref = useReveal<HTMLElement>();
+  const portraitRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const el = portraitRef.current;
+    if (!el) return;
+    let rafId: number;
+    function frame() {
+      if (!el) return;
+      el.style.transform = `translateY(${window.scrollY * 0.2}px)`;
+      rafId = requestAnimationFrame(frame);
+    }
+    rafId = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
 
   const clients = [
     'UTI INFORMÁTICA',
@@ -27,9 +42,11 @@ export function Hero() {
           </span>
         </div>
 
+
+
         <h1 className="hero-display">
           <span className="mask-reveal" style={delay('60ms')}>
-            <span>I ship web</span>
+            <span>I build things</span>
           </span>
           <br />
           <span className="mask-reveal" style={delay('160ms')}>
@@ -57,6 +74,29 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      <img
+        ref={portraitRef}
+        src="/images/hero-portrait.png"
+        alt=""
+        aria-hidden="true"
+        className="hero-portrait"
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          height: '100%',
+          width: '42%',
+          objectFit: 'cover',
+          objectPosition: 'left center',
+          mixBlendMode: 'screen',
+          opacity: 0.9,
+          pointerEvents: 'none',
+          userSelect: 'none',
+          maskImage: 'linear-gradient(to left, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 95%)',
+          WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 95%)',
+        } as CSSProperties}
+      />
 
       <div className="hero-marquee" aria-hidden>
         <div className="hero-marquee-track">
