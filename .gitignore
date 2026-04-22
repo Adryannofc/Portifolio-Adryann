@@ -62,8 +62,6 @@ desktop.ini
 .settings/
 
 # ─── Claude Code ──────────────────────────────────────────────────────────────
-# Mantém .claude/ no repo (memórias e settings do projeto)
-# mas exclui configurações locais com segredos ou paths pessoais
 .claude/settings.local.json
 
 # ─── Testing ──────────────────────────────────────────────────────────────────
