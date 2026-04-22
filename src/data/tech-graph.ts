@@ -1,4 +1,4 @@
-export type NodeCategory = 'lang' | 'fw' | 'be' | 'data' | 'infra' | 'tool';
+export type NodeCategory = 'lang' | 'fw' | 'be' | 'data' | 'infra' | 'tool' | 'design' | 'shell';
 
 export interface GraphNode {
   id: string;
@@ -11,61 +11,78 @@ export interface GraphNode {
 
 export const NODES: GraphNode[] = [
   // Large — 40
-  { id: 'ts',        label: 'TypeScript', r: 40, cat: 'lang', yrs: 5, freq: 'DAILY'   },
-  { id: 'nextjs',    label: 'Next.js',    r: 40, cat: 'fw',   yrs: 4, freq: 'DAILY'   },
-  { id: 'pg',        label: 'PostgreSQL', r: 40, cat: 'data', yrs: 4, freq: 'DAILY'   },
-  { id: 'react',     label: 'React',      r: 40, cat: 'fw',   yrs: 5, freq: 'DAILY'   },
+  { id: 'ts',         label: 'TypeScript',  r: 40, cat: 'lang',   yrs: 5, freq: 'DAILY'   },
+  { id: 'nextjs',     label: 'Next.js',     r: 40, cat: 'fw',     yrs: 4, freq: 'DAILY'   },
+  { id: 'pg',         label: 'PostgreSQL',  r: 40, cat: 'data',   yrs: 4, freq: 'DAILY'   },
+  { id: 'react',      label: 'React',       r: 40, cat: 'fw',     yrs: 5, freq: 'DAILY'   },
+  { id: 'java',       label: 'Java',        r: 40, cat: 'lang',   yrs: 5, freq: 'DAILY'   },
+  { id: 'spring',     label: 'Spring Boot', r: 28, cat: 'fw',     yrs: 5, freq: 'DAILY'   },
+  { id: 'c',          label: 'C',           r: 18, cat: 'lang',   yrs: 5, freq: 'DAILY'   },
 
   // Medium — 28
-  { id: 'node',      label: 'Node.js',    r: 28, cat: 'be',   yrs: 5, freq: 'DAILY'   },
-  { id: 'go',        label: 'Go',         r: 28, cat: 'lang', yrs: 2, freq: 'WEEKLY'  },
-  { id: 'astro',     label: 'Astro',      r: 28, cat: 'fw',   yrs: 2, freq: 'WEEKLY'  },
-  { id: 'docker',    label: 'Docker',     r: 28, cat: 'infra',yrs: 3, freq: 'WEEKLY'  },
-  { id: 'prisma',    label: 'Prisma',     r: 28, cat: 'be',   yrs: 3, freq: 'DAILY'   },
-  { id: 'tailwind',  label: 'Tailwind',   r: 28, cat: 'tool', yrs: 4, freq: 'DAILY'   },
+  { id: 'node',       label: 'Node.js',     r: 28, cat: 'be',     yrs: 5, freq: 'DAILY'   },
+  { id: 'docker',     label: 'Docker',      r: 28, cat: 'infra',  yrs: 3, freq: 'WEEKLY'  },
+  { id: 'tailwind',   label: 'Tailwind',    r: 28, cat: 'tool',   yrs: 4, freq: 'DAILY'   },
 
   // Small — 18
-  { id: 'js',        label: 'JavaScript', r: 18, cat: 'lang', yrs: 6, freq: 'DAILY'   },
-  { id: 'rust',      label: 'Rust',       r: 18, cat: 'lang', yrs: 1, freq: 'MONTHLY' },
-  { id: 'python',    label: 'Python',     r: 18, cat: 'lang', yrs: 3, freq: 'WEEKLY'  },
-  { id: 'sql',       label: 'SQL',        r: 18, cat: 'lang', yrs: 5, freq: 'DAILY'   },
-  { id: 'sveltekit', label: 'SvelteKit',  r: 18, cat: 'fw',   yrs: 1, freq: 'MONTHLY' },
-  { id: 'rails',     label: 'Rails',      r: 18, cat: 'fw',   yrs: 2, freq: 'MONTHLY' },
-  { id: 'trpc',      label: 'tRPC',       r: 18, cat: 'be',   yrs: 2, freq: 'WEEKLY'  },
-  { id: 'rest',      label: 'REST',       r: 18, cat: 'be',   yrs: 5, freq: 'DAILY'   },
-  { id: 'redis',     label: 'Redis',      r: 18, cat: 'data', yrs: 2, freq: 'WEEKLY'  },
-  { id: 'sqlite',    label: 'SQLite',     r: 18, cat: 'data', yrs: 3, freq: 'WEEKLY'  },
-  { id: 'clickhouse',label: 'ClickHouse', r: 18, cat: 'data', yrs: 1, freq: 'MONTHLY' },
-  { id: 'fly',       label: 'Fly.io',     r: 18, cat: 'infra',yrs: 2, freq: 'WEEKLY'  },
-  { id: 'terra',     label: 'Terraform',  r: 18, cat: 'infra',yrs: 1, freq: 'MONTHLY' },
-  { id: 'nginx',     label: 'Nginx',      r: 18, cat: 'infra',yrs: 3, freq: 'WEEKLY'  },
-  { id: 'figma',     label: 'Figma',      r: 18, cat: 'tool', yrs: 5, freq: 'DAILY'   },
-  { id: 'linear',    label: 'Linear',     r: 18, cat: 'tool', yrs: 2, freq: 'DAILY'   },
-  { id: 'neovim',    label: 'Neovim',     r: 18, cat: 'tool', yrs: 3, freq: 'DAILY'   },
-  { id: 'git',       label: 'Git',        r: 18, cat: 'tool', yrs: 6, freq: 'DAILY'   },
+  { id: 'js',         label: 'JavaScript',  r: 18, cat: 'lang',   yrs: 6, freq: 'DAILY'   },
+  { id: 'sql',        label: 'SQL',         r: 18, cat: 'lang',   yrs: 5, freq: 'DAILY'   },
+  { id: 'sqlite',     label: 'SQLite',      r: 18, cat: 'data',   yrs: 3, freq: 'WEEKLY'  },
+  { id: 'git',        label: 'Git',         r: 18, cat: 'tool',   yrs: 6, freq: 'DAILY'   },
+  { id: 'postman',    label: 'Postman',     r: 18, cat: 'tool',   yrs: 6, freq: 'DAILY'   },
+  { id: 'intellij',   label: 'Intellij',    r: 18, cat: 'tool',   yrs: 6, freq: 'DAILY'   },
+  { id: 'dbeaver',    label: 'Dbeaver',     r: 18, cat: 'tool',   yrs: 6, freq: 'DAILY'   },
+  { id: 'apidog',     label: 'API Dog',     r: 18, cat: 'tool',   yrs: 2, freq: 'WEEKLY'  },
+  { id: 'cursor',     label: 'Cursor',      r: 18, cat: 'tool',   yrs: 1, freq: 'DAILY'   },
+  { id: 'trello',     label: 'Trello',      r: 18, cat: 'tool',   yrs: 3, freq: 'MONTHLY' },
+
+  // Shell — 18
+  { id: 'bash',       label: 'Bash',        r: 18, cat: 'shell',  yrs: 4, freq: 'DAILY'   },
+  { id: 'powershell', label: 'PowerShell',  r: 18, cat: 'shell',  yrs: 2, freq: 'WEEKLY'  },
+  { id: 'warp',       label: 'Warp',        r: 18, cat: 'shell',  yrs: 1, freq: 'DAILY'   },
+
+  // Design — 18
+  { id: 'figma',      label: 'Figma',       r: 18, cat: 'design', yrs: 5, freq: 'DAILY'   },
+  { id: 'excalidraw', label: 'Excalidraw',  r: 18, cat: 'design', yrs: 2, freq: 'WEEKLY'  },
+  { id: 'miro',       label: 'Miro',        r: 18, cat: 'design', yrs: 2, freq: 'WEEKLY'  },
 ];
 
 export const EDGES: ReadonlyArray<readonly [string, string]> = [
-  ['ts','js'], ['ts','react'], ['ts','nextjs'], ['ts','node'], ['ts','trpc'],
+  // TypeScript / JS core
+  ['ts','js'], ['ts','react'], ['ts','nextjs'], ['ts','node'],
   ['js','react'], ['js','node'],
-  ['sql','pg'], ['sql','sqlite'], ['sql','clickhouse'],
-  ['go','docker'], ['go','rest'],
-  ['python','sql'], ['python','rest'],
-  ['rust','go'],
 
-  ['nextjs','react'], ['nextjs','node'], ['nextjs','tailwind'], ['nextjs','trpc'],
-  ['react','tailwind'], ['react','astro'], ['astro','tailwind'],
-  ['sveltekit','tailwind'], ['rails','pg'], ['rails','redis'],
+  // SQL / data
+  ['sql','pg'], ['sql','sqlite'],
 
-  ['node','prisma'], ['prisma','pg'], ['prisma','sqlite'],
-  ['trpc','node'], ['rest','node'],
-  ['node','redis'], ['redis','pg'],
+  // Next.js / React / Tailwind
+  ['nextjs','react'], ['nextjs','node'], ['nextjs','tailwind'],
+  ['react','tailwind'],
 
-  ['docker','fly'], ['docker','terra'], ['fly','terra'],
-  ['nginx','docker'], ['nginx','fly'], ['nginx','rest'],
+  // Git
+  ['git','node'],
 
-  ['figma','linear'], ['figma','tailwind'],
-  ['neovim','git'], ['linear','git'], ['git','node'],
+  // Shell / Terminal
+  ['bash','warp'], ['bash','powershell'], ['bash','git'], ['bash','docker'],
+  ['warp','git'], ['warp','docker'], ['warp','cursor'],
+
+  // Cursor / IDE
+  ['cursor','ts'], ['cursor','react'], ['cursor','git'], ['cursor','intellij'],
+
+  // API testing
+  ['apidog','postman'], ['apidog','node'], ['apidog','spring'],
+  ['postman','node'], ['postman','spring'],
+
+  // Design tools
+  ['figma','tailwind'], ['figma','react'],
+  ['excalidraw','figma'], ['excalidraw','miro'],
+  ['miro','figma'], ['miro','trello'],
+  ['trello','figma'], ['trello','git'],
+
+  // Java / Spring
+  ['java','spring'], ['java','sql'], ['java','intellij'], ['java','c'],
+  ['spring','pg'], ['spring','docker'],
+  ['c','bash'],
 ];
 
 export interface CatPalette {
@@ -75,10 +92,52 @@ export interface CatPalette {
 }
 
 export const CAT_COLOR: Record<NodeCategory, CatPalette> = {
-  lang:  { fill: 'rgba(242, 135, 5, 0.22)',   stroke: '#F28705',                 label: '#F28705' },
-  fw:    { fill: 'rgba(242, 242, 242, 0.10)', stroke: '#F2F2F2',                 label: '#F2F2F2' },
-  be:    { fill: 'rgba(210, 206, 198, 0.10)', stroke: 'rgba(230,226,218,0.9)',   label: 'rgba(230,226,218,0.95)' },
-  data:  { fill: 'rgba(160, 156, 148, 0.16)', stroke: 'rgba(200,196,188,0.85)',  label: 'rgba(220,216,208,0.92)' },
-  infra: { fill: 'rgba(160, 156, 148, 0.12)', stroke: 'rgba(180,176,168,0.7)',   label: 'rgba(200,196,188,0.88)' },
-  tool:  { fill: 'rgba(242, 242, 242, 0.06)', stroke: 'rgba(242,242,242,0.55)',  label: 'rgba(230,226,218,0.82)' },
+  // LANGUAGES — amber/orange (primary identity)
+  lang: {
+    fill:   'rgba(242, 135, 5, 0.22)',
+    stroke: '#F28705',
+    label:  '#F28705',
+  },
+  // FRAMEWORKS — white (UI layer)
+  fw: {
+    fill:   'rgba(242, 242, 242, 0.10)',
+    stroke: 'rgba(242, 242, 242, 0.85)',
+    label:  '#F2F2F2',
+  },
+  // BACKEND / RUNTIME — blue-gray
+  be: {
+    fill:   'rgba(96, 165, 250, 0.12)',
+    stroke: 'rgba(147, 197, 253, 0.75)',
+    label:  'rgba(186, 230, 253, 0.90)',
+  },
+  // DATA / DATABASES — teal
+  data: {
+    fill:   'rgba(20, 184, 166, 0.14)',
+    stroke: 'rgba(45, 212, 191, 0.75)',
+    label:  'rgba(94, 234, 212, 0.90)',
+  },
+  // INFRA — red-orange (fire/server energy)
+  infra: {
+    fill:   'rgba(239, 68, 68, 0.14)',
+    stroke: 'rgba(252, 165, 165, 0.70)',
+    label:  'rgba(254, 202, 202, 0.88)',
+  },
+  // TOOLS — muted white (neutral utilities)
+  tool: {
+    fill:   'rgba(148, 163, 184, 0.10)',
+    stroke: 'rgba(203, 213, 225, 0.55)',
+    label:  'rgba(226, 232, 240, 0.82)',
+  },
+  // DESIGN — violet/purple
+  design: {
+    fill:   'rgba(139, 92, 246, 0.18)',
+    stroke: 'rgba(167, 139, 250, 0.80)',
+    label:  'rgba(196, 181, 253, 0.92)',
+  },
+  // SHELL / TERMINAL — green
+  shell: {
+    fill:   'rgba(34, 197, 94, 0.14)',
+    stroke: 'rgba(74, 222, 128, 0.75)',
+    label:  'rgba(134, 239, 172, 0.90)',
+  },
 };

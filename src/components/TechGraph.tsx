@@ -426,6 +426,12 @@ export function TechGraph() {
         <span>
           <i className="lg lg-tool" /> TOOLS
         </span>
+        <span>
+          <i className="lg lg-design" /> DESIGN
+        </span>
+        <span>
+          <i className="lg lg-shell" /> SHELL
+        </span>
       </div>
     </section>
   );
