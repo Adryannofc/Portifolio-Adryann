@@ -13,6 +13,7 @@ import { IndexTable } from './components/IndexTable';
 import { Contact } from './components/Contact';
 import { TweaksPanel, type Tweaks } from './components/TweaksPanel';
 import { CaseStudy } from './pages/CaseStudy';
+import { Diagnostico } from './pages/Diagnostico';
 
 const DEFAULT_TWEAKS: Tweaks = {
   theme: 'dark',
@@ -110,6 +111,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
+        <Route path="/diagnostico/:slug" element={<Diagnostico />} />
       </Routes>
 
       <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} open={panelOpen} />
