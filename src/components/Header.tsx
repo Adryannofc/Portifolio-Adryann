@@ -22,6 +22,7 @@ export function Header({ theme, setTheme }: HeaderProps) {
   const linkPrefix = isHome ? '' : '/';
   const [island, setIsland] = useState(false);
   const [overDark, setOverDark] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const on = () => setIsland(window.scrollY > 80);
@@ -52,6 +53,28 @@ export function Header({ theme, setTheme }: HeaderProps) {
       window.removeEventListener('resize', check);
     };
   }, []);
+
+  // Close mobile menu on route / hash change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname, location.hash]);
+
+  // Lock body scroll while menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
+
+  const navLinks: [string, string][] = [
+    ['#work', 'Work'],
+    ['#services', 'Services'],
+    ['#process', 'Process'],
+    ['#about', 'About'],
+    ['#index', 'Index'],
+    ['#contact', 'Contact'],
+  ];
 
   return (
     <>
@@ -91,9 +114,41 @@ export function Header({ theme, setTheme }: HeaderProps) {
               <span>Contact</span>
               <span className="contact-dot" aria-hidden />
             </a>
+            <button
+              className="hamburger-btn"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              <span className="hamburger-line" />
+              <span className="hamburger-line" />
+              <span className="hamburger-line" />
+            </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile full-screen overlay */}
+      <div
+        id="mobile-menu"
+        className={`mobile-menu-overlay${menuOpen ? ' open' : ''}`}
+        aria-hidden={!menuOpen}
+        role="dialog"
+        aria-modal
+        aria-label="Navigation menu"
+      >
+        <nav className="mobile-menu-nav">
+          {navLinks.map(([href, label]) => (
+            <a key={href} href={`${linkPrefix}${href}`} onClick={closeMenu}>
+              {label}
+            </a>
+          ))}
+        </nav>
+        <div className="mobile-menu-status">
+          <span className="amber-dot" aria-hidden /> AVAILABLE · Q2
+        </div>
+      </div>
 
       <div className="site-progress-bar" aria-hidden>
         <div className="site-progress-fill" style={{ transform: `scaleX(${progress})` }} />

@@ -24,11 +24,22 @@ export function TechGraph() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const isMobile = window.innerWidth < 768;
+    const radiusScale = isMobile ? 0.65 : 1.0;
+    const LINK_REST_VAL = isMobile ? 90 : 130;
+
     let W = 0;
     let H = 0;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const nodes: SimNode[] = NODES.map((n) => ({ ...n, x: 0, y: 0, vx: 0, vy: 0 }));
+    const nodes: SimNode[] = NODES.map((n) => ({
+      ...n,
+      r: Math.round(n.r * radiusScale),
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+    }));
     const byId = new Map<string, SimNode>(nodes.map((n) => [n.id, n]));
     const adj = new Map<string, Set<string>>(nodes.map((n) => [n.id, new Set<string>()]));
     EDGES.forEach(([a, b]) => {
@@ -114,6 +125,32 @@ export function TechGraph() {
     let dragOffX = 0;
     let dragOffY = 0;
 
+    // Touch pan state (mobile only — moves entire graph view)
+    let touchPanX = 0;
+    let touchPanY = 0;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+
+    const onTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      const t = e.touches[0];
+      lastTouchX = t.clientX;
+      lastTouchY = t.clientY;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      const t = e.touches[0];
+      touchPanX += t.clientX - lastTouchX;
+      touchPanY += t.clientY - lastTouchY;
+      lastTouchX = t.clientX;
+      lastTouchY = t.clientY;
+    };
+
+    if (isMobile) {
+      canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+      canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+    }
+
     const pick = (px: number, py: number): SimNode | null => {
       for (let i = nodes.length - 1; i >= 0; i--) {
         const n = nodes[i];
@@ -187,7 +224,7 @@ export function TechGraph() {
 
     const REPEL = 1800;
     const LINK_K = 0.01;
-    const LINK_REST = 130;
+    const LINK_REST = LINK_REST_VAL;
     const CENTER_K = 0.0012;
     const DAMP = 0.88;
     const DRIFT = 0.012;
@@ -294,6 +331,12 @@ export function TechGraph() {
 
     const draw = () => {
       ctx.clearRect(0, 0, W, H);
+      ctx.save();
+      if (isMobile) {
+        touchPanX = Math.max(-W * 0.35, Math.min(W * 0.35, touchPanX));
+        touchPanY = Math.max(-H * 0.35, Math.min(H * 0.35, touchPanY));
+        ctx.translate(touchPanX, touchPanY);
+      }
 
       const neighbors = hoverId ? adj.get(hoverId) ?? null : null;
       const isDimmed = (id: string) => !!hoverId && id !== hoverId && !neighbors?.has(id);
@@ -348,7 +391,7 @@ export function TechGraph() {
         ctx.globalAlpha = 1;
 
         ctx.globalAlpha = dimmed ? 0.35 : 1;
-        ctx.font = '500 10px "JetBrains Mono", ui-monospace, monospace';
+        ctx.font = `500 ${isMobile ? '8' : '10'}px "JetBrains Mono", ui-monospace, monospace`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
@@ -365,6 +408,8 @@ export function TechGraph() {
         }
         ctx.globalAlpha = 1;
       }
+
+      ctx.restore();
     };
 
     const loop = () => {
@@ -382,6 +427,10 @@ export function TechGraph() {
       canvas.removeEventListener('mouseleave', onLeave);
       canvas.removeEventListener('mousedown', onDown);
       window.removeEventListener('mouseup', onUp);
+      if (isMobile) {
+        canvas.removeEventListener('touchstart', onTouchStart);
+        canvas.removeEventListener('touchmove', onTouchMove);
+      }
     };
   }, []);
 
@@ -405,7 +454,8 @@ export function TechGraph() {
         <div className="graph-vignette" aria-hidden />
       </div>
 
-      <p className="graph-hint mono">drag · hover · explore</p>
+      <p className="graph-hint graph-hint-mouse mono">drag · hover · explore</p>
+      <p className="graph-hint graph-hint-touch mono">pan to explore</p>
 
       <div className="stack-legend mono">
         <span>

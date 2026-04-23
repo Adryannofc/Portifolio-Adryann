@@ -995,6 +995,338 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — mobile-first additions
+   All existing rules above are untouched.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Safe area insets ──────────────────────────────────────── */
+.site-header {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+footer,
+.contact {
+  padding-bottom: max(var(--s-8), env(safe-area-inset-bottom, 0px));
+}
+
+/* ─── Hamburger button (shows ≤ 960px) ──────────────────────── */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--rule-strong);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 200ms var(--ease-out);
+}
+.hamburger-btn:hover { border-color: var(--fg); }
+.site-header.over-dark .hamburger-btn { border-color: rgba(255,255,255,0.22); color: #F2F2F2; }
+.site-header.island .hamburger-btn { border-color: rgba(255,255,255,0.22); color: var(--cream-0); }
+
+.hamburger-line {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 300ms var(--ease-out), opacity 200ms var(--ease-out);
+  transform-origin: center;
+}
+.hamburger-btn[aria-expanded="true"] .hamburger-line:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.hamburger-btn[aria-expanded="true"] .hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger-btn[aria-expanded="true"] .hamburger-line:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+@media (max-width: 960px) {
+  .hamburger-btn { display: flex; }
+}
+
+/* ─── Mobile menu overlay ────────────────────────────────────── */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 101;
+  background: #0B0B0D;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-10);
+  transform: translateY(-100%);
+  transition: transform 300ms var(--ease-out);
+  padding: var(--s-20) var(--s-6);
+  padding-top: calc(env(safe-area-inset-top, 0px) + 80px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
+  pointer-events: none;
+  overflow-y: auto;
+}
+.mobile-menu-overlay.open {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.mobile-menu-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-8);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mobile-menu-nav a {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--cream-0);
+  text-decoration: none;
+  transition: color 200ms var(--ease-out);
+}
+.mobile-menu-nav a:hover { color: var(--amber); }
+.mobile-menu-status {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--amber);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (min-width: 961px) {
+  .mobile-menu-overlay { display: none; }
+}
+
+/* ─── Island: mobile adjustments ────────────────────────────── */
+@media (max-width: 960px) {
+  .site-header.island {
+    left: 16px;
+    right: 16px;
+    transform: none;
+    width: auto;
+    max-width: unset;
+    padding: 8px 16px;
+  }
+  .site-header.island .site-header-row {
+    grid-template-columns: auto auto;
+    height: 44px;
+  }
+  .site-header.island .site-meta .theme-toggle { display: none; }
+  .site-header.island .contact-cta { font-size: 11px; padding: 5px 10px; }
+}
+
+/* ─── Hero: mobile ───────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .hero {
+    min-height: 100svh;
+    padding-bottom: 80px;
+  }
+  .hero-portrait { display: none !important; }
+  .hero-scroll-hint { display: none; }
+  .hero-marquee-item { font-size: 11px; letter-spacing: 0.14em; }
+}
+
+/* ─── Work: mobile vertical stack ───────────────────────────── */
+@media (max-width: 767px) {
+  .rail-scroll {
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+  .rail-track {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-6);
+    padding-left: var(--margin);
+    padding-right: var(--margin);
+    width: auto;
+  }
+  .proj-card {
+    flex: none;
+    width: 100%;
+    height: auto;
+    grid-template-rows: auto auto;
+    scroll-snap-align: none;
+  }
+  .proj-card-media {
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+  .rail-end {
+    flex: none;
+    width: 100%;
+    height: auto;
+    min-height: 180px;
+  }
+  .work-controls { display: none; }
+  .work-head-meta .work-counter,
+  .work-head-meta .work-progress { display: none; }
+}
+
+/* ─── Work: tablet 2-column grid ────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .rail-scroll {
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+  .rail-track {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-6);
+    padding-left: var(--margin);
+    padding-right: var(--margin);
+    width: auto;
+  }
+  .proj-card {
+    flex: none;
+    width: 100%;
+    height: auto;
+    scroll-snap-align: none;
+  }
+  .proj-card-media {
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+  .rail-end {
+    flex: none;
+    width: 100%;
+    height: auto;
+    min-height: 260px;
+  }
+}
+
+/* ─── Services: mobile ───────────────────────────────────────── */
+@media (max-width: 767px) {
+  .svc { min-height: unset; }
+  .svc-foot .u-link {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+    border: 1px solid var(--rule-strong);
+  }
+}
+
+/* ─── Process: reduce large number on mobile ─────────────────── */
+@media (max-width: 767px) {
+  .process-n { font-size: 28px; }
+  .process-row:hover { padding-left: 0; padding-right: 0; }
+}
+
+/* ─── TechGraph: canvas height + hint swap ───────────────────── */
+@media (max-width: 767px) {
+  .graph-wrap { height: 320px; }
+}
+.graph-hint-touch { display: none; }
+@media (max-width: 767px) {
+  .graph-hint-touch { display: block; }
+  .graph-hint-mouse { display: none; }
+}
+
+/* ─── IndexTable: accordion rows ─────────────────────────────── */
+.idx-row-wrap {
+  border-top: 1px solid var(--rule);
+}
+.idx-row-wrap:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.idx-row-wrap .idx-row {
+  border-top: 0;
+}
+.idx-row-wrap .idx-row:last-child {
+  border-bottom: 0;
+}
+
+.idx-row-detail {
+  display: none;
+  padding: var(--s-3) var(--s-2);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--fg-mute);
+  font-family: var(--ff-mono);
+  background: var(--surface-1);
+  gap: var(--s-3);
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--rule);
+}
+.idx-row-wrap.expanded .idx-row-detail { display: grid; }
+.idx-row-detail .idx-detail-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: 4px;
+}
+
+/* Expand icon on row — last col (only visible in mobile grid) */
+.idx-expand-icon {
+  display: none;
+  font-size: 16px;
+  color: var(--fg-faint);
+  align-self: center;
+  justify-self: end;
+  transition: transform 200ms var(--ease-out);
+  line-height: 1;
+}
+.idx-row-wrap.expanded .idx-expand-icon { transform: rotate(90deg); }
+
+/* Sort toggle: desktop=buttons, mobile=select */
+.idx-sort-btns { display: inline-flex; gap: 10px; align-items: baseline; }
+.idx-sort-select {
+  display: none;
+  background: var(--surface-1);
+  color: var(--fg);
+  border: 1px solid var(--rule-strong);
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .idx-thead, .idx-row { min-height: 56px; }
+  /* Mobile: 3 data cols + expand icon */
+  .idx-thead, .idx-row { grid-template-columns: 48px 1fr 90px 20px; }
+  .idx-kind, .idx-stack, .idx-year { display: none; }
+  .idx-expand-icon { display: flex; }
+  .idx-row { cursor: pointer; }
+  .idx-sort-btns { display: none; }
+  .idx-sort-select { display: block; }
+}
+
+/* ─── Contact: full-width buttons on mobile ──────────────────── */
+@media (max-width: 767px) {
+  .contact-row {
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+  .contact-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .contact-row > * {
+    width: 100%;
+    display: block;
+  }
+  .site-footer {
+    padding-bottom: max(var(--s-10), env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ─── BootLoader: font reductions on mobile ──────────────────── */
+@media (max-width: 767px) {
+  .boot-list { font-size: 12px; }
+  .boot-title { font-size: 14px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
    TWEAKS PANEL
    ═══════════════════════════════════════════════════════════════ */
 .tweaks {

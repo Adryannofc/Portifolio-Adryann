@@ -1042,3 +1042,14 @@
   .case-stack-card,
   .case-roadmap-card { transform: none !important; }
 }
+
+/* ─── Case study: mobile responsive ──────────────────────────── */
+@media (max-width: 767px) {
+  .case-header { padding-top: 90px; }
+  .case-h1 { font-size: clamp(32px, 10vw, 52px); }
+  .case-tagline { font-size: 16px; }
+  .case-dark { overflow-x: hidden; }
+  .case-footer-grid { grid-template-columns: 1fr; text-align: center; }
+  .case-footer-nav.next { align-items: center; }
+  .case-footer-nav.next .case-footer-nav-desc { margin-left: 0; }
+}

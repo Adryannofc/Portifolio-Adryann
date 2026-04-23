@@ -92,6 +92,10 @@
   --gutter:   24px;
   --margin:   48px;
 
+  /* -------- Fluid layout spacing -------- */
+  --page-x:    20px;
+  --section-y: 80px;
+
   /* -------- Focus -------- */
   --focus-ring: 0 0 0 3px rgba(242, 135, 5, 0.35);
 }
@@ -183,6 +187,30 @@ button { font-family: inherit; border: 0; background: none; color: inherit; curs
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 1px;
+}
+
+/* ─── Responsive layout tokens ──────────────────────────── */
+@media (min-width: 768px) {
+  :root { --page-x: 40px; --section-y: 100px; }
+}
+@media (min-width: 1280px) {
+  :root { --page-x: 80px; --section-y: 120px; }
+}
+
+/* ─── Page container utility ─────────────────────────────── */
+.page-container {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-x);
+}
+
+/* ─── Shorter motion on mobile (battery / perf) ──────────── */
+@media (max-width: 767px) {
+  :root {
+    --dur-3: 320ms;
+    --dur-4: 520ms;
+    --dur-5: 820ms;
+  }
 }
 
 /* ─── Reduced motion ────────────────────────────────────── */

@@ -10,6 +10,8 @@ export function Hero() {
   useEffect(() => {
     const el = portraitRef.current;
     if (!el) return;
+    // Portrait is hidden on mobile via CSS; skip RAF
+    if (window.innerWidth < 768) return;
     let rafId: number;
     function frame() {
       if (!el) return;

@@ -19,6 +19,7 @@ export function useParallax<T extends HTMLElement = HTMLElement>({
     const el = ref.current;
     if (!el) return;
     if (prefersReducedMotion()) return;
+    if (window.innerWidth < 768) return;
 
     let frame = 0;
     let visible = false;

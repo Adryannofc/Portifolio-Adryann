@@ -94,10 +94,12 @@ export default function App() {
     document.body.classList.remove('booting');
   };
 
+  const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+
   return (
     <>
       {!booted && isHome && <BootLoader onDone={onBootDone} />}
-      <Cursor />
+      {!isTouch && <Cursor />}
       <Header
         theme={tweaks.theme}
         setTheme={(t) => setTweaks({ ...tweaks, theme: t })}
