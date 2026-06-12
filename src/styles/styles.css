@@ -1196,6 +1196,12 @@ footer,
   .hero-marquee-item { font-size: 11px; letter-spacing: 0.14em; }
 }
 
+@media (max-width: 640px) {
+  .hero-marquee {
+    bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* ─── Work: mobile vertical stack ───────────────────────────── */
 @media (max-width: 767px) {
   .rail-scroll {
