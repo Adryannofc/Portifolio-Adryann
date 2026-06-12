@@ -1197,8 +1197,17 @@ footer,
 }
 
 @media (max-width: 640px) {
+  .hero {
+    min-height: 100svh;
+    padding-bottom: 80px;
+  }
+  .hero-inner { row-gap: 24px; }
+  .hero-grid { display: none; }
   .hero-marquee {
+    position: absolute;
     bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    right: 0;
   }
 }
 
