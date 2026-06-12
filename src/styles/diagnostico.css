@@ -1401,3 +1401,80 @@ a.diag-bridge-project-row:hover .diag-bridge-project-name {
     stroke-dashoffset: var(--gauge-offset, 289) !important;
   }
 }
+
+/* ─── Professional mobile responsiveness ─────────────────────────── */
+
+@media (max-width: 640px) {
+  /* Prevent content overflow from expanding the viewport */
+  .diag-page {
+    overflow-x: hidden;
+  }
+
+  /* Tighter vertical rhythm — 64px is too generous on a phone screen */
+  .diag-section {
+    padding: 48px 0;
+  }
+
+  /* Hero: no forced viewport height; tighter vertical padding */
+  .diag-hero {
+    min-height: auto;
+    padding: 28px 0 20px;
+  }
+
+  .diag-hero-top {
+    margin-bottom: 24px;
+  }
+
+  /* Score gauge: slightly smaller so legend has more horizontal room */
+  .diag-gauge-svg {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Score legend: allow rows to wrap on very narrow viewports */
+  .diag-score-legend {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 20px;
+  }
+
+  /* Search term: allow natural line break inside the heading */
+  .diag-search-term {
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  /* Ficha kv: PRIMARY overflow fix — values must shrink and wrap */
+  .diag-kv-val {
+    flex-shrink: 1;
+    min-width: 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 56%;
+  }
+
+  .diag-kv-dots {
+    min-width: 6px;
+  }
+
+  /* Problem cards: reduce padding for comfortable mobile density */
+  .diag-problem-card {
+    padding: 16px;
+  }
+
+  /* Recommendation items: reduce gap/padding */
+  .diag-rec-item {
+    gap: 14px;
+    padding: 16px 0;
+  }
+
+  /* CTA button: full-width with ≥ 48px touch target */
+  .diag-cta-btn {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 14px 20px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}

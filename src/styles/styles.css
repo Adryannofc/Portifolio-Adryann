@@ -425,6 +425,23 @@
   display: flex; flex-direction: column; justify-content: center;
   overflow: hidden;
 }
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.13) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 20%, black 70%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 20%, black 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-inner,
+.hero-scroll-hint,
+.hero-marquee {
+  position: relative;
+  z-index: 1;
+}
 [data-theme="light"] .hero { background: var(--ink-0); color: var(--cream-0); } /* hero stays dark regardless */
 
 .hero-inner {
@@ -1018,15 +1035,13 @@ footer,
   width: 40px;
   height: 40px;
   padding: 0;
-  border: 1px solid var(--rule-strong);
+  border: none;
   background: transparent;
   cursor: pointer;
   flex-shrink: 0;
-  transition: border-color 200ms var(--ease-out);
 }
-.hamburger-btn:hover { border-color: var(--fg); }
-.site-header.over-dark .hamburger-btn { border-color: rgba(255,255,255,0.22); color: #F2F2F2; }
-.site-header.island .hamburger-btn { border-color: rgba(255,255,255,0.22); color: var(--cream-0); }
+.site-header.over-dark .hamburger-btn { color: #F2F2F2; }
+.site-header.island .hamburger-btn { color: var(--cream-0); }
 
 .hamburger-line {
   display: block;
@@ -1091,6 +1106,21 @@ footer,
   transition: color 200ms var(--ease-out);
 }
 .mobile-menu-nav a:hover { color: var(--amber); }
+.mobile-menu-theme-toggle {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--cream-0);
+  opacity: 0.55;
+  background: none;
+  border: 0.5px solid rgba(242, 242, 242, 0.2);
+  padding: 8px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 200ms ease;
+}
+.mobile-menu-theme-toggle:hover { opacity: 0.85; }
+
 .mobile-menu-status {
   font-family: var(--ff-mono);
   font-size: 11px;
@@ -1120,6 +1150,39 @@ footer,
   }
   .site-header.island .site-meta .theme-toggle { display: none; }
   .site-header.island .contact-cta { font-size: 11px; padding: 5px 10px; }
+}
+
+/* ─── Mobile header: brand + hamburger only (≤ 640px) ───────── */
+/* Navigation moves to BottomNav; header is minimal             */
+@media (max-width: 640px) {
+  .site-header {
+    padding: 0 16px;
+  }
+  /* Clock, theme toggle and contact CTA live in bottom nav / hamburger menu */
+  .site-header .site-clock,
+  .site-header .theme-toggle,
+  .site-header .contact-cta {
+    display: none;
+  }
+  .site-header .site-meta {
+    gap: 0;
+  }
+  .site-header .site-header-row {
+    gap: 12px;
+    height: 56px;
+  }
+  /* Island: keep pill shape but also minimal */
+  .site-header.island {
+    left: 12px;
+    right: 12px;
+    padding: 8px 16px;
+  }
+  .site-header.island .site-header-row {
+    height: 44px;
+  }
+  .brand-text {
+    white-space: nowrap;
+  }
 }
 
 /* ─── Hero: mobile ───────────────────────────────────────────── */

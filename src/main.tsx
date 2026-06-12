@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './styles/tokens.css';
 import './styles/styles.css';
+import './styles/bottom-nav.css';
 import './styles/case-study.css';
 import './styles/diagnostico.css';
 import App from './App';

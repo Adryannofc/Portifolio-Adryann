@@ -145,6 +145,13 @@ export function Header({ theme, setTheme }: HeaderProps) {
             </a>
           ))}
         </nav>
+        <button
+          className="mobile-menu-theme-toggle"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+        >
+          <span className="mono">{theme === 'dark' ? '☀ LIGHT MODE' : '☾ DARK MODE'}</span>
+        </button>
         <div className="mobile-menu-status">
           <span className="amber-dot" aria-hidden /> AVAILABLE · Q2
         </div>

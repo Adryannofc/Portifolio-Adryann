@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { BootLoader } from './components/BootLoader';
+import { BottomNav } from './components/BottomNav';
 import { Cursor } from './components/Cursor';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -115,6 +116,7 @@ export default function App() {
       </Routes>
 
       <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} open={panelOpen} />
+      <BottomNav />
     </>
   );
 }
