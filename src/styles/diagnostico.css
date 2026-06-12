@@ -982,3 +982,422 @@ a.diag-bridge-project-row:hover .diag-bridge-project-name {
   }
   .ba-connector-line { height: 100% !important; }
 }
+
+/* ─── Score Gauge ─────────────────────────────────────────────────── */
+
+.diag-score-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.diag-gauge-svg {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+}
+
+.diag-gauge-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 7;
+}
+
+.diag-gauge-fill {
+  fill: none;
+  stroke: #f28705;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 289;
+  stroke-dashoffset: 289;
+  transition: stroke-dashoffset 1100ms cubic-bezier(0.16, 1, 0.3, 1) 400ms;
+}
+
+.diag-score-wrap[data-revealed="true"] .diag-gauge-fill {
+  stroke-dashoffset: var(--gauge-offset, 289);
+}
+
+.diag-gauge-number {
+  font-family: var(--ff-sans);
+  font-weight: 800;
+  font-size: 26px;
+  fill: #f0eee9;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.diag-gauge-sub {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  fill: var(--fg-mute);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.diag-score-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.diag-score-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diag-score-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.diag-score-name {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--fg-mute);
+  min-width: 88px;
+}
+
+.diag-score-val {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: #f0eee9;
+}
+
+@media (max-width: 640px) {
+  .diag-score-wrap {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .diag-score-legend {
+    flex-direction: row;
+    gap: 20px;
+  }
+  .diag-score-name {
+    min-width: unset;
+  }
+}
+
+/* ─── Platform Grid ───────────────────────────────────────────────── */
+
+.diag-platform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.diag-platform-card {
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 20px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(12px) scale(0.97);
+  transition: opacity 500ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.diag-platform-grid[data-revealed="true"] .diag-platform-card {
+  opacity: 1;
+  transform: none;
+}
+
+.diag-platform-card:nth-child(1) { transition-delay: 0ms   }
+.diag-platform-card:nth-child(2) { transition-delay: 60ms  }
+.diag-platform-card:nth-child(3) { transition-delay: 120ms }
+.diag-platform-card:nth-child(4) { transition-delay: 180ms }
+.diag-platform-card:nth-child(5) { transition-delay: 240ms }
+.diag-platform-card:nth-child(6) { transition-delay: 300ms }
+
+.diag-platform-card[data-status="ausente"] {
+  opacity: 0;
+  background: transparent;
+}
+
+.diag-platform-grid[data-revealed="true"] .diag-platform-card[data-status="ausente"] {
+  opacity: 0.45;
+}
+
+.diag-platform-card[data-status="presente"] {
+  border-color: rgba(34, 197, 94, 0.18);
+}
+
+.diag-platform-card[data-status="fraco"] {
+  border-color: rgba(224, 183, 64, 0.18);
+}
+
+.diag-platform-icon {
+  font-family: var(--ff-mono);
+  font-size: 20px;
+  color: var(--fg-mute);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.diag-platform-name {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: var(--tr-over);
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  margin-bottom: 8px;
+}
+
+.diag-platform-status {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.diag-platform-metric {
+  font-size: 11px;
+  color: var(--fg-faint);
+  font-family: var(--ff-mono);
+}
+
+@media (max-width: 640px) {
+  .diag-platform-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ─── Search Row + Volume Badge ───────────────────────────────────── */
+
+.diag-search-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.diag-search-row .diag-search-headline {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.diag-volume-badge {
+  flex-shrink: 0;
+  border: 0.5px solid;
+  border-radius: 6px;
+  padding: 10px 14px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.diag-volume-eyebrow {
+  display: block;
+  font-family: var(--ff-mono);
+  font-size: 9px;
+  letter-spacing: var(--tr-over);
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+.diag-volume-val {
+  display: block;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .diag-search-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .diag-volume-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+  }
+  .diag-volume-eyebrow { margin-bottom: 0; }
+}
+
+/* ─── Problem Cards ───────────────────────────────────────────────── */
+
+.diag-problem-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.diag-problem-card {
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 500ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.diag-problem-list[data-revealed="true"] .diag-problem-card {
+  opacity: 1;
+  transform: none;
+}
+
+.diag-problem-card:nth-child(1) { transition-delay: 0ms   }
+.diag-problem-card:nth-child(2) { transition-delay: 100ms }
+.diag-problem-card:nth-child(3) { transition-delay: 200ms }
+.diag-problem-card:nth-child(4) { transition-delay: 300ms }
+
+.diag-problem-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.diag-problem-cat {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: var(--tr-over);
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.diag-problem-impact {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: var(--tr-over);
+  border: 0.5px solid;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.diag-problem-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f0eee9;
+  margin: 0 0 8px;
+  line-height: var(--lh-snug);
+}
+
+.diag-problem-desc {
+  font-size: 13px;
+  color: var(--fg-mute);
+  line-height: var(--lh-body);
+  margin: 0;
+}
+
+/* ─── Recommendations List ────────────────────────────────────────── */
+
+.diag-recs-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.diag-rec-item {
+  display: flex;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 500ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.diag-rec-item:last-child {
+  border-bottom: none;
+}
+
+.diag-recs-list[data-revealed="true"] .diag-rec-item {
+  opacity: 1;
+  transform: none;
+}
+
+.diag-rec-item:nth-child(1) { transition-delay: 0ms   }
+.diag-rec-item:nth-child(2) { transition-delay: 100ms }
+.diag-rec-item:nth-child(3) { transition-delay: 200ms }
+
+.diag-rec-priority {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(242, 135, 5, 0.12);
+  border: 0.5px solid rgba(242, 135, 5, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: #f28705;
+  margin-top: 2px;
+}
+
+.diag-rec-body {
+  flex: 1;
+}
+
+.diag-rec-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.diag-rec-icon {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--fg-mute);
+}
+
+.diag-rec-service {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: var(--tr-over);
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+
+.diag-rec-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f0eee9;
+  margin: 0 0 6px;
+  line-height: var(--lh-snug);
+}
+
+.diag-rec-desc {
+  font-size: 13px;
+  color: var(--fg-mute);
+  line-height: var(--lh-body);
+  margin: 0;
+}
+
+/* ─── Expired page extra element ──────────────────────────────────── */
+
+.diag-expired-lock {
+  font-size: 48px;
+  color: var(--fg-faint);
+  margin-bottom: 24px;
+  line-height: 1;
+}
+
+/* ─── Reduced motion additions ────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .diag-platform-card,
+  .diag-problem-card,
+  .diag-rec-item,
+  .diag-gauge-fill {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    stroke-dashoffset: var(--gauge-offset, 289) !important;
+  }
+}

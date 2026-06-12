@@ -1,57 +1,185 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { DIAGNOSTICOS } from '../data/diagnosticos';
+import { DIAGNOSTICOS, type DiagnosticoData } from '../data/diagnosticos';
 import { PROJECTS, type ProjectStatus } from '../data/projects';
 import { DiagnosticoNotFound } from './DiagnosticoNotFound';
+import { DiagnosticoExpirado } from './DiagnosticoExpirado';
 import { useDiagReveal } from '../hooks/useDiagReveal';
 
-function statusColor(status: ProjectStatus): string {
-  if (status === 'LIVE') return '#22C55E';
-  if (status === 'BETA') return '#F28705';
+// ─── Helpers ────────────────────────────────────────────────────────
+
+function calcularScore(d: DiagnosticoData) {
+  let presenca = 25;
+  if (d.site) presenca += 30;
+  if (d.plataformas.instagram?.ativo) presenca += 20;
+  if (d.plataformas.facebook?.ativo) presenca += 10;
+  if (d.plataformas.youtube) presenca += 10;
+  if (d.plataformas.tiktok?.ativo) presenca += 5;
+  presenca = Math.min(presenca, 100);
+
+  const compComSite = d.competitors.filter(c => c.hasSite && !c.highlight).length;
+  const totalComp   = d.competitors.filter(c => !c.highlight).length;
+  let visibilidade  = d.site ? 60 : 10;
+  if (totalComp > 0) visibilidade += Math.round((1 - compComSite / totalComp) * 40);
+  visibilidade = Math.min(Math.max(visibilidade, 0), 100);
+
+  const ratingScore = Math.round(((d.plataformas.googleBusiness.rating - 1) / 4) * 70);
+  const reviewBonus = Math.min(Math.round(d.plataformas.googleBusiness.reviews / 3), 30);
+  const reputacao   = Math.min(ratingScore + reviewBonus, 100);
+
+  const geral = Math.round(presenca * 0.35 + visibilidade * 0.40 + reputacao * 0.25);
+  return { geral, presenca, visibilidade, reputacao };
+}
+
+function volumeInfo(v: 'baixo' | 'médio' | 'alto') {
+  if (v === 'baixo') return { label: '< 100/mês', color: '#E0B740', estimate: 40  };
+  if (v === 'alto')  return { label: '> 1k/mês',  color: '#22C55E', estimate: 750 };
+  return { label: '100–1k/mês', color: '#F28705', estimate: 200 };
+}
+
+function impactoStyle(i: 'alto' | 'médio' | 'baixo') {
+  if (i === 'alto')  return { bg: 'rgba(239,68,68,0.12)',  border: 'rgba(239,68,68,0.3)',  color: '#EF4444', label: 'ALTO' };
+  if (i === 'médio') return { bg: 'rgba(242,135,5,0.12)',  border: 'rgba(242,135,5,0.3)',  color: '#F28705', label: 'MÉDIO' };
+  return               { bg: 'rgba(224,183,64,0.12)', border: 'rgba(224,183,64,0.3)', color: '#E0B740', label: 'BAIXO' };
+}
+
+const CAT_LABEL: Record<string, string> = {
+  busca:     'BUSCA ORGÂNICA',
+  redes:     'REDES SOCIAIS',
+  reputacao: 'REPUTAÇÃO',
+  site:      'SITE',
+  conversao: 'CONVERSÃO',
+};
+
+const SVC_INFO: Record<string, { icon: string; label: string }> = {
+  'site':          { icon: '◉', label: 'Site Web'       },
+  'seo-local':     { icon: '⌖', label: 'SEO Local'      },
+  'google-perfil': { icon: '⊙', label: 'Google Perfil'  },
+  'social':        { icon: '◈', label: 'Social Media'   },
+  'google-ads':    { icon: '▲', label: 'Google Ads'     },
+  'conteudo':      { icon: '≡', label: 'Conteúdo'       },
+};
+
+function statusColor(s: ProjectStatus): string {
+  if (s === 'LIVE') return '#22C55E';
+  if (s === 'BETA') return '#F28705';
   return 'var(--fg-mute)';
 }
 
+const CIRC = 289; // 2π × 46
+
+// ─── Component ───────────────────────────────────────────────────────
+
 export function Diagnostico() {
   const { slug } = useParams<{ slug: string }>();
-  const data = DIAGNOSTICOS.find((d) => d.slug === slug);
+  const data = DIAGNOSTICOS.find(d => d.slug === slug);
   const [fichaOpen, setFichaOpen] = useState(false);
 
-  // Hero — delay-based: elements are in-viewport on mount, delay creates stagger
-  const pillsRef         = useDiagReveal<HTMLDivElement>(200);
-  const heroStatementRef = useDiagReveal<HTMLHeadingElement>(400);
-  const heroSubRef       = useDiagReveal<HTMLParagraphElement>(600);
+  // Hero
+  const scoreRef         = useDiagReveal<HTMLDivElement>(100);
+  const pillsRef         = useDiagReveal<HTMLDivElement>(350);
+  const heroStatementRef = useDiagReveal<HTMLHeadingElement>(550);
+  const heroSubRef       = useDiagReveal<HTMLParagraphElement>(750);
 
-  // Section 02
-  const s2HeaderRef = useDiagReveal<HTMLDivElement>();
-  const s2ParaRef   = useDiagReveal<HTMLParagraphElement>();
-  const s2TableRef  = useDiagReveal<HTMLTableElement>();
-  const s2StatRef   = useDiagReveal<HTMLDivElement>();
-
-  // Section 03
+  // Sections
+  const platformsRef = useDiagReveal<HTMLDivElement>();
   const s3HeaderRef  = useDiagReveal<HTMLDivElement>();
-  const s3LeftRef    = useDiagReveal<HTMLDivElement>();
-  const s3CounterRef = useDiagReveal<HTMLDivElement>();
-
-  // Section 04 — one ref per ba-item (Rules of Hooks: no hooks inside loops)
-  const baRef0 = useDiagReveal<HTMLDivElement>();
-  const baRef1 = useDiagReveal<HTMLDivElement>();
-  const baRef2 = useDiagReveal<HTMLDivElement>();
-  const baRefs = [baRef0, baRef1, baRef2];
-
-  // Section 05
-  const s5Ref = useDiagReveal<HTMLDivElement>();
-
-  // Section 06
-  const stepsRef = useDiagReveal<HTMLDivElement>();
-  const ctaRef   = useDiagReveal<HTMLDivElement>();
-
-  // Section 07
-  const bridgeRef = useDiagReveal<HTMLDivElement>();
+  const s3ParaRef    = useDiagReveal<HTMLParagraphElement>();
+  const s3TableRef   = useDiagReveal<HTMLTableElement>();
+  const s3StatRef    = useDiagReveal<HTMLDivElement>();
+  const s4HeaderRef  = useDiagReveal<HTMLDivElement>();
+  const s4LeftRef    = useDiagReveal<HTMLDivElement>();
+  const s4CounterRef = useDiagReveal<HTMLDivElement>();
+  const s5HeaderRef  = useDiagReveal<HTMLDivElement>();
+  const s5ListRef    = useDiagReveal<HTMLDivElement>();
+  const baRef0       = useDiagReveal<HTMLDivElement>();
+  const baRef1       = useDiagReveal<HTMLDivElement>();
+  const baRef2       = useDiagReveal<HTMLDivElement>();
+  const baRefs       = [baRef0, baRef1, baRef2];
+  const s7HeaderRef  = useDiagReveal<HTMLDivElement>();
+  const s7ListRef    = useDiagReveal<HTMLDivElement>();
+  const s8Ref        = useDiagReveal<HTMLDivElement>();
+  const stepsRef     = useDiagReveal<HTMLDivElement>();
+  const ctaRef       = useDiagReveal<HTMLDivElement>();
+  const bridgeRef    = useDiagReveal<HTMLDivElement>();
 
   if (!data) return <DiagnosticoNotFound />;
+  if (!data.ativo) return <DiagnosticoExpirado />;
 
-  const bridgeProjects = PROJECTS.slice(0, 3);
-  const competitorsWithSite = data.competitors.filter((c) => c.hasSite && !c.highlight).length;
+  const score            = calcularScore(data);
+  const vol              = volumeInfo(data.busca.volumeEstimado);
+  const dashoffset       = Math.round(CIRC - (score.geral / 100) * CIRC);
+  const compWithSite     = data.competitors.filter(c => c.hasSite && !c.highlight).length;
+  const baCards          = data.recomendacoes.filter(r => r.antes && r.depois).slice(0, 3);
+  const bridgeProjects   = PROJECTS.slice(0, 3);
+
+  const gb = data.plataformas.googleBusiness;
+  const gbActive = [gb.verificado, gb.temFotos, gb.horarioPreenchido, gb.categoriasOk].filter(Boolean).length;
+  const gbStatus: 'presente' | 'fraco' = gbActive >= 3 ? 'presente' : 'fraco';
+
+  const platforms = [
+    {
+      key: 'site',
+      label: 'Website',
+      icon: '◉',
+      status: (data.site
+        ? (data.site.qualidade !== 'básico' ? 'presente' : 'fraco')
+        : 'ausente') as 'presente' | 'fraco' | 'ausente',
+      metric: data.site ? data.site.url : undefined,
+    },
+    {
+      key: 'google',
+      label: 'Google Business',
+      icon: 'G',
+      status: gbStatus,
+      metric: `${gb.rating}★ · ${gb.reviews} av.`,
+    },
+    {
+      key: 'instagram',
+      label: 'Instagram',
+      icon: '⊞',
+      status: (data.plataformas.instagram
+        ? (data.plataformas.instagram.ativo ? 'presente' : 'fraco')
+        : 'ausente') as 'presente' | 'fraco' | 'ausente',
+      metric: data.plataformas.instagram
+        ? `${data.plataformas.instagram.seguidores} seg.`
+        : undefined,
+    },
+    {
+      key: 'facebook',
+      label: 'Facebook',
+      icon: 'f',
+      status: (data.plataformas.facebook
+        ? (data.plataformas.facebook.ativo ? 'presente' : 'fraco')
+        : 'ausente') as 'presente' | 'fraco' | 'ausente',
+      metric: data.plataformas.facebook
+        ? `${data.plataformas.facebook.seguidores} seg.`
+        : undefined,
+    },
+    {
+      key: 'youtube',
+      label: 'YouTube',
+      icon: '▶',
+      status: (data.plataformas.youtube ? 'presente' : 'ausente') as 'presente' | 'fraco' | 'ausente',
+      metric: data.plataformas.youtube
+        ? `${data.plataformas.youtube.inscritos} inscritos`
+        : undefined,
+    },
+    {
+      key: 'tiktok',
+      label: 'TikTok',
+      icon: '♪',
+      status: (data.plataformas.tiktok
+        ? (data.plataformas.tiktok.ativo ? 'presente' : 'fraco')
+        : 'ausente') as 'presente' | 'fraco' | 'ausente',
+      metric: data.plataformas.tiktok
+        ? `${data.plataformas.tiktok.seguidores} seg.`
+        : undefined,
+    },
+  ];
+
+  const STATUS_ICON  = { presente: '✓', fraco: '~', ausente: '✕' } as const;
+  const STATUS_COLOR = { presente: '#22C55E', fraco: '#E0B740', ausente: '#EF4444' } as const;
 
   const steps = [
     {
@@ -71,21 +199,6 @@ export function Diagnostico() {
     },
   ];
 
-  const beforeAfterCards = [
-    {
-      before: 'Invisível nas buscas do Google',
-      after: `Aparece quando alguém busca "${data.segmento} ${data.cidade}"`,
-    },
-    {
-      before: 'Especialização Apple enterrada nas avaliações',
-      after: 'Posicionamento Apple na primeira dobra do site',
-    },
-    {
-      before: 'Contato só por indicação ou quem já conhece',
-      after: 'WhatsApp direto da busca — cliente chega pronto para comprar',
-    },
-  ];
-
   return (
     <main data-theme="dark" className="diag-page">
       <div className="diag-content">
@@ -94,18 +207,54 @@ export function Diagnostico() {
         <section className="diag-hero">
           <div className="diag-hero-top">
             <p className="diag-overline">
-              DIAGNÓSTICO DE PRESENÇA DIGITAL · {data.ano}
+              DIAGNÓSTICO DE PRESENÇA DIGITAL · {data.dataGerado.slice(0, 4)}
             </p>
             <span className="diag-confidential">DOCUMENTO CONFIDENCIAL</span>
           </div>
 
+          <div
+            ref={scoreRef}
+            className="diag-score-wrap"
+            data-anim="fade-up"
+            style={{ '--gauge-offset': String(dashoffset) } as React.CSSProperties}
+          >
+            <svg viewBox="0 0 100 100" className="diag-gauge-svg">
+              <circle className="diag-gauge-track" cx="50" cy="50" r="46" />
+              <circle
+                className="diag-gauge-fill"
+                cx="50" cy="50" r="46"
+                strokeDasharray={CIRC}
+                transform="rotate(-90 50 50)"
+              />
+              <text x="50" y="47" className="diag-gauge-number">{score.geral}</text>
+              <text x="50" y="62" className="diag-gauge-sub">/ 100</text>
+            </svg>
+            <div className="diag-score-legend">
+              <div className="diag-score-row">
+                <span className="diag-score-dot" style={{ background: '#F28705' }} />
+                <span className="diag-score-name">Presença</span>
+                <span className="diag-score-val">{score.presenca}</span>
+              </div>
+              <div className="diag-score-row">
+                <span className="diag-score-dot" style={{ background: '#EF4444' }} />
+                <span className="diag-score-name">Visibilidade</span>
+                <span className="diag-score-val">{score.visibilidade}</span>
+              </div>
+              <div className="diag-score-row">
+                <span className="diag-score-dot" style={{ background: '#22C55E' }} />
+                <span className="diag-score-name">Reputação</span>
+                <span className="diag-score-val">{score.reputacao}</span>
+              </div>
+            </div>
+          </div>
+
           <div ref={pillsRef} className="diag-pills-wrap diag-stat-pills">
             <div className="diag-pill diag-stat-pill">
-              <div className="diag-stat-number diag-stat-amber">{data.google.rating}★</div>
+              <div className="diag-stat-number diag-stat-amber">{gb.rating}★</div>
               <div className="diag-stat-label">nota no Google</div>
             </div>
             <div className="diag-pill diag-stat-pill">
-              <div className="diag-stat-number">{data.google.reviews}</div>
+              <div className="diag-stat-number">{gb.reviews}</div>
               <div className="diag-stat-label">avaliações</div>
             </div>
           </div>
@@ -120,11 +269,7 @@ export function Diagnostico() {
             {data.empresa} não.
           </h1>
 
-          <p
-            ref={heroSubRef}
-            className="diag-hero-sub"
-            data-anim="fade-in"
-          >
+          <p ref={heroSubRef} className="diag-hero-sub" data-anim="fade-in">
             {data.cidade} · {data.estado} · {data.segmento}
           </p>
 
@@ -132,30 +277,62 @@ export function Diagnostico() {
         </section>
         <hr className="diag-rule" />
 
-        {/* 02 — A BUSCA QUE VOCÊ ESTÁ PERDENDO */}
+        {/* 02 — PRESENÇA NAS PLATAFORMAS */}
         <section className="diag-section">
-          <div
-            ref={s2HeaderRef}
-            className="diag-section-label"
-            data-anim="slide-left"
-          >
+          <div className="diag-section-label">
             <span className="diag-n">02</span>
+            <span className="diag-label-text">PRESENÇA NAS PLATAFORMAS</span>
+          </div>
+          <div ref={platformsRef} className="diag-platform-grid">
+            {platforms.map(p => (
+              <div
+                key={p.key}
+                className="diag-platform-card"
+                data-status={p.status}
+              >
+                <div className="diag-platform-icon">{p.icon}</div>
+                <div className="diag-platform-name">{p.label}</div>
+                <div
+                  className="diag-platform-status"
+                  style={{ color: STATUS_COLOR[p.status] }}
+                >
+                  <span>{STATUS_ICON[p.status]}</span>
+                  {p.status === 'presente' ? ' Ativo' : p.status === 'fraco' ? ' Fraco' : ' Ausente'}
+                </div>
+                {p.metric && (
+                  <div className="diag-platform-metric">{p.metric}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+        <hr className="diag-rule" />
+
+        {/* 03 — A BUSCA QUE VOCÊ ESTÁ PERDENDO */}
+        <section className="diag-section">
+          <div ref={s3HeaderRef} className="diag-section-label" data-anim="slide-left">
+            <span className="diag-n">03</span>
             <span className="diag-label-text">A BUSCA QUE VOCÊ ESTÁ PERDENDO AGORA</span>
           </div>
-          <p
-            ref={s2ParaRef}
-            className="diag-search-headline"
-            data-anim="fade-up"
-          >
-            Quando alguém pesquisa{' '}
-            <span className="diag-search-term">"{data.problemaBusca}"</span>
-            {' '}no Google, a {data.empresa} não aparece — mesmo tendo nota melhor que a maioria
-            dos concorrentes.
-          </p>
+
+          <div className="diag-search-row">
+            <p ref={s3ParaRef} className="diag-search-headline" data-anim="fade-up">
+              Quando alguém pesquisa{' '}
+              <span className="diag-search-term">"{data.busca.palavraChave}"</span>
+              {' '}no Google, a {data.empresa} não aparece.
+            </p>
+            <div
+              className="diag-volume-badge"
+              style={{ borderColor: vol.color, color: vol.color }}
+            >
+              <span className="diag-volume-eyebrow">VOLUME</span>
+              <span className="diag-volume-val">{vol.label}</span>
+            </div>
+          </div>
 
           {/* Desktop table */}
           <div className="diag-table-wrap">
-            <table ref={s2TableRef} className="diag-table" data-stagger>
+            <table ref={s3TableRef} className="diag-table" data-stagger>
               <thead>
                 <tr>
                   <th>Empresa</th>
@@ -166,7 +343,7 @@ export function Diagnostico() {
                 </tr>
               </thead>
               <tbody>
-                {data.competitors.map((c) => (
+                {data.competitors.map(c => (
                   <tr key={c.name} className={c.highlight ? 'highlight' : undefined}>
                     <td style={c.highlight ? { color: '#F28705', fontWeight: 700 } : undefined}>
                       {c.name}
@@ -187,7 +364,7 @@ export function Diagnostico() {
 
           {/* Mobile stacked */}
           <div className="diag-competitors-mobile">
-            {data.competitors.map((c) => (
+            {data.competitors.map(c => (
               <dl
                 key={c.name}
                 className={`diag-competitor-card${c.highlight ? ' highlight' : ''}`}
@@ -212,40 +389,27 @@ export function Diagnostico() {
             ))}
           </div>
 
-          <div
-            ref={s2StatRef}
-            className="diag-competitor-callout"
-            data-anim="scale-in"
-          >
+          <div ref={s3StatRef} className="diag-competitor-callout" data-anim="scale-in">
             <p className="diag-callout-main">
-              {competitorsWithSite} concorrentes com site. Nenhum tem sua nota.
+              {compWithSite} concorrentes com site. Nenhum tem sua nota.
             </p>
             <p className="diag-callout-sub">Você tem o produto. Falta o canal.</p>
           </div>
         </section>
         <hr className="diag-rule" />
 
-        {/* 03 — O CUSTO DA INVISIBILIDADE */}
+        {/* 04 — O CUSTO DA INVISIBILIDADE */}
         <section className="diag-section">
-          <div
-            ref={s3HeaderRef}
-            className="diag-section-label"
-            data-anim="slide-left"
-          >
-            <span className="diag-n">03</span>
+          <div ref={s4HeaderRef} className="diag-section-label" data-anim="slide-left">
+            <span className="diag-n">04</span>
             <span className="diag-label-text">O CUSTO DA INVISIBILIDADE</span>
           </div>
           <div className="diag-cost-card">
-            <div
-              ref={s3LeftRef}
-              className="diag-cost-left"
-              data-anim="fade-up"
-              data-stagger
-            >
+            <div ref={s4LeftRef} className="diag-cost-left" data-anim="fade-up" data-stagger>
               <p className="diag-cost-eyebrow">ESTIMATIVA CONSERVADORA</p>
               <p className="diag-cost-statement">
                 Se apenas 10 pessoas buscam{' '}
-                <span className="diag-search-term">"{data.problemaBusca}"</span>
+                <span className="diag-search-term">"{data.busca.palavraChave}"</span>
                 {' '}por dia...
               </p>
               <ul className="diag-cost-list">
@@ -259,12 +423,12 @@ export function Diagnostico() {
                 </li>
                 <li className="diag-cost-item">
                   <span className="diag-cost-dot">●</span>
-                  <span>São ~150 clientes potenciais por mês indo para a concorrência.</span>
+                  <span>São ~{vol.estimate} clientes potenciais por mês indo para a concorrência.</span>
                 </li>
               </ul>
             </div>
             <div className="diag-cost-right">
-              <div ref={s3CounterRef} className="diag-counter diag-cost-big-n">150+</div>
+              <div ref={s4CounterRef} className="diag-counter diag-cost-big-n">{vol.estimate}+</div>
               <div className="diag-cost-big-label">
                 CLIENTES/MÊS
                 <br />
@@ -275,88 +439,142 @@ export function Diagnostico() {
         </section>
         <hr className="diag-rule" />
 
-        {/* 04 — O QUE MUDA COM UM SITE — vertical timeline */}
+        {/* 05 — DIAGNÓSTICO DETALHADO */}
         <section className="diag-section">
-          <div className="diag-section-label">
-            <span className="diag-n">04</span>
-            <span className="diag-label-text">O QUE MUDA COM UM SITE</span>
+          <div ref={s5HeaderRef} className="diag-section-label" data-anim="slide-left">
+            <span className="diag-n">05</span>
+            <span className="diag-label-text">DIAGNÓSTICO DETALHADO</span>
           </div>
-          <p className="diag-section-sub">Três problemas resolvidos ao mesmo tempo.</p>
+          <p className="diag-section-sub">Problemas por categoria e nível de impacto.</p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
-            {beforeAfterCards.map((card, i) => (
-              <div key={i} ref={baRefs[i]} className="ba-item">
-
-                {/* BEFORE */}
-                <div className="ba-before">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <span style={{
-                      width: 18, height: 18,
-                      background: 'rgba(239,68,68,0.15)',
-                      borderRadius: '50%',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: '#EF4444', fontSize: 10, flexShrink: 0,
-                    }}>✕</span>
-                    <span style={{
-                      fontFamily: 'var(--ff-mono)',
-                      fontSize: 10, letterSpacing: '0.12em',
-                      color: '#EF4444', textTransform: 'uppercase',
-                    }}>Antes</span>
+          <div ref={s5ListRef} className="diag-problem-list">
+            {data.problemas.map((p, i) => {
+              const imp = impactoStyle(p.impacto);
+              return (
+                <div key={i} className="diag-problem-card">
+                  <div className="diag-problem-meta">
+                    <span className="diag-problem-cat">
+                      {CAT_LABEL[p.categoria] ?? p.categoria.toUpperCase()}
+                    </span>
+                    <span
+                      className="diag-problem-impact"
+                      style={{ background: imp.bg, borderColor: imp.border, color: imp.color }}
+                    >
+                      IMPACTO {imp.label}
+                    </span>
                   </div>
-                  <p style={{
-                    fontSize: 15, fontStyle: 'italic',
-                    color: 'rgba(242,242,242,0.40)',
-                    textDecoration: 'line-through',
-                    textDecorationColor: 'rgba(239,68,68,0.35)',
-                    textDecorationThickness: 1,
-                    lineHeight: 1.5, margin: 0,
-                  }}>{card.before}</p>
+                  <p className="diag-problem-title">{p.titulo}</p>
+                  <p className="diag-problem-desc">{p.descricao}</p>
                 </div>
-
-                {/* CONNECTOR */}
-                <div style={{
-                  display: 'flex', flexDirection: 'column',
-                  alignItems: 'center', height: 56, position: 'relative',
-                }}>
-                  <div className="ba-connector-line" />
-                  <div className="ba-connector-pill">↓ transforma em</div>
-                </div>
-
-                {/* AFTER */}
-                <div className="ba-after">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <span style={{
-                      width: 18, height: 18,
-                      background: 'rgba(34,197,94,0.15)',
-                      borderRadius: '50%',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      color: '#22C55E', fontSize: 10, flexShrink: 0,
-                    }}>✓</span>
-                    <span style={{
-                      fontFamily: 'var(--ff-mono)',
-                      fontSize: 10, letterSpacing: '0.12em',
-                      color: '#22C55E', textTransform: 'uppercase',
-                    }}>Depois</span>
-                  </div>
-                  <p style={{
-                    fontSize: 16, fontWeight: 600,
-                    color: '#F2F2F2', lineHeight: 1.5, margin: 0,
-                  }}>{card.after}</p>
-                </div>
-
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
         <hr className="diag-rule" />
 
-        {/* 05 — FICHA DO NEGÓCIO */}
+        {/* 06 — O QUE MUDA (before/after from recomendacoes) */}
+        {baCards.length > 0 && (
+          <>
+            <section className="diag-section">
+              <div className="diag-section-label">
+                <span className="diag-n">06</span>
+                <span className="diag-label-text">O QUE MUDA COM UM SITE</span>
+              </div>
+              <p className="diag-section-sub">Transformação direta para cada problema identificado.</p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
+                {baCards.map((card, i) => (
+                  <div key={i} ref={baRefs[i]} className="ba-item">
+                    <div className="ba-before">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                        <span style={{
+                          width: 18, height: 18, background: 'rgba(239,68,68,0.15)',
+                          borderRadius: '50%', display: 'flex', alignItems: 'center',
+                          justifyContent: 'center', color: '#EF4444', fontSize: 10, flexShrink: 0,
+                        }}>✕</span>
+                        <span style={{
+                          fontFamily: 'var(--ff-mono)', fontSize: 10,
+                          letterSpacing: '0.12em', color: '#EF4444', textTransform: 'uppercase',
+                        }}>Antes</span>
+                      </div>
+                      <p style={{
+                        fontSize: 15, fontStyle: 'italic',
+                        color: 'rgba(242,242,242,0.40)',
+                        textDecoration: 'line-through',
+                        textDecorationColor: 'rgba(239,68,68,0.35)',
+                        lineHeight: 1.5, margin: 0,
+                      }}>{card.antes}</p>
+                    </div>
+
+                    <div style={{
+                      display: 'flex', flexDirection: 'column',
+                      alignItems: 'center', height: 56, position: 'relative',
+                    }}>
+                      <div className="ba-connector-line" />
+                      <div className="ba-connector-pill">↓ transforma em</div>
+                    </div>
+
+                    <div className="ba-after">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                        <span style={{
+                          width: 18, height: 18, background: 'rgba(34,197,94,0.15)',
+                          borderRadius: '50%', display: 'flex', alignItems: 'center',
+                          justifyContent: 'center', color: '#22C55E', fontSize: 10, flexShrink: 0,
+                        }}>✓</span>
+                        <span style={{
+                          fontFamily: 'var(--ff-mono)', fontSize: 10,
+                          letterSpacing: '0.12em', color: '#22C55E', textTransform: 'uppercase',
+                        }}>Depois</span>
+                      </div>
+                      <p style={{
+                        fontSize: 16, fontWeight: 600,
+                        color: '#F2F2F2', lineHeight: 1.5, margin: 0,
+                      }}>{card.depois}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+            <hr className="diag-rule" />
+          </>
+        )}
+
+        {/* 07 — RECOMENDAÇÕES PRIORIZADAS */}
+        <section className="diag-section">
+          <div ref={s7HeaderRef} className="diag-section-label" data-anim="slide-left">
+            <span className="diag-n">07</span>
+            <span className="diag-label-text">RECOMENDAÇÕES PRIORIZADAS</span>
+          </div>
+          <p className="diag-section-sub">Ações ordenadas por impacto e esforço.</p>
+
+          <div ref={s7ListRef} className="diag-recs-list">
+            {data.recomendacoes.map((r, i) => {
+              const svc = SVC_INFO[r.servico] ?? { icon: '●', label: r.servico };
+              return (
+                <div key={i} className="diag-rec-item">
+                  <div className="diag-rec-priority">{r.prioridade}</div>
+                  <div className="diag-rec-body">
+                    <div className="diag-rec-header">
+                      <span className="diag-rec-icon">{svc.icon}</span>
+                      <span className="diag-rec-service">{svc.label}</span>
+                    </div>
+                    <p className="diag-rec-title">{r.titulo}</p>
+                    <p className="diag-rec-desc">{r.descricao}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+        <hr className="diag-rule" />
+
+        {/* 08 — FICHA DO NEGÓCIO */}
         <section className="diag-section">
           <div className="diag-section-label">
-            <span className="diag-n">05</span>
+            <span className="diag-n">08</span>
             <span className="diag-label-text">FICHA DO NEGÓCIO</span>
           </div>
-          <div ref={s5Ref} className="diag-kv-list" data-anim="fade-up">
+          <div ref={s8Ref} className="diag-kv-list" data-anim="fade-up">
             <div className="diag-kv">
               <span className="diag-kv-key">Empresa</span>
               <span className="diag-kv-dots" />
@@ -366,19 +584,37 @@ export function Diagnostico() {
               <span className="diag-kv-key">Google</span>
               <span className="diag-kv-dots" />
               <span className="diag-kv-val">
-                {data.google.rating} ★ · {data.google.reviews} avaliações
+                {gb.rating} ★ · {gb.reviews} avaliações
               </span>
             </div>
             <div className="diag-kv">
-              <span className="diag-kv-key">Site</span>
+              <span className="diag-kv-key">Website</span>
               <span className="diag-kv-dots" />
               <span
                 className="diag-kv-val"
-                style={data.temSite ? undefined : { color: '#EF4444' }}
+                style={!data.site ? { color: '#EF4444' } : undefined}
               >
-                {data.temSite ? 'Sim' : 'Nenhum'}
+                {data.site ? data.site.url : 'Nenhum'}
               </span>
             </div>
+            {data.plataformas.instagram && (
+              <div className={`diag-kv diag-kv-extra${fichaOpen ? ' diag-kv-expanded' : ''}`}>
+                <span className="diag-kv-key">Instagram</span>
+                <span className="diag-kv-dots" />
+                <span className="diag-kv-val">
+                  {data.plataformas.instagram.handle} · {data.plataformas.instagram.seguidores} seg.
+                </span>
+              </div>
+            )}
+            {data.plataformas.facebook && (
+              <div className={`diag-kv diag-kv-extra${fichaOpen ? ' diag-kv-expanded' : ''}`}>
+                <span className="diag-kv-key">Facebook</span>
+                <span className="diag-kv-dots" />
+                <span className="diag-kv-val">
+                  {data.plataformas.facebook.handle} · {data.plataformas.facebook.seguidores} seg.
+                </span>
+              </div>
+            )}
             <div className={`diag-kv diag-kv-extra${fichaOpen ? ' diag-kv-expanded' : ''}`}>
               <span className="diag-kv-key">Endereço</span>
               <span className="diag-kv-dots" />
@@ -389,15 +625,6 @@ export function Diagnostico() {
               <span className="diag-kv-dots" />
               <span className="diag-kv-val">{data.telefone}</span>
             </div>
-            {data.instagram && (
-              <div className={`diag-kv diag-kv-extra${fichaOpen ? ' diag-kv-expanded' : ''}`}>
-                <span className="diag-kv-key">Instagram</span>
-                <span className="diag-kv-dots" />
-                <span className="diag-kv-val">
-                  {data.instagram.handle} · {data.instagram.followers} seguidores
-                </span>
-              </div>
-            )}
             <div className={`diag-kv diag-kv-extra${fichaOpen ? ' diag-kv-expanded' : ''}`}>
               <span className="diag-kv-key">Especialidade</span>
               <span className="diag-kv-dots" />
@@ -406,21 +633,21 @@ export function Diagnostico() {
           </div>
           <button
             className="diag-ficha-toggle"
-            onClick={() => setFichaOpen((o) => !o)}
+            onClick={() => setFichaOpen(o => !o)}
           >
-            <span>{fichaOpen ? 'Ver menos ↑' : 'Ver dados completos ↓'}</span>
+            {fichaOpen ? 'Ver menos ↑' : 'Ver dados completos ↓'}
           </button>
         </section>
         <hr className="diag-rule" />
 
-        {/* 06 — PRÓXIMOS PASSOS + CTA */}
+        {/* 09 — PRÓXIMOS PASSOS + CTA */}
         <section className="diag-section">
           <div className="diag-section-label">
-            <span className="diag-n">06</span>
+            <span className="diag-n">09</span>
             <span className="diag-label-text">PRÓXIMOS PASSOS</span>
           </div>
           <div ref={stepsRef} className="diag-steps" data-stagger>
-            {steps.map((s) => (
+            {steps.map(s => (
               <div key={s.n} className="diag-step">
                 <span className="diag-step-n">{s.n}</span>
                 <p className="diag-step-title">{s.title}</p>
@@ -447,7 +674,7 @@ export function Diagnostico() {
           </div>
         </section>
 
-        {/* 07 — CREDIBILIDADE + BRIDGE */}
+        {/* 10 — CREDIBILIDADE + BRIDGE */}
         <hr className="diag-rule" />
         <section className="diag-section">
           <p className="diag-bridge-name">// ADRYANN FELIX</p>
@@ -460,7 +687,7 @@ export function Diagnostico() {
               </p>
               <p className="diag-bridge-projects-label">PROJETOS ENTREGUES RECENTEMENTE:</p>
               <ul className="diag-bridge-projects">
-                {bridgeProjects.map((p) =>
+                {bridgeProjects.map(p =>
                   p.slug ? (
                     <li key={p.n}>
                       <Link to={`/work/${p.slug}`} className="diag-bridge-project-row">
@@ -485,7 +712,7 @@ export function Diagnostico() {
                         </span>
                       </div>
                     </li>
-                  ),
+                  )
                 )}
               </ul>
             </div>
