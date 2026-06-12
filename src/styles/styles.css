@@ -1197,12 +1197,27 @@ footer,
 }
 
 @media (max-width: 640px) {
+  /* 1 — center: push content to ~22% from viewport top */
   .hero {
     min-height: 100svh;
-    padding-bottom: 80px;
+    justify-content: flex-start;
+    padding-top: max(72px, 22svh);
+    padding-bottom: 0;
+  }
+  /* 2 — dot fade: gradient covers the 62px gap below marquee */
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(80px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to bottom, transparent 0%, var(--ink-0) 65%);
+    pointer-events: none;
   }
   .hero-inner { row-gap: 24px; }
   .hero-grid { display: none; }
+  /* 3 — marquee glued above bottom nav */
   .hero-marquee {
     position: absolute;
     bottom: calc(62px + env(safe-area-inset-bottom, 0px));
