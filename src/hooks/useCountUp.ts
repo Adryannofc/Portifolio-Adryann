@@ -1,62 +1,50 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useCallback } from 'react'
 
 interface Options {
-  duration?: number;
-  threshold?: number;
+  duration?: number
+  delay?: number
+  decimals?: number
 }
 
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
-
-export function useCountUp<T extends HTMLElement = HTMLElement>(
+export function useCountUp<T extends Element = Element>(
   target: number,
-  { duration = 1200, threshold = 0.4 }: Options = {},
+  { duration = 1200, delay = 0, decimals = 0 }: Options = {}
 ) {
-  const ref = useRef<T | null>(null);
-  const reducedInitial = prefersReducedMotion();
-  const [value, setValue] = useState(reducedInitial ? target : 0);
+  const [node, setNode] = useState<T | null>(null)
+  const [value, setValue] = useState(0)
+  const ref = useCallback((el: T | null) => setNode(el), [])
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (prefersReducedMotion()) return;
+    if (!node) return
+    let timerId: ReturnType<typeof setTimeout>
+    let rafId: number
 
-    let frame = 0;
-    let start = 0;
-    let fired = false;
-
-    const tick = (now: number) => {
-      if (!start) start = now;
-      const t = Math.min(1, (now - start) / duration);
-      setValue(Math.round(easeOut(t) * target));
-      if (t < 1) {
-        frame = window.requestAnimationFrame(tick);
-      }
-    };
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !fired) {
-            fired = true;
-            frame = window.requestAnimationFrame(tick);
-            io.disconnect();
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        obs.disconnect()
+        timerId = setTimeout(() => {
+          const start = performance.now()
+          const tick = (now: number) => {
+            const p = Math.min((now - start) / duration, 1)
+            const eased = 1 - (1 - p) ** 3
+            setValue(parseFloat((eased * target).toFixed(decimals)))
+            if (p < 1) rafId = requestAnimationFrame(tick)
+            else setValue(target)
           }
-        });
+          rafId = requestAnimationFrame(tick)
+        }, delay)
       },
-      { threshold },
-    );
+      { threshold: 0.1 }
+    )
 
-    io.observe(el);
-
+    obs.observe(node)
     return () => {
-      io.disconnect();
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, [target, duration, threshold]);
+      obs.disconnect()
+      clearTimeout(timerId)
+      cancelAnimationFrame(rafId)
+    }
+  }, [node, target, duration, delay, decimals])
 
-  return { ref, value };
+  return { value, ref }
 }

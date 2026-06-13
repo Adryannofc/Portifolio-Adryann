@@ -118,10 +118,6 @@ export function Header({ theme, setTheme }: HeaderProps) {
             >
               <span className="mono">{theme === 'dark' ? '☾ DARK' : '☀ LIGHT'}</span>
             </button>
-            <a className="contact-cta" href={`${linkPrefix}#contact`} data-cursor="link">
-              <span>{t.nav.contact}</span>
-              <span className="contact-dot" aria-hidden />
-            </a>
             <button
               className="hamburger-btn"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}

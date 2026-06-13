@@ -5,6 +5,7 @@ import { PROJECTS, type ProjectStatus } from '../data/projects';
 import { DiagnosticoNotFound } from './DiagnosticoNotFound';
 import { DiagnosticoExpirado } from './DiagnosticoExpirado';
 import { useDiagReveal } from '../hooks/useDiagReveal';
+import { useCountUp } from '../hooks/useCountUp';
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
@@ -101,6 +102,19 @@ export function Diagnostico() {
     ).forEach(el => el.setAttribute('data-revealed', 'true'));
   }, [data]);
 
+  // Pre-compute for count-up hooks (hooks must be before early returns)
+  const preScore = data ? calcularScore(data) : { geral: 0, presenca: 0, visibilidade: 0, reputacao: 0 }
+  const preVol   = data ? volumeInfo(data.busca.volumeEstimado) : { label: '', color: '', estimate: 0 }
+  const preGb    = data?.plataformas.googleBusiness
+
+  const { value: gaugeDisplay,   ref: gaugeCountRef }   = useCountUp<SVGSVGElement>(preScore.geral,            { duration: 1100, delay: 400 })
+  const { value: presencaDisplay, ref: presencaValRef } = useCountUp<HTMLSpanElement>(preScore.presenca,       { duration: 900,  delay: 650 })
+  const { value: visibDisplay,   ref: visibValRef }     = useCountUp<HTMLSpanElement>(preScore.visibilidade,   { duration: 900,  delay: 800 })
+  const { value: repDisplay,     ref: repValRef }       = useCountUp<HTMLSpanElement>(preScore.reputacao,      { duration: 900,  delay: 950 })
+  const { value: ratingDisplay,  ref: ratingRef }       = useCountUp<HTMLDivElement>(preGb?.rating ?? 0,      { duration: 800,  delay: 250, decimals: 1 })
+  const { value: reviewsDisplay, ref: reviewsRef }      = useCountUp<HTMLDivElement>(preGb?.reviews ?? 0,     { duration: 900,  delay: 380 })
+  const { value: costDisplay,    ref: costCountRef }    = useCountUp<HTMLDivElement>(preVol.estimate,         { duration: 1000, delay: 200 })
+
   // Hero
   const scoreRef         = useDiagReveal<HTMLDivElement>(100);
   const pillsRef         = useDiagReveal<HTMLDivElement>(350);
@@ -133,8 +147,8 @@ export function Diagnostico() {
   if (!data) return <DiagnosticoNotFound />;
   if (!data.ativo) return <DiagnosticoExpirado />;
 
-  const score            = calcularScore(data);
-  const vol              = volumeInfo(data.busca.volumeEstimado);
+  const score            = preScore;
+  const vol              = preVol;
   const dashoffset       = Math.round(CIRC - (score.geral / 100) * CIRC);
   const compWithSite     = data.competitors.filter(c => c.hasSite && !c.highlight).length;
   const baCards          = data.recomendacoes.filter(r => r.antes && r.depois).slice(0, 3);
@@ -245,7 +259,7 @@ export function Diagnostico() {
             data-anim="fade-up"
             style={{ '--gauge-offset': String(dashoffset) } as React.CSSProperties}
           >
-            <svg viewBox="0 0 100 100" className="diag-gauge-svg">
+            <svg ref={gaugeCountRef} viewBox="0 0 100 100" className="diag-gauge-svg">
               <circle className="diag-gauge-track" cx="50" cy="50" r="46" />
               <circle
                 className="diag-gauge-fill"
@@ -253,35 +267,35 @@ export function Diagnostico() {
                 strokeDasharray={CIRC}
                 transform="rotate(-90 50 50)"
               />
-              <text x="50" y="47" className="diag-gauge-number">{score.geral}</text>
+              <text x="50" y="47" className="diag-gauge-number">{gaugeDisplay}</text>
               <text x="50" y="62" className="diag-gauge-sub">/ 100</text>
             </svg>
             <div className="diag-score-legend">
               <div className="diag-score-row">
                 <span className="diag-score-dot" style={{ background: '#F28705' }} />
                 <span className="diag-score-name">Presença</span>
-                <span className="diag-score-val">{score.presenca}</span>
+                <span ref={presencaValRef} className="diag-score-val">{presencaDisplay}</span>
               </div>
               <div className="diag-score-row">
                 <span className="diag-score-dot" style={{ background: '#EF4444' }} />
                 <span className="diag-score-name">Visibilidade</span>
-                <span className="diag-score-val">{score.visibilidade}</span>
+                <span ref={visibValRef} className="diag-score-val">{visibDisplay}</span>
               </div>
               <div className="diag-score-row">
                 <span className="diag-score-dot" style={{ background: '#22C55E' }} />
                 <span className="diag-score-name">Reputação</span>
-                <span className="diag-score-val">{score.reputacao}</span>
+                <span ref={repValRef} className="diag-score-val">{repDisplay}</span>
               </div>
             </div>
           </div>
 
           <div ref={pillsRef} className="diag-pills-wrap diag-stat-pills">
             <div className="diag-pill diag-stat-pill">
-              <div className="diag-stat-number diag-stat-amber">{gb.rating}★</div>
+              <div ref={ratingRef} className="diag-stat-number diag-stat-amber">{ratingDisplay.toFixed(1)}★</div>
               <div className="diag-stat-label">nota no Google</div>
             </div>
             <div className="diag-pill diag-stat-pill">
-              <div className="diag-stat-number">{gb.reviews}</div>
+              <div ref={reviewsRef} className="diag-stat-number">{reviewsDisplay}</div>
               <div className="diag-stat-label">avaliações</div>
             </div>
           </div>
@@ -454,8 +468,8 @@ export function Diagnostico() {
                 </li>
               </ul>
             </div>
-            <div className="diag-cost-right">
-              <div ref={s4CounterRef} className="diag-counter diag-cost-big-n">{vol.estimate}+</div>
+            <div ref={costCountRef} className="diag-cost-right">
+              <div ref={s4CounterRef} className="diag-counter diag-cost-big-n">{costDisplay}+</div>
               <div className="diag-cost-big-label">
                 CLIENTES/MÊS
                 <br />

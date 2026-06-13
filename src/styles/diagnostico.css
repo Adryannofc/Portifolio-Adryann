@@ -965,6 +965,76 @@ a.diag-bridge-project-row:hover .diag-bridge-project-name {
   .ba-item { max-width: 100%; }
 }
 
+/* ── Gauge glow after fill ───────────── */
+
+@keyframes diag-gauge-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(242,135,5,0.25)); }
+  50%       { filter: drop-shadow(0 0 16px rgba(242,135,5,0.60)); }
+}
+
+.diag-score-wrap[data-revealed="true"] .diag-gauge-svg {
+  animation: diag-gauge-glow 3s ease-in-out 1.8s infinite;
+}
+
+/* ── Score legend row stagger ─────────── */
+
+.diag-score-legend .diag-score-row {
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 350ms ease, transform 350ms cubic-bezier(0.16,1,0.3,1);
+}
+
+.diag-score-wrap[data-revealed="true"] .diag-score-row:nth-child(1) { opacity: 1; transform: none; transition-delay: 700ms; }
+.diag-score-wrap[data-revealed="true"] .diag-score-row:nth-child(2) { opacity: 1; transform: none; transition-delay: 850ms; }
+.diag-score-wrap[data-revealed="true"] .diag-score-row:nth-child(3) { opacity: 1; transform: none; transition-delay: 1000ms; }
+
+/* ── Platform card hover ─────────────── */
+
+.diag-platform-grid[data-revealed="true"] .diag-platform-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  border-color: rgba(255,255,255,0.18);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.diag-platform-grid[data-revealed="true"] .diag-platform-card[data-status="presente"]:hover {
+  border-color: rgba(34,197,94,0.38);
+}
+
+.diag-platform-grid[data-revealed="true"] .diag-platform-card[data-status="fraco"]:hover {
+  border-color: rgba(224,183,64,0.38);
+}
+
+/* ── Problem card hover ──────────────── */
+
+.diag-problem-list[data-revealed="true"] .diag-problem-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+  border-color: rgba(255,255,255,0.14);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+/* ── Rec priority circle hover glow ─── */
+
+.diag-recs-list[data-revealed="true"] .diag-rec-item:hover .diag-rec-priority {
+  background: rgba(242,135,5,0.22);
+  border-color: rgba(242,135,5,0.55);
+  box-shadow: 0 0 14px rgba(242,135,5,0.22);
+  transition: background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+/* ── CTA button pulse ────────────────── */
+
+@keyframes diag-cta-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(11,11,13,0.55); }
+  70%  { box-shadow: 0 0 0 12px rgba(11,11,13,0); }
+  100% { box-shadow: 0 0 0 0 rgba(11,11,13,0); }
+}
+
+.diag-cta-block[data-revealed="true"] .diag-cta-btn {
+  animation: diag-cta-pulse 2.4s ease-out 0.9s infinite;
+}
+
 /* Reduced motion — disable all animations */
 @media (prefers-reduced-motion: reduce) {
   [data-anim],
@@ -974,11 +1044,14 @@ a.diag-bridge-project-row:hover .diag-bridge-project-name {
   .ba-connector-pill,
   .ba-after,
   .diag-cta-block,
-  .diag-counter {
+  .diag-counter,
+  .diag-score-legend .diag-score-row,
+  .diag-gauge-svg {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
     animation: none !important;
+    filter: none !important;
   }
   .ba-connector-line { height: 100% !important; }
 }
@@ -1399,6 +1472,11 @@ a.diag-bridge-project-row:hover .diag-bridge-project-name {
     transform: none !important;
     transition: none !important;
     stroke-dashoffset: var(--gauge-offset, 289) !important;
+  }
+
+  .diag-cta-block[data-revealed="true"] .diag-cta-btn,
+  .diag-score-wrap[data-revealed="true"] .diag-gauge-svg {
+    animation: none !important;
   }
 }
 

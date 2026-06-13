@@ -13,6 +13,7 @@ import { About } from './components/About';
 import { IndexTable } from './components/IndexTable';
 import { Contact } from './components/Contact';
 import { TweaksPanel, type Tweaks } from './components/TweaksPanel';
+import { SpeedDial } from './components/SpeedDial';
 import { CaseStudy } from './pages/CaseStudy';
 import { Diagnostico } from './pages/Diagnostico';
 import { AdminLogin } from './pages/AdminLogin';
@@ -132,6 +133,7 @@ export default function App() {
       </Routes>
 
       {!isAdmin && <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} open={panelOpen} />}
+      {!isAdmin && <SpeedDial />}
       {!isAdmin && <BottomNav />}
     </>
   );

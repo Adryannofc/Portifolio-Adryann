@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { DiagSheet } from './DiagSheet';
 
 const WhatsAppIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -44,15 +45,10 @@ export function BottomNav() {
   const [savedSlug, setSavedSlug] = useState<string | null>(null);
   const [showSheet, setShowSheet] = useState(false);
   const [code, setCode] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setSavedSlug(localStorage.getItem('last_diagnostico_slug'));
   }, [location.pathname]);
-
-  useEffect(() => {
-    if (showSheet) inputRef.current?.focus();
-  }, [showSheet]);
 
   function handleDiagClick() {
     const slug = savedSlug ?? localStorage.getItem('last_diagnostico_slug');
@@ -76,32 +72,13 @@ export function BottomNav() {
 
   return (
     <>
-      {showSheet && (
-        <>
-          <div className="diag-sheet-overlay" onClick={() => setShowSheet(false)} />
-          <div className="diag-sheet">
-            <p className="diag-sheet-title">Acessar relatório</p>
-            <p className="diag-sheet-sub">
-              Digite o código do seu diagnóstico — é o texto no final do link que você recebeu.
-            </p>
-            <form onSubmit={handleSubmit} className="diag-sheet-form">
-              <input
-                ref={inputRef}
-                className="diag-sheet-input"
-                value={code}
-                onChange={e => setCode(e.target.value)}
-                placeholder="ex: nome-da-empresa"
-                autoComplete="off"
-                spellCheck={false}
-              />
-              <button type="submit" className="diag-sheet-btn">Acessar →</button>
-            </form>
-            <button type="button" className="diag-sheet-close" onClick={() => setShowSheet(false)}>
-              Cancelar
-            </button>
-          </div>
-        </>
-      )}
+      <DiagSheet
+        open={showSheet}
+        onClose={() => setShowSheet(false)}
+        code={code}
+        setCode={setCode}
+        onSubmit={handleSubmit}
+      />
 
       <nav className="bottom-nav" aria-label="Bottom navigation">
         <div className="bottom-nav-inner">
