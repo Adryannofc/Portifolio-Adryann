@@ -83,7 +83,7 @@ export function BottomNav() {
       <nav className="bottom-nav" aria-label="Bottom navigation">
         <div className="bottom-nav-inner">
           <a
-            href="https://wa.me/5545999999999"
+            href="https://wa.me/558781209267"
             target="_blank"
             rel="noopener noreferrer"
             className="bottom-nav-item"
