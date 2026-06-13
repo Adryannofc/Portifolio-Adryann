@@ -12,7 +12,7 @@ export const en = {
     meta: '[ PORTFOLIO · 2026 ]',
     status: 'ACCEPTING PROJECTS · Q2',
     h1: ['I build things', 'software that', 'feels inevitable.'],
-    scroll: 'SCROLL ↓ · 01 / 07',
+    scroll: 'SCROLL ↓ · 01 / 08',
   },
   work: {
     eyebrow: 'SELECTED WORK · 2023 — 2025',
@@ -29,6 +29,49 @@ export const en = {
     eyebrow: 'PROCESS · HOW I WORK',
     h2: ['Four phases.', 'Zero drama.'],
     duration: '~ 3 to 8 weeks typical',
+  },
+  services: {
+    eyebrow: 'SERVICES · 2026',
+    titleA: 'How we can work',
+    titleB: 'together.',
+    caption: '03 shapes — pick the one that fits',
+    includes: 'What is included',
+    cta: 'Start a conversation',
+    items: [
+      {
+        title: 'Product engineering',
+        desc: 'End-to-end: from the type scale to the database schema. Best when there is no existing design team — or the handoff loss is killing you.',
+        delivers: [
+          'Figma → production in one loop',
+          'Accessible UI system',
+          'Observable deploys',
+          'Docs the next dev can read',
+        ],
+        from: 'from R$ 12k / engagement',
+      },
+      {
+        title: 'Landing & conversion',
+        desc: 'Single-page sites engineered for speed and conversion. LCP under 1.2s, CLS near zero, SEO local done properly.',
+        delivers: [
+          'Copy + design + dev',
+          'CMS or static, your call',
+          '90+ Lighthouse across four metrics',
+          'Analytics + A/B lane',
+        ],
+        from: 'from R$ 4k / page',
+      },
+      {
+        title: 'Retainer · design-engineer',
+        desc: 'An embedded pair of hands for product teams. Ship small things weekly, fix the things that feel off, raise the quality bar.',
+        delivers: [
+          '20h / week baseline',
+          'Async-first · PT/EN',
+          'Component system care',
+          'Weekly ship log',
+        ],
+        from: 'from R$ 8k / month',
+      },
+    ],
   },
   about: {
     eyebrow: 'ABOUT · BIO',
@@ -51,9 +94,8 @@ export const en = {
     },
   },
   contact: {
-    eyebrow: '07 / CONTACT — LET\'S TALK',
+    eyebrow: '08 / CONTACT — LET\'S TALK',
     h2: ['Got a project', 'that deserves', 'care'],
-    calendar: 'Book 30 min',
     elsewhere: 'ELSEWHERE',
     direct: 'DIRECT',
     based: 'BASED',

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Adryann Felix — Engenheiro de Software">
+<title>Adryann Felix — Engenheiro de Software</title>
+<desc>Capa de preview do portfolio: nome em destaque, posicionamento e tagline sobre fundo escuro com acento ambar.</desc>
+<rect width="1200" height="630" fill="#0A0A0A"/>
+<rect x="24" y="24" width="1152" height="582" fill="none" stroke="#F28705" stroke-opacity="0.16"/>
+<text x="64" y="86" font-family="'JetBrains Mono','Consolas',monospace" font-size="17" letter-spacing="3" fill="#8C8C8C">PORTFÓLIO · 2026</text>
+<circle cx="944" cy="80" r="4.5" fill="#F28705"/>
+<text x="1136" y="86" text-anchor="end" font-family="'JetBrains Mono','Consolas',monospace" font-size="17" letter-spacing="2" fill="#C9C4B8">DISPONÍVEL · T2</text>
+<line x1="64" y1="110" x2="1136" y2="110" stroke="#FFFFFF" stroke-opacity="0.09"/>
+<text x="56" y="286" font-family="'Plus Jakarta Sans','Segoe UI',sans-serif" font-weight="800" font-size="140" letter-spacing="-6" fill="#F4F2EC">ADRYANN</text>
+<text x="56" y="412" font-family="'Plus Jakarta Sans','Segoe UI',sans-serif" font-weight="800" font-size="140" letter-spacing="-6" fill="#F4F2EC">FELIX</text>
+<rect x="62" y="434" width="128" height="7" fill="#F28705"/>
+<text x="64" y="494" font-family="'JetBrains Mono','Consolas',monospace" font-size="20" letter-spacing="2" fill="#8C8C8C">ENGENHEIRO DE SOFTWARE · DESIGN-ENGINEER</text>
+<text x="64" y="546" font-family="'Plus Jakarta Sans','Segoe UI',sans-serif" font-weight="500" font-size="29" fill="#C9C4B8"><tspan fill="#F28705">⟶ </tspan>Software que parece inevitável.</text>
+<text x="64" y="592" font-family="'JetBrains Mono','Consolas',monospace" font-size="16" letter-spacing="2" fill="#6E6E6E">FOZ DO IGUAÇU · BR · GMT-03</text>
+<text x="1136" y="592" text-anchor="end" font-family="'JetBrains Mono','Consolas',monospace" font-size="16" letter-spacing="2" fill="#6E6E6E">CODE · BUILD · SHIP</text>
+</svg>

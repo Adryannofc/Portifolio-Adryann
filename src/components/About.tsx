@@ -29,7 +29,7 @@ export function About() {
   }, []);
 
   return (
-    <section id="about" className="about" ref={ref} data-screen-label="05 About">
+    <section id="about" className="about" ref={ref} data-screen-label="06 About">
       <SectionHead index="06 /" eyebrow={t.about.eyebrow} title="" />
 
       <div className="about-grid">

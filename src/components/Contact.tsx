@@ -13,7 +13,7 @@ export function Contact() {
   const { t } = useI18n();
   const ref = useReveal<HTMLElement>();
   return (
-    <section id="contact" className="contact" ref={ref} data-screen-label="07 Contact">
+    <section id="contact" className="contact" ref={ref} data-screen-label="08 Contact">
       <div className="contact-inner">
         <Overline>{t.contact.eyebrow}</Overline>
 
@@ -45,11 +45,6 @@ export function Contact() {
             <Button href="https://wa.me/558781209267" variant="primary" arrow>
               <WhatsAppIcon />
               WhatsApp
-            </Button>
-          </Magnetic>
-          <Magnetic strength={0.2}>
-            <Button href="https://cal.com" variant="ghost" arrow>
-              {t.contact.calendar}
             </Button>
           </Magnetic>
         </div>

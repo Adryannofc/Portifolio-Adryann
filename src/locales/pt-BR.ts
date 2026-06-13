@@ -12,7 +12,7 @@ export const ptBR = {
     meta: '[ PORTFÓLIO · 2026 ]',
     status: 'ACEITANDO PROJETOS · T2',
     h1: ['Construo coisas,', 'software que', 'parece inevitável.'],
-    scroll: 'ROLAR ↓ · 01 / 07',
+    scroll: 'ROLAR ↓ · 01 / 08',
   },
   work: {
     eyebrow: 'TRABALHOS SELECIONADOS · 2023 — 2025',
@@ -29,6 +29,49 @@ export const ptBR = {
     eyebrow: 'PROCESSO · COMO TRABALHO',
     h2: ['Quatro fases.', 'Zero drama.'],
     duration: '~ 3 a 8 semanas típicas',
+  },
+  services: {
+    eyebrow: 'SERVIÇOS · 2026',
+    titleA: 'Como podemos',
+    titleB: 'trabalhar juntos.',
+    caption: '03 formatos — escolha o que encaixa',
+    includes: 'O que está incluso',
+    cta: 'Iniciar uma conversa',
+    items: [
+      {
+        title: 'Engenharia de produto',
+        desc: 'Ponta a ponta: da escala tipográfica ao schema do banco. Ideal quando não existe time de design — ou quando a perda no handoff está te matando.',
+        delivers: [
+          'Figma → produção num loop só',
+          'Sistema de UI acessível',
+          'Deploys observáveis',
+          'Docs que o próximo dev consegue ler',
+        ],
+        from: 'a partir de R$ 12k / projeto',
+      },
+      {
+        title: 'Landing & conversão',
+        desc: 'Sites de página única feitos para velocidade e conversão. LCP abaixo de 1,2s, CLS quase zero, SEO local bem feito.',
+        delivers: [
+          'Copy + design + dev',
+          'CMS ou estático, você decide',
+          '90+ no Lighthouse nas quatro métricas',
+          'Analytics + trilha de A/B',
+        ],
+        from: 'a partir de R$ 4k / página',
+      },
+      {
+        title: 'Retainer · design-engineer',
+        desc: 'Um par de mãos embarcado no seu time de produto. Entrega pequena toda semana, conserta o que está esquisito, eleva o nível de qualidade.',
+        delivers: [
+          '20h / semana de base',
+          'Async-first · PT/EN',
+          'Cuidado com o design system',
+          'Log de entregas semanal',
+        ],
+        from: 'a partir de R$ 8k / mês',
+      },
+    ],
   },
   about: {
     eyebrow: 'SOBRE · BIO',
@@ -51,9 +94,8 @@ export const ptBR = {
     },
   },
   contact: {
-    eyebrow: '07 / CONTATO — VAMOS FALAR',
+    eyebrow: '08 / CONTATO — VAMOS FALAR',
     h2: ['Tem um projeto', 'que merece', 'cuidado'],
-    calendar: 'Agendar 30 min',
     elsewhere: 'EM OUTROS LUGARES',
     direct: 'DIRETO',
     based: 'BASEADO EM',

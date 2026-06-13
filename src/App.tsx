@@ -7,6 +7,7 @@ import { Cursor } from './components/Cursor';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
+import { Services } from './components/Services';
 import { Process } from './components/Process';
 import { TechGraph } from './components/TechGraph';
 import { About } from './components/About';
@@ -47,7 +48,8 @@ function Home() {
     <main>
       <Hero />
       <Work />
-<Process />
+      <Services />
+      <Process />
       <TechGraph />
       <About />
       <IndexTable />

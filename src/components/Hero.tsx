@@ -36,7 +36,7 @@ export function Hero() {
   const delay = (ms: string): CSSProperties => ({ ['--reveal-delay' as string]: ms } as CSSProperties);
 
   return (
-    <section id="top" className="hero" ref={ref} data-screen-label="Hero">
+    <section id="top" className="hero" ref={ref} data-screen-label="01 Hero">
       <div className="hero-inner">
         <div className="hero-meta">
           <span className="mono hero-meta-tag">{t.hero.meta}</span>

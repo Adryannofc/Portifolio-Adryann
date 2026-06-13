@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode, type CSSProperties } from 'react';
+import { useEffect, useState, type ReactNode, type CSSProperties, type MouseEvent } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLiveClock } from '../hooks/useLiveClock';
 import { useScrollProgress } from '../hooks/useScrollProgress';
@@ -69,6 +69,26 @@ export function Header({ theme, setTheme }: HeaderProps) {
 
   const closeMenu = () => setMenuOpen(false);
 
+  const handleNavClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!isHome) return;
+    const href = e.currentTarget.getAttribute('href') ?? '';
+    const hashIdx = href.indexOf('#');
+    if (hashIdx === -1) return;
+    const hash = href.slice(hashIdx);
+    e.preventDefault();
+    window.history.replaceState(null, '', hash);
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (hash === '#top') {
+      window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+      return;
+    }
+    const target = document.querySelector<HTMLElement>(hash);
+    if (!target) return;
+    const headerH = document.querySelector<HTMLElement>('.site-header')?.offsetHeight ?? 80;
+    const top = target.getBoundingClientRect().top + window.scrollY - headerH;
+    window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' });
+  };
+
   const navLinks: [string, string][] = [
     ['#work', t.nav.work],
     ['#process', t.nav.process],
@@ -85,17 +105,17 @@ export function Header({ theme, setTheme }: HeaderProps) {
         data-over-dark={overDark}
       >
         <div className="site-header-row">
-          <a href={isHome ? '#top' : '/'} className="brand" data-cursor="link" aria-label="Home">
+          <a href={isHome ? '#top' : '/'} className="brand" data-cursor="link" aria-label="Home" onClick={handleNavClick}>
             <img src={logoImage} className="brand-logo" alt="" />
             <span className="brand-text">ADRYANN FELIX</span>
             <span className="overline brand-role">SOFTWARE ENGINEER</span>
           </a>
 
           <nav className="site-nav" aria-label="Primary">
-            <ULink href={`${linkPrefix}#work`}>{t.nav.work}</ULink>
-            <ULink href={`${linkPrefix}#process`}>{t.nav.process}</ULink>
-            <ULink href={`${linkPrefix}#about`}>{t.nav.about}</ULink>
-            <ULink href={`${linkPrefix}#index`}>{t.nav.index}</ULink>
+            <ULink href={`${linkPrefix}#work`} onClick={handleNavClick}>{t.nav.work}</ULink>
+            <ULink href={`${linkPrefix}#process`} onClick={handleNavClick}>{t.nav.process}</ULink>
+            <ULink href={`${linkPrefix}#about`} onClick={handleNavClick}>{t.nav.about}</ULink>
+            <ULink href={`${linkPrefix}#index`} onClick={handleNavClick}>{t.nav.index}</ULink>
           </nav>
 
           <div className="site-meta">
@@ -144,7 +164,11 @@ export function Header({ theme, setTheme }: HeaderProps) {
       >
         <nav className="mobile-menu-nav">
           {navLinks.map(([href, label]) => (
-            <a key={href} href={`${linkPrefix}${href}`} onClick={closeMenu}>
+            <a
+              key={href}
+              href={`${linkPrefix}${href}`}
+              onClick={(e) => { closeMenu(); handleNavClick(e); }}
+            >
               {label}
             </a>
           ))}
