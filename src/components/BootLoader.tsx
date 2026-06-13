@@ -18,19 +18,19 @@ export function BootLoader({ onDone }: BootLoaderProps) {
   const lines = useMemo<BootLine[]>(
     () => [
       { k: 'TYPOGRAPHY', v: 'Plus Jakarta · JetBrains Mono', dur: 140 },
-      { k: 'GRID',       v: '12col · 24 gutter · 1440 max', dur: 120 },
-      { k: 'TOKENS',     v: 'warm · ink · amber · dual surfaces', dur: 160 },
-      { k: 'MOTION',     v: 'cubic-bezier(0.16, 1, 0.3, 1)', dur: 140 },
-      { k: 'A11Y',       v: 'WCAG AA · reduced-motion guarded', dur: 140 },
-      { k: 'ASSETS',     v: '05 cases · preloaded', dur: 150 },
-      { k: 'CURSOR',     v: 'contextual · magnetic · trailing', dur: 120 },
-      { k: 'SCROLL',     v: 'observer · sticky · horizontal rail', dur: 160 },
+      { k: 'GRID', v: '12col · 24 gutter · 1440 max', dur: 120 },
+      { k: 'TOKENS', v: 'warm · ink · amber · dual surfaces', dur: 160 },
+      { k: 'MOTION', v: 'cubic-bezier(0.16, 1, 0.3, 1)', dur: 140 },
+      { k: 'A11Y', v: 'WCAG AA · reduced-motion guarded', dur: 140 },
+      { k: 'ASSETS', v: '05 cases · preloaded', dur: 150 },
+      { k: 'CURSOR', v: 'contextual · magnetic · trailing', dur: 120 },
+      { k: 'SCROLL', v: 'observer · sticky · horizontal rail', dur: 160 },
     ],
     [],
   );
 
   const curtainDur = alreadyBooted ? 300 : 900;
-  const pauseDur   = alreadyBooted ? 0 : 220;
+  const pauseDur = alreadyBooted ? 0 : 220;
 
   // Return visits: skip running phase — show all lines as done, progress full
   const [step, setStep] = useState(() => alreadyBooted ? lines.length : 0);
