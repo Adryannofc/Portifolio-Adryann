@@ -87,6 +87,16 @@ export function Diagnostico() {
     load();
   }, [slug]);
 
+  useEffect(() => {
+    if (!data) return;
+    document.querySelectorAll<HTMLElement>(
+      '.diag-page [data-anim], .diag-page .diag-pills-wrap, ' +
+      '.diag-page .diag-platform-grid, .diag-page .diag-problem-list, ' +
+      '.diag-page .diag-recs-list, .diag-page .diag-cta-block, ' +
+      '.diag-page .diag-counter, .diag-page .ba-item'
+    ).forEach(el => el.setAttribute('data-revealed', 'true'));
+  }, [data]);
+
   // Hero
   const scoreRef         = useDiagReveal<HTMLDivElement>(100);
   const pillsRef         = useDiagReveal<HTMLDivElement>(350);
