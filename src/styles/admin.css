@@ -473,6 +473,43 @@
 
 .admin-spacer { height: 24px; }
 
+/* ── Import mode ── */
+.admin-mode-tabs {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.admin-mode-tab {
+  flex: 1;
+  padding: 8px 16px;
+  font-size: 13px;
+  background: transparent;
+  border: none;
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.admin-mode-tab:hover { background: var(--ink-1); }
+.admin-mode-tab.active { background: var(--accent); color: #fff; }
+
+.admin-import-block { display: flex; flex-direction: column; gap: 16px; }
+
+.admin-import-hint {
+  font-size: 13px;
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+.admin-import-textarea {
+  min-height: 360px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 640px) {
   .admin-content { padding: 24px 16px 80px; }

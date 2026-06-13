@@ -273,6 +273,22 @@ function RecomendacaoCard({
   );
 }
 
+function diagnosticoToFormState(d: DiagnosticoData): FormState {
+  return {
+    ...EMPTY_FORM,
+    ...d,
+    _platforms: {
+      instagram: !!d.plataformas.instagram,
+      facebook:  !!d.plataformas.facebook,
+      youtube:   !!d.plataformas.youtube,
+      tiktok:    !!d.plataformas.tiktok,
+      linkedin:  !!d.plataformas.linkedin,
+    },
+    _hasSite:         !!d.site,
+    _hasInvestimento: !!d.investimento,
+  };
+}
+
 /* ─── Main Component ─── */
 
 export function AdminDiagnosticoForm() {
@@ -288,6 +304,9 @@ export function AdminDiagnosticoForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loadingForm, setLoadingForm] = useState(isEditing);
+  const [importMode,  setImportMode]  = useState(false);
+  const [importJson,  setImportJson]  = useState('');
+  const [importError, setImportError] = useState('');
 
   /* Load existing data when editing */
   useEffect(() => {
@@ -300,20 +319,7 @@ export function AdminDiagnosticoForm() {
       .then(({ data, error }) => {
         if (error || !data) { setError('Diagnóstico não encontrado.'); setLoadingForm(false); return; }
         const d = data.data as DiagnosticoData;
-        setForm({
-          ...EMPTY_FORM,
-          ...d,
-          ativo: data.ativo,
-          _platforms: {
-            instagram: !!d.plataformas.instagram,
-            facebook: !!d.plataformas.facebook,
-            youtube: !!d.plataformas.youtube,
-            tiktok: !!d.plataformas.tiktok,
-            linkedin: !!d.plataformas.linkedin,
-          },
-          _hasSite: !!d.site,
-          _hasInvestimento: !!d.investimento,
-        });
+        setForm(diagnosticoToFormState({ ...d, ativo: data.ativo }));
         setSlugManual(true);
         setLoadingForm(false);
       });
@@ -379,6 +385,104 @@ export function AdminDiagnosticoForm() {
   }
   function removeRecomendacao(idx: number) {
     set('recomendacoes', form.recomendacoes.filter((_, i) => i !== idx));
+  }
+
+  /* Import */
+  function handleImport() {
+    setImportError('');
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(importJson);
+    } catch {
+      setImportError('JSON inválido — verifique a formatação.');
+      return;
+    }
+    const d = parsed as DiagnosticoData;
+    if (!d.empresa) { setImportError('Campo obrigatório ausente: empresa'); return; }
+    if (!d.plataformas?.googleBusiness) { setImportError('Campo obrigatório ausente: plataformas.googleBusiness'); return; }
+    setForm(diagnosticoToFormState(d));
+    setImportMode(false);
+    setStep(0);
+  }
+
+  function copyPrompt() {
+    const schema = `{
+  "slug": "nome-empresa",
+  "empresa": "Nome Completo",
+  "segmento": "Ex: Assistência técnica Apple",
+  "cidade": "...",
+  "estado": "UF",
+  "dataGerado": "YYYY-MM-DD",
+  "endereco": "...",
+  "telefone": "...",
+  "especialidade": "...",
+  "problemaHeadline": "Uma frase sobre o problema central de visibilidade no Google",
+  "plataformas": {
+    "googleBusiness": {
+      "rating": 4.5,
+      "reviews": 80,
+      "verificado": true,
+      "temFotos": true,
+      "horarioPreenchido": true,
+      "categoriasOk": false
+    }
+  },
+  "busca": {
+    "palavraChave": "termo principal de busca local",
+    "volumeEstimado": "médio",
+    "posicaoAtual": null
+  },
+  "competitors": [
+    {
+      "name": "Concorrente A",
+      "rating": 4.8,
+      "reviews": 60,
+      "hasSite": true,
+      "status": "Aparece",
+      "siteQualidade": "básico"
+    }
+  ],
+  "problemas": [
+    {
+      "categoria": "busca",
+      "titulo": "Título do problema",
+      "descricao": "Descrição detalhada e impacto no negócio",
+      "impacto": "alto"
+    }
+  ],
+  "oportunidadeTexto": "Parágrafo contextualizando pontos fortes do cliente e o que falta para ter mais visibilidade",
+  "recomendacoes": [
+    {
+      "prioridade": 1,
+      "servico": "site",
+      "titulo": "Nome da recomendação",
+      "descricao": "O que será feito e por quê",
+      "antes": "Situação atual",
+      "depois": "Resultado esperado"
+    }
+  ],
+  "ctaWhatsapp": "55DDDNUMERO",
+  "prazo": "15–25 dias",
+  "ativo": true
+}`;
+    const prompt = `Você é um especialista em marketing digital para pequenos negócios locais no Brasil.
+Preencha o JSON abaixo com base nos dados da empresa fornecidos.
+Retorne SOMENTE o JSON válido, sem texto adicional e sem comentários.
+
+Valores válidos para cada campo enum:
+- volumeEstimado: "baixo" | "médio" | "alto"
+- categoria (problema): "busca" | "redes" | "reputacao" | "site" | "conversao"
+- impacto: "alto" | "médio" | "baixo"
+- servico (recomendação): "site" | "seo-local" | "google-perfil" | "social" | "google-ads" | "conteudo"
+- siteQualidade: "básico" | "profissional" | "premium"
+- status (competitor): "Aparece" | "Invisível"
+- prioridade: 1 | 2 | 3
+
+${schema}
+
+Dados da empresa:
+[COLE AQUI AS INFORMAÇÕES DO CLIENTE]`;
+    navigator.clipboard.writeText(prompt).catch(() => {});
   }
 
   /* Save */
@@ -837,49 +941,95 @@ export function AdminDiagnosticoForm() {
           {isEditing ? `slug: ${form.slug}` : 'Preencha todas as informações do cliente'}
         </p>
 
-        {/* Steps */}
-        <div className="admin-steps">
-          {STEPS.map((label, i) => (
-            <div
-              key={i}
-              className={`admin-step ${i === step ? 'active' : i < step ? 'done' : ''}`}
-              onClick={() => setStep(i)}
-            >
-              {i < step ? '✓ ' : `${i + 1}. `}{label}
-            </div>
-          ))}
+        {/* Mode toggle */}
+        <div className="admin-mode-tabs">
+          <button
+            className={`admin-mode-tab ${!importMode ? 'active' : ''}`}
+            onClick={() => setImportMode(false)}
+          >
+            Preencher manualmente
+          </button>
+          <button
+            className={`admin-mode-tab ${importMode ? 'active' : ''}`}
+            onClick={() => setImportMode(true)}
+          >
+            Importar via IA
+          </button>
         </div>
 
         {error && <div className="admin-error">{error}</div>}
         {success && <div className="admin-success">{success}</div>}
 
-        {renderStep()}
-
-        {/* Navigation */}
-        <div className="admin-form-nav">
-          <button
-            className="admin-btn"
-            onClick={() => setStep(s => Math.max(0, s - 1))}
-            disabled={step === 0}
-            style={{ opacity: step === 0 ? 0.4 : 1 }}
-          >
-            ← Anterior
-          </button>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <button className="admin-btn" onClick={save} disabled={saving}>
-              {saving ? 'Salvando...' : 'Salvar rascunho'}
-            </button>
-            {step < STEPS.length - 1 ? (
-              <button className="admin-btn admin-btn-primary" onClick={() => setStep(s => s + 1)}>
-                Próximo →
+        {importMode ? (
+          <div className="admin-import-block">
+            <p className="admin-import-hint">
+              Cole abaixo o JSON gerado pela IA. Use o botão "Copiar prompt" para obter o prompt pronto para usar no Claude.ai ou ChatGPT.
+            </p>
+            <div className="admin-list-actions">
+              <button className="admin-btn admin-btn-sm" onClick={copyPrompt}>
+                Copiar prompt para IA
               </button>
-            ) : (
-              <button className="admin-btn admin-btn-primary" onClick={save} disabled={saving}>
-                {saving ? 'Publicando...' : isEditing ? 'Atualizar' : 'Publicar'}
+            </div>
+            <textarea
+              className="admin-textarea admin-import-textarea"
+              value={importJson}
+              onChange={e => setImportJson(e.target.value)}
+              placeholder={'{\n  "empresa": "Nome do Cliente",\n  ...\n}'}
+            />
+            {importError && <div className="admin-error">{importError}</div>}
+            <div className="admin-form-nav">
+              <button className="admin-btn" onClick={() => setImportMode(false)}>
+                ← Cancelar
               </button>
-            )}
+              <button className="admin-btn admin-btn-primary" onClick={handleImport}>
+                Importar e revisar
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <>
+            {/* Steps */}
+            <div className="admin-steps">
+              {STEPS.map((label, i) => (
+                <div
+                  key={i}
+                  className={`admin-step ${i === step ? 'active' : i < step ? 'done' : ''}`}
+                  onClick={() => setStep(i)}
+                >
+                  {i < step ? '✓ ' : `${i + 1}. `}{label}
+                </div>
+              ))}
+            </div>
+
+            {renderStep()}
+
+            {/* Navigation */}
+            <div className="admin-form-nav">
+              <button
+                className="admin-btn"
+                onClick={() => setStep(s => Math.max(0, s - 1))}
+                disabled={step === 0}
+                style={{ opacity: step === 0 ? 0.4 : 1 }}
+              >
+                ← Anterior
+              </button>
+              <div style={{ display: 'flex', gap: 12 }}>
+                <button className="admin-btn" onClick={save} disabled={saving}>
+                  {saving ? 'Salvando...' : 'Salvar rascunho'}
+                </button>
+                {step < STEPS.length - 1 ? (
+                  <button className="admin-btn admin-btn-primary" onClick={() => setStep(s => s + 1)}>
+                    Próximo →
+                  </button>
+                ) : (
+                  <button className="admin-btn admin-btn-primary" onClick={save} disabled={saving}>
+                    {saving ? 'Publicando...' : isEditing ? 'Atualizar' : 'Publicar'}
+                  </button>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

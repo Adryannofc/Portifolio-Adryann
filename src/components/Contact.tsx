@@ -50,12 +50,12 @@ export function Contact() {
             <Overline>ELSEWHERE</Overline>
             <ul className="contact-links">
               <li>
-                <ULink href="https://github.com" external>
+                <ULink href="https://github.com/Adryannofc" external>
                   GitHub
                 </ULink>
               </li>
               <li>
-                <ULink href="https://linkedin.com" external>
+                <ULink href="https://www.linkedin.com/in/adryann-felix-7a3b4925b/" external>
                   LinkedIn
                 </ULink>
               </li>
