@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { useI18n } from './contexts/I18nContext';
 import { BootLoader } from './components/BootLoader';
 import { BottomNav } from './components/BottomNav';
 import { Cursor } from './components/Cursor';
@@ -55,12 +56,17 @@ function Home() {
 }
 
 export default function App() {
+  const { t } = useI18n();
   const location = useLocation();
   const isHome = location.pathname === '/';
   const isAdmin = location.pathname.startsWith('/admin');
   const [booted, setBooted] = useState(!isHome);
   const [tweaks, setTweaks] = useState<Tweaks>(() => readTweakDefaults());
   const [panelOpen, setPanelOpen] = useState(false);
+
+  useEffect(() => {
+    document.title = t.meta.title;
+  }, [t.meta.title]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', tweaks.theme);

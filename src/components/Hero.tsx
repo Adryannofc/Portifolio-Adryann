@@ -2,8 +2,10 @@ import type { CSSProperties } from 'react';
 import { useRef, useEffect } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { Overline } from './primitives';
+import { useI18n } from '../contexts/I18nContext';
 
 export function Hero() {
+  const { t } = useI18n();
   const ref = useReveal<HTMLElement>();
   const portraitRef = useRef<HTMLImageElement>(null);
 
@@ -37,10 +39,10 @@ export function Hero() {
     <section id="top" className="hero" ref={ref} data-screen-label="Hero">
       <div className="hero-inner">
         <div className="hero-meta">
-          <span className="mono hero-meta-tag">[ PORTFOLIO · 2026 ]</span>
+          <span className="mono hero-meta-tag">{t.hero.meta}</span>
           <span className="hero-meta-rule" />
           <span className="mono hero-meta-tag hero-meta-accent">
-            <span className="amber-dot" aria-hidden /> ACCEPTING PROJECTS · Q2
+            <span className="amber-dot" aria-hidden /> {t.hero.status}
           </span>
         </div>
 
@@ -48,11 +50,11 @@ export function Hero() {
 
         <h1 className="hero-display">
           <span className="mask-reveal" style={delay('60ms')}>
-            <span>I build things</span>
+            <span>{t.hero.h1[0]}</span>
           </span>
           <br />
           <span className="mask-reveal" style={delay('160ms')}>
-            <span>software that</span>
+            <span>{t.hero.h1[1]}</span>
           </span>
           <br />
           <span className="mask-reveal" style={delay('260ms')}>
@@ -60,7 +62,7 @@ export function Hero() {
               <span className="hero-arrow" aria-hidden>
                 ⟶
               </span>
-              &nbsp;feels inevitable.
+              &nbsp;{t.hero.h1[2]}
             </span>
           </span>
         </h1>
@@ -70,7 +72,7 @@ export function Hero() {
         </div>
 
         <div className="hero-scroll-hint reveal" style={delay('820ms')}>
-          <Overline>SCROLL ↓ · 01 / 07</Overline>
+          <Overline>{t.hero.scroll}</Overline>
           <div className="hero-scroll-line">
             <div className="hero-scroll-line-fill" />
           </div>

@@ -1,0 +1,93 @@
+export const ptBR = {
+  nav: {
+    work: 'Trabalhos',
+    process: 'Processo',
+    about: 'Sobre',
+    index: 'Índice',
+    contact: 'Contato',
+    langToggle: 'EN',
+    available: 'DISPONÍVEL · T2',
+  },
+  hero: {
+    meta: '[ PORTFÓLIO · 2026 ]',
+    status: 'ACEITANDO PROJETOS · T2',
+    h1: ['Construo coisas,', 'software que', 'parece inevitável.'],
+    scroll: 'ROLAR ↓ · 01 / 07',
+  },
+  work: {
+    eyebrow: 'TRABALHOS SELECIONADOS · 2023 — 2025',
+    h2: ['Cinco projetos,', 'cinco problemas.'],
+    moreWork: 'MAIS TRABALHOS',
+    showAll: 'Ver todos os trabalhos',
+    moreSingular: 'projeto',
+    morePlural: 'projetos',
+    prev: 'Projeto anterior',
+    next: 'Próximo projeto',
+    role: 'FUNÇÃO',
+  },
+  process: {
+    eyebrow: 'PROCESSO · COMO TRABALHO',
+    h2: ['Quatro fases.', 'Zero drama.'],
+    duration: '~ 3 a 8 semanas típicas',
+  },
+  about: {
+    eyebrow: 'SOBRE · BIO',
+    photoCaption: 'FOZ DO IGUAÇU · BR',
+    photoCredit: 'FOTO POR — TBD',
+    quotePre: 'Trato software ',
+    quoteEm: 'como um tipógrafo trata um parágrafo',
+    quotePost: ' — cada detalhe está trabalhando, ou está no caminho.',
+    bio: [
+      'Sou Adryann — engenheiro de software de Foz do Iguaçu, na tríplice fronteira. Construo produtos web para clientes que querem a qualidade de um time de produto sem a folha de pagamento de um.',
+      'Os últimos cinco anos foram uma especialização silenciosa: a costura entre intenção de design e código em produção. Trabalho solo ou embarcado, de forma assíncrona, em PT e EN, entregando pequeno toda semana.',
+    ],
+    facts: {
+      languages: 'IDIOMAS',
+      timezone: 'FUSO HORÁRIO',
+      focus: 'FOCO',
+      avoiding: 'NÃO TRABALHO COM',
+      focusVal: 'Apps web · sites de marketing · ferramentas internas',
+      avoidingVal: 'Cripto · apostas · AI slop',
+    },
+  },
+  contact: {
+    eyebrow: '07 / CONTATO — VAMOS FALAR',
+    h2: ['Tem um projeto', 'que merece', 'cuidado'],
+    calendar: 'Agendar 30 min',
+    elsewhere: 'EM OUTROS LUGARES',
+    direct: 'DIRETO',
+    based: 'BASEADO EM',
+  },
+  footer: {
+    built: 'CONSTRUÍDO NO BROWSER · SEM TEMPLATES',
+    backToTop: 'VOLTAR AO TOPO ↑',
+  },
+  index: {
+    eyebrow: 'ÍNDICE · TUDO',
+    title: 'O arquivo.',
+    sort: 'ORDENAR ·',
+    cols: {
+      title: 'TÍTULO',
+      type: 'TIPO',
+      stack: 'STACK',
+      year: 'ANO',
+      status: 'STATUS',
+    },
+    expand: {
+      type: 'Tipo',
+      year: 'Ano',
+      stack: 'Stack',
+      status: 'Status',
+    },
+  },
+  meta: {
+    title: 'Adryann Felix — Engenheiro de Software',
+    description:
+      'Adryann Felix — engenheiro de software de Foz do Iguaçu. Construo produtos web duráveis e cuidadosos, do front ao back.',
+  },
+  caseStudy: {
+    notFound: 'CASE STUDY NÃO ENCONTRADO',
+    notFoundMsg: 'O projeto "{slug}" ainda não tem um case study publicado.',
+    backToWork: '↑ Voltar para todos os trabalhos',
+  },
+};

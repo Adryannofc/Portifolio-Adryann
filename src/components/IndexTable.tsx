@@ -1,16 +1,18 @@
 import { useState, type CSSProperties } from 'react';
 import { useReveal } from '../hooks/useReveal';
-import { ARCHIVE } from '../data/projects';
+import { getArchive } from '../data/projects';
 import { SectionHead } from './Header';
+import { useI18n } from '../contexts/I18nContext';
 
 type SortKey = 'n' | 'title' | 'year';
 
 export function IndexTable() {
+  const { locale, t } = useI18n();
   const ref = useReveal<HTMLElement>();
   const [sort, setSort] = useState<SortKey>('n');
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  const sorted = [...ARCHIVE].sort((a, b) => {
+  const sorted = [...getArchive(locale)].sort((a, b) => {
     if (sort === 'year') return b.year.localeCompare(a.year);
     if (sort === 'title') return a.title.localeCompare(b.title);
     return a.n.localeCompare(b.n);
@@ -23,17 +25,17 @@ export function IndexTable() {
     <section id="index" className="idx" ref={ref} data-screen-label="07 Index">
       <SectionHead
         index="07 /"
-        eyebrow="INDEX · EVERYTHING"
+        eyebrow={t.index.eyebrow}
         title={
           <>
             <span className="mask-reveal">
-              <span>The archive.</span>
+              <span>{t.index.title}</span>
             </span>
           </>
         }
         right={
           <div className="idx-sort mono">
-            <span>SORT ·</span>
+            <span>{t.index.sort}</span>
             {/* Desktop: individual buttons */}
             <span className="idx-sort-btns">
               {(['n', 'title', 'year'] as SortKey[]).map((k) => (
@@ -65,11 +67,11 @@ export function IndexTable() {
       <div className="idx-table">
         <div className="idx-thead mono">
           <span>#</span>
-          <span>TITLE</span>
-          <span>TYPE</span>
-          <span>STACK</span>
-          <span>YEAR</span>
-          <span>STATUS</span>
+          <span>{t.index.cols.title}</span>
+          <span>{t.index.cols.type}</span>
+          <span>{t.index.cols.stack}</span>
+          <span>{t.index.cols.year}</span>
+          <span>{t.index.cols.status}</span>
           {/* Spacer for expand icon column on mobile */}
           <span aria-hidden />
         </div>
@@ -109,19 +111,19 @@ export function IndexTable() {
               {/* Accordion sub-row: visible on mobile when expanded */}
               <div className="idx-row-detail" aria-hidden={!isExpanded}>
                 <div>
-                  <div className="idx-detail-label">Type</div>
+                  <div className="idx-detail-label">{t.index.expand.type}</div>
                   <span className="mono">{r.kind}</span>
                 </div>
                 <div>
-                  <div className="idx-detail-label">Year</div>
+                  <div className="idx-detail-label">{t.index.expand.year}</div>
                   <span className="mono">{r.year}</span>
                 </div>
                 <div>
-                  <div className="idx-detail-label">Stack</div>
+                  <div className="idx-detail-label">{t.index.expand.stack}</div>
                   <span className="mono">{r.stack}</span>
                 </div>
                 <div>
-                  <div className="idx-detail-label">Status</div>
+                  <div className="idx-detail-label">{t.index.expand.status}</div>
                   <span className={`mono idx-status idx-status-${r.status.toLowerCase()}`}>
                     <span className="idx-status-dot" />
                     {r.status}

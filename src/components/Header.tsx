@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useLiveClock } from '../hooks/useLiveClock';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { Overline, ULink } from './primitives';
+import { useI18n } from '../contexts/I18nContext';
 
 import logoImage from '../../public/images/Logo-adryann.svg';
 type Theme = 'dark' | 'light';
@@ -15,6 +16,7 @@ interface HeaderProps {
 }
 
 export function Header({ theme, setTheme }: HeaderProps) {
+  const { locale, setLocale, t } = useI18n();
   const clock = useLiveClock('America/Sao_Paulo');
   const progress = useScrollProgress();
   const location = useLocation();
@@ -68,11 +70,11 @@ export function Header({ theme, setTheme }: HeaderProps) {
   const closeMenu = () => setMenuOpen(false);
 
   const navLinks: [string, string][] = [
-    ['#work', 'Work'],
-    ['#process', 'Process'],
-    ['#about', 'About'],
-    ['#index', 'Index'],
-    ['#contact', 'Contact'],
+    ['#work', t.nav.work],
+    ['#process', t.nav.process],
+    ['#about', t.nav.about],
+    ['#index', t.nav.index],
+    ['#contact', t.nav.contact],
   ];
 
   return (
@@ -90,16 +92,24 @@ export function Header({ theme, setTheme }: HeaderProps) {
           </a>
 
           <nav className="site-nav" aria-label="Primary">
-            <ULink href={`${linkPrefix}#work`}>Work</ULink>
-            <ULink href={`${linkPrefix}#process`}>Process</ULink>
-            <ULink href={`${linkPrefix}#about`}>About</ULink>
-            <ULink href={`${linkPrefix}#index`}>Index</ULink>
+            <ULink href={`${linkPrefix}#work`}>{t.nav.work}</ULink>
+            <ULink href={`${linkPrefix}#process`}>{t.nav.process}</ULink>
+            <ULink href={`${linkPrefix}#about`}>{t.nav.about}</ULink>
+            <ULink href={`${linkPrefix}#index`}>{t.nav.index}</ULink>
           </nav>
 
           <div className="site-meta">
             <span className="mono site-clock" aria-label="Local time in Foz do Iguaçu">
               <span className="site-clock-dot" /> FOZ · {clock}
             </span>
+            <button
+              className="theme-toggle"
+              onClick={() => setLocale(locale === 'pt-BR' ? 'en' : 'pt-BR')}
+              aria-label={`Switch to ${locale === 'pt-BR' ? 'English' : 'Português'}`}
+              data-cursor="link"
+            >
+              <span className="mono">{t.nav.langToggle}</span>
+            </button>
             <button
               className="theme-toggle"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -109,7 +119,7 @@ export function Header({ theme, setTheme }: HeaderProps) {
               <span className="mono">{theme === 'dark' ? '☾ DARK' : '☀ LIGHT'}</span>
             </button>
             <a className="contact-cta" href={`${linkPrefix}#contact`} data-cursor="link">
-              <span>Contact</span>
+              <span>{t.nav.contact}</span>
               <span className="contact-dot" aria-hidden />
             </a>
             <button
@@ -151,7 +161,7 @@ export function Header({ theme, setTheme }: HeaderProps) {
           <span className="mono">{theme === 'dark' ? '☀ LIGHT MODE' : '☾ DARK MODE'}</span>
         </button>
         <div className="mobile-menu-status">
-          <span className="amber-dot" aria-hidden /> AVAILABLE · Q2
+          <span className="amber-dot" aria-hidden /> {t.nav.available}
         </div>
       </div>
 

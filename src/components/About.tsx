@@ -2,8 +2,10 @@ import { useRef, useEffect, type CSSProperties } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { Overline } from './primitives';
 import { SectionHead } from './Header';
+import { useI18n } from '../contexts/I18nContext';
 
 export function About() {
+  const { t } = useI18n();
   const ref = useReveal<HTMLElement>();
   const aboutPortraitRef = useRef<HTMLImageElement>(null);
 
@@ -28,7 +30,7 @@ export function About() {
 
   return (
     <section id="about" className="about" ref={ref} data-screen-label="05 About">
-      <SectionHead index="06 /" eyebrow="ABOUT · BIO" title="" />
+      <SectionHead index="06 /" eyebrow={t.about.eyebrow} title="" />
 
       <div className="about-grid">
         <div className="about-portrait-col">
@@ -64,65 +66,56 @@ export function About() {
             />
           </div>
           <div className="mono about-portrait-cap">
-            <span>FOZ DO IGUAÇU · BR</span>
-            <span>SHOT BY — TBD</span>
+            <span>{t.about.photoCaption}</span>
+            <span>{t.about.photoCredit}</span>
           </div>
         </div>
 
         <div className="about-copy">
           <p
             className="h2 about-quote reveal"
-            style={{ ['--reveal-delay' as string]: '80ms' } as CSSProperties}
+            style={{ '--reveal-delay': '80ms' } as CSSProperties}
           >
-            I treat software the way{' '}
-            <span className="about-em">a typographer treats a paragraph</span> — every detail is
-            either doing work, or it’s in the way.
+            {t.about.quotePre}
+            <span className="about-em">{t.about.quoteEm}</span>
+            {t.about.quotePost}
           </p>
 
           <div
             className="about-body reveal"
-            style={{ ['--reveal-delay' as string]: '160ms' } as CSSProperties}
+            style={{ '--reveal-delay': '160ms' } as CSSProperties}
           >
-            <p>
-              I’m Adryann — a software engineer from Foz do Iguaçu, on the Brazilian tri-border. I
-              build web products for clients who want the craft of a product team without the
-              payroll of one.
-            </p>
-            <p>
-              My last five years have been a quiet specialization: the seam between design intent
-              and production code. I work solo or embedded, asynchronously, across PT and EN, and I
-              ship small every week.
-            </p>
+            {t.about.bio.map((p, i) => <p key={i}>{p}</p>)}
           </div>
 
           <div
             className="about-facts reveal"
-            style={{ ['--reveal-delay' as string]: '220ms' } as CSSProperties}
+            style={{ '--reveal-delay': '220ms' } as CSSProperties}
           >
             <dl>
               <div>
                 <dt>
-                  <Overline>LANGUAGES</Overline>
+                  <Overline>{t.about.facts.languages}</Overline>
                 </dt>
                 <dd>PT · EN · ES</dd>
               </div>
               <div>
                 <dt>
-                  <Overline>TIMEZONE</Overline>
+                  <Overline>{t.about.facts.timezone}</Overline>
                 </dt>
                 <dd>GMT-03</dd>
               </div>
               <div>
                 <dt>
-                  <Overline>FOCUS</Overline>
+                  <Overline>{t.about.facts.focus}</Overline>
                 </dt>
-                <dd>Web apps · marketing sites · internal tools</dd>
+                <dd>{t.about.facts.focusVal}</dd>
               </div>
               <div>
                 <dt>
-                  <Overline>AVOIDING</Overline>
+                  <Overline>{t.about.facts.avoiding}</Overline>
                 </dt>
-                <dd>Crypto · gambling · AI slop</dd>
+                <dd>{t.about.facts.avoidingVal}</dd>
               </div>
             </dl>
           </div>

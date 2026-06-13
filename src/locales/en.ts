@@ -1,0 +1,93 @@
+export const en = {
+  nav: {
+    work: 'Work',
+    process: 'Process',
+    about: 'About',
+    index: 'Index',
+    contact: 'Contact',
+    langToggle: 'PT',
+    available: 'AVAILABLE · Q2',
+  },
+  hero: {
+    meta: '[ PORTFOLIO · 2026 ]',
+    status: 'ACCEPTING PROJECTS · Q2',
+    h1: ['I build things', 'software that', 'feels inevitable.'],
+    scroll: 'SCROLL ↓ · 01 / 07',
+  },
+  work: {
+    eyebrow: 'SELECTED WORK · 2023 — 2025',
+    h2: ['Five projects,', 'five problems.'],
+    moreWork: 'MORE WORK',
+    showAll: 'Show all work',
+    moreSingular: 'project',
+    morePlural: 'projects',
+    prev: 'Previous project',
+    next: 'Next project',
+    role: 'ROLE',
+  },
+  process: {
+    eyebrow: 'PROCESS · HOW I WORK',
+    h2: ['Four phases.', 'Zero drama.'],
+    duration: '~ 3 to 8 weeks typical',
+  },
+  about: {
+    eyebrow: 'ABOUT · BIO',
+    photoCaption: 'FOZ DO IGUAÇU · BR',
+    photoCredit: 'SHOT BY — TBD',
+    quotePre: 'I treat software the way ',
+    quoteEm: 'a typographer treats a paragraph',
+    quotePost: ' — every detail is either doing work, or it\'s in the way.',
+    bio: [
+      'I\'m Adryann — a software engineer from Foz do Iguaçu, on the Brazilian tri-border. I build web products for clients who want the craft of a product team without the payroll of one.',
+      'My last five years have been a quiet specialization: the seam between design intent and production code. I work solo or embedded, asynchronously, across PT and EN, and I ship small every week.',
+    ],
+    facts: {
+      languages: 'LANGUAGES',
+      timezone: 'TIMEZONE',
+      focus: 'FOCUS',
+      avoiding: 'AVOIDING',
+      focusVal: 'Web apps · marketing sites · internal tools',
+      avoidingVal: 'Crypto · gambling · AI slop',
+    },
+  },
+  contact: {
+    eyebrow: '07 / CONTACT — LET\'S TALK',
+    h2: ['Got a project', 'that deserves', 'care'],
+    calendar: 'Book 30 min',
+    elsewhere: 'ELSEWHERE',
+    direct: 'DIRECT',
+    based: 'BASED',
+  },
+  footer: {
+    built: 'BUILT IN THE BROWSER · NO TEMPLATES',
+    backToTop: 'BACK TO TOP ↑',
+  },
+  index: {
+    eyebrow: 'INDEX · EVERYTHING',
+    title: 'The archive.',
+    sort: 'SORT ·',
+    cols: {
+      title: 'TITLE',
+      type: 'TYPE',
+      stack: 'STACK',
+      year: 'YEAR',
+      status: 'STATUS',
+    },
+    expand: {
+      type: 'Type',
+      year: 'Year',
+      stack: 'Stack',
+      status: 'Status',
+    },
+  },
+  meta: {
+    title: 'Adryann Felix — Software Engineer',
+    description:
+      'Adryann Felix — software engineer based in Foz do Iguaçu. I build calm, durable web products end-to-end.',
+  },
+  caseStudy: {
+    notFound: 'CASE STUDY NOT FOUND',
+    notFoundMsg: 'Project "{slug}" doesn\'t have a published case study yet.',
+    backToWork: '↑ Back to all work',
+  },
+};

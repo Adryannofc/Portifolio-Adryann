@@ -73,6 +73,13 @@ export interface CaseStudyContent {
   notes: ImplNote[];
   roadmap: RoadmapItem[];
   nav: { prev?: CaseStudyNav; next?: CaseStudyNav };
+  // PT-BR overrides
+  taglinePt?: string;
+  overviewPt?: { problem: string; solution: string; result: string };
+  briefPt?: string[];
+  metaPt?: Array<{ k: string; v: string }>;
+  notesPt?: ImplNote[];
+  roadmapPt?: RoadmapItem[];
 }
 
 export interface Project {
@@ -87,6 +94,10 @@ export interface Project {
   tag: string;
   slug?: string;
   caseStudy?: CaseStudyContent;
+  // PT-BR overrides
+  descPt?: string;
+  rolePt?: string;
+  tagPt?: string;
 }
 
 const UTI_CASE: CaseStudyContent = {
@@ -199,6 +210,49 @@ const UTI_CASE: CaseStudyContent = {
       desc: 'Community gallery where devs publish learning projects.',
     },
   },
+  taglinePt: 'Landing page que converte visitas presenciais em leads no WhatsApp.',
+  overviewPt: {
+    problem: 'Loja de reparo invisível online, perdendo leads para grandes redes',
+    solution: 'Landing page dark, WhatsApp como CTA principal, dados estruturados para Google Maps',
+    result: '[ RESULTADO · A DEFINIR ]',
+  },
+  briefPt: [
+    'UTI Informática & Celulares é uma assistência técnica especializada em Apple em Foz do Iguaçu. O fluxo de clientes presenciais da área central era constante, mas a presença online era inexistente — nenhum site, nenhuma otimização de perfil no Google Business e uma página no Facebook sem atualização desde 2022. Clientes em potencial pesquisando "conserto iPhone Foz" caíam nas concorrentes a dois quarteirões de distância.',
+    'O cliente tinha duas restrições fixas: sem custo mensal recorrente de construtor de site, e um mecanismo de conversão principal que o dono pudesse monitorar pelo celular. Formulário de contato tradicional estava fora de cogitação — ele não checa e-mail durante o dia. WhatsApp já era como 90% dos clientes chegavam à loja, então o briefing foi potencializar esse canal em vez de lutar contra ele.',
+    'Meta para o projeto de 3 semanas: publicar um site de página única que (a) rankeia para palavras-chave de intenção local dentro de Foz, (b) direciona cada CTA para uma mensagem pré-preenchida no WhatsApp, e (c) tem aparência premium suficiente para que a loja seja lida como especialista Apple em vez de bancada genérica de reparo. Sem rastreamento além do Google Search Console — o dono queria ver impressões de busca, não analisar sessões.',
+  ],
+  metaPt: [
+    { k: 'CLIENTE', v: 'UTI Informática & Celulares' },
+    { k: 'LOCALIZAÇÃO', v: 'Foz do Iguaçu, PR' },
+    { k: 'PRAZO', v: '3 semanas' },
+    { k: 'ENTREGA', v: 'Landing page + configuração SEO' },
+    { k: 'URL AO VIVO', v: '[ url · a definir ]' },
+  ],
+  notesPt: [
+    {
+      n: '01',
+      title: 'WhatsApp como mecanismo principal de conversão',
+      body: 'Cada CTA da página — hero, cada card de serviço, barra fixa inferior no mobile — direciona para wa.me/5545XXXXXXXXX com uma mensagem pré-preenchida que inclui a categoria de serviço (ex: "Vim pelo site — quero orçar conserto de iPhone"). A mensagem é interpretada no lado da loja para que o técnico saiba o contexto antes de abrir o chat.\n\nParâmetros UTM são adicionados ao próprio link wa.me: utm_source=site, utm_medium=hero_cta, utm_campaign=apple_repair. O app WhatsApp Business os oculta do lado do cliente, mas os mantém nos relatórios do operador — suficiente para distinguir qual CTA da página gerou o chat.\n\nPara negócios de serviço local, o trade-off é claro: formulários têm teto de conversão de 2-3% porque comprometem o cliente a esperar por uma resposta de e-mail que pode nunca chegar. WhatsApp tem taxa de abertura próxima de 100% e o operador já está na plataforma 8h por dia. Abrir mão das affordances de lead-scoring e automação de marketing de um formulário valeu o ganho de 4-5x na taxa de resposta.',
+    },
+    {
+      n: '02',
+      title: 'Dados estruturados para SEO local',
+      body: 'O schema JSON-LD LocalBusiness fica no <head>, declarando a loja como ElectronicsStore com coordenadas geográficas, horário de funcionamento, faixa de preço e três tipos de serviço explícitos (iPhoneRepair, MacRepair, iPadRepair). O NAP (Nome, Endereço, Telefone) do Google Business Profile é espelhado com exatidão — qualquer divergência entre o site e o perfil prejudicaria o ranking.\n\nO embed do Google Maps tem carregamento lazy, ativado por clique. O iframe padrão adiciona ~400ms ao LCP em 4G, e como apenas ~20% dos visitantes interagem com o mapa, o padrão de carregamento diferido preserva a velocidade de página para a maioria.\n\nOrçamento de velocidade mobile-first: LCP < 1,2s em 4G lento (perfil Slow 4G no Lighthouse), CLS < 0,05, TBT < 150ms. Atingido com inlining de CSS crítico, preload da imagem hero nos breakpoints responsivos e auto-hospedagem de dois pesos de fonte em vez dos quatro padrão do Google Fonts.',
+    },
+    {
+      n: '03',
+      title: 'Racional do design dark-first',
+      body: 'A paleta escura é um sinal de posicionamento, não uma preferência estética. A concorrência no mercado local — três redes em raio de 1km — usa fundos brancos com acentos em azul ou verde. Esse template é lido como bancada genérica de reparo. Os clientes da UTI estão dispostos a pagar 20-30% a mais por uma experiência de especialista Apple, e esperam esse enquadramento premium desde o primeiro frame.\n\nO dark também mantém proximidade visual ao próprio marketing da Apple sem cruzar para território de marca registrada. O vermelho de acento (#E8002D) é extraído da página de produto do iPhone 15 Pro Max — próximo o suficiente para registrar, diferente o suficiente para ser da UTI. Risco jurídico: nenhum, pois a cor em si não é protegida.\n\nCompatibilidade com OLED é um ganho secundário. Foz do Iguaçu tem ~85% de tráfego mobile em buscas de serviço local, e a maioria dos dispositivos recentes nessa faixa são OLED. Uma página escura consome ~40% menos bateria sob o mesmo brilho de pixel — não é um ponto de marketing, mas uma cortesia de UX que se acumula com o tempo de permanência.',
+    },
+  ],
+  roadmapPt: [
+    { priority: 'HIGH', name: 'Formulário de intake de reparo online', desc: 'Cliente registra dispositivo e problema antes de visitar. Reduz fricção, pré-qualifica leads.', effort: '~5 dias', status: 'SUGGESTED' },
+    { priority: 'HIGH', name: 'Rastreador de status de reparo', desc: 'Cliente insere número do ticket e vê o estágio do reparo. Reduz volume de suporte por telefone.', effort: '~8 dias', status: 'SUGGESTED' },
+    { priority: 'MEDIUM', name: 'Suporte multilíngue (PT/ES)', desc: 'Foz do Iguaçu, cidade de fronteira — clientes de língua espanhola da Argentina e Paraguai.', effort: '~2 dias', status: 'SUGGESTED' },
+    { priority: 'MEDIUM', name: 'Integração com Google Reviews', desc: 'Feed ao vivo de avaliações do Google Maps na página. Prova social sem curadoria manual.', effort: '~3 dias', status: 'SUGGESTED' },
+    { priority: 'LOW', name: 'Estimador de preço de reparo', desc: 'Widget interativo: selecione dispositivo + problema, receba faixa de preço. Reduz chamadas de orçamento.', effort: '~6 dias', status: 'SUGGESTED' },
+    { priority: 'LOW', name: 'Fluxo de chatbot no WhatsApp', desc: 'Primeira resposta automatizada com FAQ + direcionamento ao técnico.', effort: '~10 dias', status: 'SUGGESTED' },
+  ],
 };
 
 export const PROJECTS: Project[] = [
@@ -207,6 +261,7 @@ export const PROJECTS: Project[] = [
     status: 'LIVE',
     title: 'UTI Informática',
     desc: 'Landing page for Apple-focused repair service. Dark-first, WhatsApp-as-primary-CTA, local SEO.',
+    descPt: 'Landing page para assistência técnica especializada em Apple. Dark-first, WhatsApp como CTA principal, SEO local.',
     client: 'UTI Informática · Foz',
     year: '2025',
     role: 'Design + Dev · Solo',
@@ -220,11 +275,14 @@ export const PROJECTS: Project[] = [
     status: 'BETA',
     title: 'DevDex',
     desc: 'Community gallery where devs publish learning projects. GitHub OAuth, enrichment via API, likes + filters.',
+    descPt: 'Galeria comunitária onde devs publicam projetos de aprendizado. GitHub OAuth, enriquecimento via API, likes + filtros.',
     client: 'Open source · self-initiated',
     year: '2025',
     role: 'Product + Dev · Solo',
+    rolePt: 'Produto + Dev · Solo',
     stack: ['Next.js', 'TypeScript', 'Node', 'GitHub API'],
     tag: 'Product · OSS',
+    tagPt: 'Produto · OSS',
     slug: 'devdex',
   },
   {
@@ -232,11 +290,13 @@ export const PROJECTS: Project[] = [
     status: 'CASE',
     title: 'Cataratas Park Hotel',
     desc: 'Institutional site with direct booking integrated into Booking.com — cut OTA commission, own the funnel.',
+    descPt: 'Site institucional com reserva direta integrada ao Booking.com — reduz comissão de OTA, controla o funil.',
     client: 'Regional hotel · Foz',
     year: '2024',
     role: 'Frontend · Freelance',
     stack: ['Astro', 'Tailwind', 'Stripe'],
     tag: 'Booking · Web',
+    tagPt: 'Reserva · Web',
     slug: 'cataratas-park-hotel',
   },
   {
@@ -244,11 +304,13 @@ export const PROJECTS: Project[] = [
     status: 'CASE',
     title: 'Sabor da Fronteira',
     desc: 'QR-code digital menu per table, admin panel for live price updates, iFood integration.',
+    descPt: 'Cardápio digital via QR code por mesa, painel admin para atualizações de preço ao vivo, integração iFood.',
     client: 'Restaurant · Santa Terezinha',
     year: '2024',
     role: 'Fullstack · Solo',
     stack: ['React', 'Node', 'PostgreSQL'],
     tag: 'QR Menu · Admin',
+    tagPt: 'Cardápio QR · Admin',
     slug: 'sabor-da-fronteira',
   },
   {
@@ -256,6 +318,7 @@ export const PROJECTS: Project[] = [
     status: 'CASE',
     title: 'Iguaçu Social',
     desc: 'Institutional site for local NGO with donor capture, auto-emailed receipts, financial transparency panel.',
+    descPt: 'Site institucional para ONG local com captação de doadores, recibos automáticos por e-mail, painel de transparência financeira.',
     client: 'NGO · Foz',
     year: '2023',
     role: 'Fullstack · Pro bono',
@@ -289,3 +352,20 @@ export const ARCHIVE: ArchiveEntry[] = [
   { n: 'E/02', title: 'Paraná Tipografia', kind: 'Type specimen', stack: 'Astro · MDX', year: '2024', status: 'DRAFT' },
   { n: 'E/03', title: 'Shadermonk', kind: 'WebGL scratch', stack: 'Three · GLSL', year: '2024', status: 'DRAFT' },
 ];
+
+export function getArchive(locale: 'pt-BR' | 'en'): ArchiveEntry[] {
+  if (locale === 'en') return ARCHIVE;
+  return [
+    ...PROJECTS.map<ArchiveEntry>((p) => ({
+      n: p.n,
+      title: p.title,
+      kind: p.tagPt ?? p.tag,
+      stack: p.stack.join(' · '),
+      year: p.year,
+      status: p.status,
+    })),
+    { n: 'E/01', title: 'Sazerac · Experimento Kanban', kind: 'Playground', stack: 'Next · Zustand · DnD-kit', year: '2025', status: 'DRAFT' },
+    { n: 'E/02', title: 'Paraná Tipografia', kind: 'Type specimen', stack: 'Astro · MDX', year: '2024', status: 'DRAFT' },
+    { n: 'E/03', title: 'Shadermonk', kind: 'WebGL scratch', stack: 'Three · GLSL', year: '2024', status: 'DRAFT' },
+  ];
+}

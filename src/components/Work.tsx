@@ -4,6 +4,7 @@ import { useReveal } from '../hooks/useReveal';
 import { PROJECTS, type Project } from '../data/projects';
 import { Overline, Media, Button } from './primitives';
 import { SectionHead } from './Header';
+import { useI18n } from '../contexts/I18nContext';
 
 interface ProjectCardProps {
   p: Project;
@@ -12,6 +13,10 @@ interface ProjectCardProps {
 }
 
 function ProjectCard({ p, i, onEnter }: ProjectCardProps) {
+  const { locale, t } = useI18n();
+  const desc = locale === 'pt-BR' ? (p.descPt ?? p.desc) : p.desc;
+  const role = locale === 'pt-BR' ? (p.rolePt ?? p.role) : p.role;
+  const tag = locale === 'pt-BR' ? (p.tagPt ?? p.tag) : p.tag;
   const cardRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     const el = cardRef.current;
@@ -36,7 +41,7 @@ function ProjectCard({ p, i, onEnter }: ProjectCardProps) {
   const inner = (
     <>
       <div className="proj-card-media">
-        <Media label={`${p.n} · ${p.title.toUpperCase()}`} meta={p.tag.toUpperCase()} fill />
+        <Media label={`${p.n} · ${p.title.toUpperCase()}`} meta={tag.toUpperCase()} fill />
         <div className="proj-card-meta-top">
           <span className="mono proj-card-n">{p.n}</span>
           <span className={`proj-status proj-status-${p.status.toLowerCase()}`}>
@@ -50,7 +55,7 @@ function ProjectCard({ p, i, onEnter }: ProjectCardProps) {
         <h3 id={`p-${p.n}-title`} className="proj-card-title">
           {p.title}
         </h3>
-        <p className="proj-card-desc">{p.desc}</p>
+        <p className="proj-card-desc">{desc}</p>
 
         <div className="proj-card-foot">
           <div className="proj-card-stack">
@@ -61,8 +66,8 @@ function ProjectCard({ p, i, onEnter }: ProjectCardProps) {
             ))}
           </div>
           <div className="proj-card-role">
-            <Overline>ROLE</Overline>
-            <div className="mono proj-card-role-v">{p.role}</div>
+            <Overline>{t.work.role}</Overline>
+            <div className="mono proj-card-role-v">{role}</div>
           </div>
         </div>
       </div>
@@ -100,6 +105,7 @@ function ProjectCard({ p, i, onEnter }: ProjectCardProps) {
 const INITIAL_COUNT = 3;
 
 export function Work() {
+  const { t } = useI18n();
   const ref = useReveal<HTMLElement>();
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [active, setActive] = useState(0);
@@ -138,18 +144,18 @@ export function Work() {
       <div className="work-head">
         <SectionHead
           index="02 /"
-          eyebrow="SELECTED WORK · 2023 — 2025"
+          eyebrow={t.work.eyebrow}
           title={
             <span>
               <span className="mask-reveal">
-                <span>Five projects,</span>
+                <span>{t.work.h2[0]}</span>
               </span>
               <br />
               <span
                 className="mask-reveal"
                 style={{ ['--reveal-delay' as string]: '100ms' } as CSSProperties}
               >
-                <span>five problems.</span>
+                <span>{t.work.h2[1]}</span>
               </span>
             </span>
           }
@@ -179,17 +185,17 @@ export function Work() {
             ))}
             {!showAll && PROJECTS.length > INITIAL_COUNT && (
               <div className="rail-end rail-show-more" data-cursor="link">
-                <Overline>MORE WORK</Overline>
+                <Overline>{t.work.moreWork}</Overline>
                 <div className="h2" style={{ marginTop: 12, maxWidth: 320 }}>
-                  +{PROJECTS.length - INITIAL_COUNT} more{' '}
-                  {PROJECTS.length - INITIAL_COUNT === 1 ? 'project' : 'projects'}
+                  +{PROJECTS.length - INITIAL_COUNT}{' '}
+                  {PROJECTS.length - INITIAL_COUNT === 1 ? t.work.moreSingular : t.work.morePlural}
                 </div>
                 <Button
                   variant="primary"
                   style={{ marginTop: 24 }}
                   onClick={() => setShowAll(true)}
                 >
-                  Show all work
+                  {t.work.showAll}
                 </Button>
               </div>
             )}
@@ -200,7 +206,7 @@ export function Work() {
           <button
             className="rail-btn"
             onClick={() => scrollBy(-1)}
-            aria-label="Previous project"
+            aria-label={t.work.prev}
             data-cursor="link"
           >
             <span className="mono">←</span>
@@ -208,7 +214,7 @@ export function Work() {
           <button
             className="rail-btn"
             onClick={() => scrollBy(1)}
-            aria-label="Next project"
+            aria-label={t.work.next}
             data-cursor="link"
           >
             <span className="mono">→</span>

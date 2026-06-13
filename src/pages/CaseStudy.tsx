@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { PROJECTS } from '../data/projects';
 import { useReveal } from '../hooks/useReveal';
+import { useI18n } from '../contexts/I18nContext';
 import { CaseHeader } from '../components/case-study/CaseHeader';
 import { CaseOverview } from '../components/case-study/CaseOverview';
 import { CaseStyleGuide } from '../components/case-study/CaseStyleGuide';
@@ -12,6 +13,7 @@ import { SectionDots } from '../components/case-study/SectionDots';
 import { PageTransitionCurtain } from '../components/case-study/PageTransitionCurtain';
 
 export function CaseStudy() {
+  const { locale, t } = useI18n();
   const { slug } = useParams<{ slug: string }>();
   const project = PROJECTS.find((p) => p.slug === slug);
   const ref = useReveal<HTMLDivElement>();
@@ -21,17 +23,28 @@ export function CaseStudy() {
       <main className="case-dark">
         <div className="case-404">
           <div className="case-404-n mono">404</div>
-          <div className="overline">CASE STUDY NOT FOUND</div>
+          <div className="overline">{t.caseStudy.notFound}</div>
           <p className="body">
-            Project "{slug}" doesn't have a published case study yet.
+            {t.caseStudy.notFoundMsg.replace('{slug}', slug ?? '')}
           </p>
-          <Link to="/">↑ Back to all work</Link>
+          <Link to="/">{t.caseStudy.backToWork}</Link>
         </div>
       </main>
     );
   }
 
-  const cs = project.caseStudy;
+  const raw = project.caseStudy;
+  const cs = locale === 'pt-BR'
+    ? {
+        ...raw,
+        tagline: raw.taglinePt ?? raw.tagline,
+        overview: raw.overviewPt ?? raw.overview,
+        brief: raw.briefPt ?? raw.brief,
+        meta: raw.metaPt ?? raw.meta,
+        notes: raw.notesPt ?? raw.notes,
+        roadmap: raw.roadmapPt ?? raw.roadmap,
+      }
+    : raw;
 
   return (
     <main className="case-dark" ref={ref}>

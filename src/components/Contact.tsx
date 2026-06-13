@@ -1,53 +1,55 @@
-import type { CSSProperties } from 'react';
+﻿import type { CSSProperties } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { Overline, ULink, Button, Magnetic } from './primitives';
+import { useI18n } from '../contexts/I18nContext';
 
 export function Contact() {
+  const { t } = useI18n();
   const ref = useReveal<HTMLElement>();
   return (
     <section id="contact" className="contact" ref={ref} data-screen-label="07 Contact">
       <div className="contact-inner">
-        <Overline>07 / CONTACT — LET’S TALK</Overline>
+        <Overline>{t.contact.eyebrow}</Overline>
 
         <h2 className="contact-display">
           <span className="mask-reveal">
-            <span>Got a project</span>
+            <span>{t.contact.h2[0]}</span>
           </span>
           <br />
           <span
             className="mask-reveal"
-            style={{ ['--reveal-delay' as string]: '90ms' } as CSSProperties}
+            style={{ '--reveal-delay': '90ms' } as CSSProperties}
           >
-            <span>that deserves</span>
+            <span>{t.contact.h2[1]}</span>
           </span>
           <br />
           <span
             className="mask-reveal"
-            style={{ ['--reveal-delay' as string]: '180ms' } as CSSProperties}
+            style={{ '--reveal-delay': '180ms' } as CSSProperties}
           >
             <span>
-              care
-              <span className="contact-arrow">⟶</span>
+              {t.contact.h2[2]}
+              <span className="contact-arrow">&#x27F6;</span>
             </span>
           </span>
         </h2>
 
         <div className="contact-row">
           <Magnetic strength={0.25}>
-            <Button href="mailto:hey@adryann.dev" variant="primary" arrow>
-              hey@adryann.dev
+            <Button href="https://wa.me/558781209267" variant="primary" arrow>
+              Whastapp
             </Button>
           </Magnetic>
           <Magnetic strength={0.2}>
             <Button href="https://cal.com" variant="ghost" arrow>
-              Book 30 min
+              {t.contact.calendar}
             </Button>
           </Magnetic>
         </div>
 
         <div className="contact-grid">
           <div>
-            <Overline>ELSEWHERE</Overline>
+            <Overline>{t.contact.elsewhere}</Overline>
             <ul className="contact-links">
               <li>
                 <ULink href="https://github.com/Adryannofc" external>
@@ -72,24 +74,11 @@ export function Contact() {
             </ul>
           </div>
           <div>
-            <Overline>DIRECT</Overline>
-            <ul className="contact-links">
-              <li>
-                <ULink href="https://wa.me/5545999999999" external>
-                  WhatsApp · +55 45
-                </ULink>
-              </li>
-              <li>
-                <ULink href="tel:+5545999999999">+55 45 9999-9999</ULink>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <Overline>BASED</Overline>
+            <Overline>{t.contact.based}</Overline>
             <div className="mono contact-based">
               Foz do Iguaçu, BR
               <br />
-              —25.54° S, —54.58° W
+              {String.fromCharCode(0x2014)}25.54° S, {String.fromCharCode(0x2014)}54.58° W
               <br />
               GMT-03
             </div>
@@ -97,11 +86,11 @@ export function Contact() {
         </div>
 
         <footer className="site-footer mono">
-          <span>© ADRYANN FELIX · {new Date().getFullYear()}</span>
-          <span>BUILT IN THE BROWSER · NO TEMPLATES</span>
+          <span>&#169; ADRYANN FELIX · {new Date().getFullYear()}</span>
+          <span>{t.footer.built}</span>
           <span>
             <a href="#top" data-cursor="link">
-              BACK TO TOP ↑
+              {t.footer.backToTop}
             </a>
           </span>
         </footer>
