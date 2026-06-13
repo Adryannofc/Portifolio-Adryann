@@ -97,11 +97,23 @@ function ProjectCard({ p, i, onEnter }: ProjectCardProps) {
   );
 }
 
+const INITIAL_COUNT = 3;
+
 export function Work() {
   const ref = useReveal<HTMLElement>();
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    if (!showAll) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const cards = el.querySelectorAll<HTMLElement>('.proj-card');
+    const target = cards[INITIAL_COUNT];
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+  }, [showAll]);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -162,18 +174,25 @@ export function Work() {
       <div className="work-rail">
         <div className="rail-scroll" ref={scrollRef} data-cursor="drag">
           <div className="rail-track">
-            {PROJECTS.map((p, i) => (
+            {(showAll ? PROJECTS : PROJECTS.slice(0, INITIAL_COUNT)).map((p, i) => (
               <ProjectCard p={p} i={i} key={p.n} onEnter={setActive} />
             ))}
-            <div className="rail-end">
-              <Overline>END OF RAIL</Overline>
-              <div className="h2" style={{ marginTop: 12, maxWidth: 320 }}>
-                Want yours here next?
+            {!showAll && PROJECTS.length > INITIAL_COUNT && (
+              <div className="rail-end rail-show-more" data-cursor="link">
+                <Overline>MORE WORK</Overline>
+                <div className="h2" style={{ marginTop: 12, maxWidth: 320 }}>
+                  +{PROJECTS.length - INITIAL_COUNT} more{' '}
+                  {PROJECTS.length - INITIAL_COUNT === 1 ? 'project' : 'projects'}
+                </div>
+                <Button
+                  variant="primary"
+                  style={{ marginTop: 24 }}
+                  onClick={() => setShowAll(true)}
+                >
+                  Show all work
+                </Button>
               </div>
-              <Button href="#contact" variant="primary" style={{ marginTop: 24 }}>
-                Start a project
-              </Button>
-            </div>
+            )}
           </div>
         </div>
 

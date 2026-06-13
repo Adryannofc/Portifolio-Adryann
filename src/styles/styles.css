@@ -1007,8 +1007,27 @@
 }
 
 @media (max-width: 720px) {
-  .contact-grid { grid-template-columns: 1fr; }
-  .site-footer { flex-direction: column; gap: 10px; }
+  .contact-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-6);
+  }
+  .contact-grid > :last-child {
+    grid-column: 1 / -1;
+    padding-top: var(--s-4);
+    border-top: 1px solid rgba(240, 238, 233, 0.06);
+  }
+  .site-footer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 0;
+  }
+  .site-footer > :nth-child(2) {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+  .site-footer > :nth-child(3) {
+    order: 2;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════

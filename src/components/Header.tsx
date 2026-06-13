@@ -69,7 +69,6 @@ export function Header({ theme, setTheme }: HeaderProps) {
 
   const navLinks: [string, string][] = [
     ['#work', 'Work'],
-    ['#services', 'Services'],
     ['#process', 'Process'],
     ['#about', 'About'],
     ['#index', 'Index'],
@@ -92,7 +91,6 @@ export function Header({ theme, setTheme }: HeaderProps) {
 
           <nav className="site-nav" aria-label="Primary">
             <ULink href={`${linkPrefix}#work`}>Work</ULink>
-            <ULink href={`${linkPrefix}#services`}>Services</ULink>
             <ULink href={`${linkPrefix}#process`}>Process</ULink>
             <ULink href={`${linkPrefix}#about`}>About</ULink>
             <ULink href={`${linkPrefix}#index`}>Index</ULink>

@@ -22,12 +22,6 @@ const WhatsAppIcon = () => (
   </svg>
 );
 
-const ServicesIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-  </svg>
-);
-
 const AboutIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
@@ -65,12 +59,7 @@ export function BottomNav() {
           </span>
         </a>
 
-        <a href={`${prefix}#services`} className="bottom-nav-item" aria-label="Services">
-          <ServicesIcon />
-          <span className="bottom-nav-label">Services</span>
-        </a>
-
-        <a href={`${prefix}#about`} className="bottom-nav-item" aria-label="About">
+<a href={`${prefix}#about`} className="bottom-nav-item" aria-label="About">
           <AboutIcon />
           <span className="bottom-nav-label">About</span>
         </a>
