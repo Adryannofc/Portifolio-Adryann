@@ -393,6 +393,7 @@
 .btn-ghost:active { transform: scale(0.97); }
 .btn-arrow { display: inline-block; transition: transform 320ms var(--ease-out); }
 .btn:hover .btn-arrow { transform: translateX(4px); }
+.btn > span:first-child { display: inline-flex; align-items: center; gap: 8px; }
 
 /* ═══════════════════════════════════════════════════════════════
    SECTION HEAD

@@ -308,7 +308,7 @@ export function Diagnostico() {
           >
             Seus concorrentes aparecem no Google.
             <br />
-            {data.empresa} não.
+            <span className="diag-highlight">{data.empresa}</span>{' '}não.
           </h1>
 
           <p ref={heroSubRef} className="diag-hero-sub" data-anim="fade-in">
