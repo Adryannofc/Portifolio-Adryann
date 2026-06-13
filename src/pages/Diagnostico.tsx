@@ -6,6 +6,7 @@ import { DiagnosticoNotFound } from './DiagnosticoNotFound';
 import { DiagnosticoExpirado } from './DiagnosticoExpirado';
 import { useDiagReveal } from '../hooks/useDiagReveal';
 import { useCountUp } from '../hooks/useCountUp';
+import { Spinner } from '../components/Spinner';
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
@@ -143,7 +144,7 @@ export function Diagnostico() {
   const ctaRef       = useDiagReveal<HTMLDivElement>();
   const bridgeRef    = useDiagReveal<HTMLDivElement>();
 
-  if (loading) return <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--fg-muted)', fontFamily: 'var(--ff-mono)', fontSize: 13 }}>carregando...</div>;
+  if (loading) return <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner /></div>;
   if (!data) return <DiagnosticoNotFound />;
   if (!data.ativo) return <DiagnosticoExpirado />;
 

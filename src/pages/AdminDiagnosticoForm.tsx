@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../hooks/useAuth';
+import { Spinner } from '../components/Spinner';
 import type {
   DiagnosticoData,
   SiteInfo,
@@ -921,7 +922,7 @@ Dados da empresa:
   }
 
   if (loadingForm) {
-    return <div className="admin-loading">Carregando...</div>;
+    return <div className="admin-loading"><Spinner /></div>;
   }
 
   return (

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../hooks/useAuth';
+import { Spinner } from '../components/Spinner';
 
 interface DiagRow {
   id: string;
@@ -75,7 +76,7 @@ export function AdminDashboard() {
         {error && <div className="admin-error">{error}</div>}
 
         {loading ? (
-          <div style={{ color: 'var(--fg-muted)', fontSize: 14 }}>Carregando...</div>
+          <Spinner />
         ) : rows.length === 0 ? (
           <div className="admin-empty">
             Nenhum diagnóstico criado ainda.{' '}
