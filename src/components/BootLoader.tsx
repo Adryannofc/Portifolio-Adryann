@@ -13,30 +13,29 @@ interface BootLoaderProps {
 }
 
 export function BootLoader({ onDone }: BootLoaderProps) {
-  const [speed] = useState(() =>
-    localStorage.getItem('portfolio-booted') === '1' ? 0.5 : 1,
-  );
+  const [alreadyBooted] = useState(() => localStorage.getItem('portfolio-booted') === '1');
 
   const lines = useMemo<BootLine[]>(
     () => [
-      { k: 'TYPOGRAPHY', v: 'Plus Jakarta · JetBrains Mono', dur: Math.round(140 * speed) },
-      { k: 'GRID',       v: '12col · 24 gutter · 1440 max', dur: Math.round(120 * speed) },
-      { k: 'TOKENS',     v: 'warm · ink · amber · dual surfaces', dur: Math.round(160 * speed) },
-      { k: 'MOTION',     v: 'cubic-bezier(0.16, 1, 0.3, 1)', dur: Math.round(140 * speed) },
-      { k: 'A11Y',       v: 'WCAG AA · reduced-motion guarded', dur: Math.round(140 * speed) },
-      { k: 'ASSETS',     v: '05 cases · preloaded', dur: Math.round(150 * speed) },
-      { k: 'CURSOR',     v: 'contextual · magnetic · trailing', dur: Math.round(120 * speed) },
-      { k: 'SCROLL',     v: 'observer · sticky · horizontal rail', dur: Math.round(160 * speed) },
+      { k: 'TYPOGRAPHY', v: 'Plus Jakarta · JetBrains Mono', dur: 140 },
+      { k: 'GRID',       v: '12col · 24 gutter · 1440 max', dur: 120 },
+      { k: 'TOKENS',     v: 'warm · ink · amber · dual surfaces', dur: 160 },
+      { k: 'MOTION',     v: 'cubic-bezier(0.16, 1, 0.3, 1)', dur: 140 },
+      { k: 'A11Y',       v: 'WCAG AA · reduced-motion guarded', dur: 140 },
+      { k: 'ASSETS',     v: '05 cases · preloaded', dur: 150 },
+      { k: 'CURSOR',     v: 'contextual · magnetic · trailing', dur: 120 },
+      { k: 'SCROLL',     v: 'observer · sticky · horizontal rail', dur: 160 },
     ],
-    [speed],
+    [],
   );
 
-  const curtainDur = Math.round(900 * speed);
-  const pauseDur   = Math.round(220 * speed);
+  const curtainDur = alreadyBooted ? 300 : 900;
+  const pauseDur   = alreadyBooted ? 0 : 220;
 
-  const [step, setStep] = useState(0);
+  // Return visits: skip running phase — show all lines as done, progress full
+  const [step, setStep] = useState(() => alreadyBooted ? lines.length : 0);
   const [phase, setPhase] = useState<Phase>('running');
-  const [pct, setPct] = useState(0);
+  const [pct, setPct] = useState(() => alreadyBooted ? 1 : 0);
 
   useEffect(() => {
     if (step >= lines.length) return;
@@ -46,6 +45,10 @@ export function BootLoader({ onDone }: BootLoaderProps) {
 
   useEffect(() => {
     if (phase !== 'running') return;
+    if (alreadyBooted) {
+      const t = setTimeout(() => setPhase('curtain'), 0);
+      return () => clearTimeout(t);
+    }
     let raf = 0;
     const start = performance.now();
     const total = lines.reduce((a, l) => a + l.dur, 0) + pauseDur;
@@ -57,7 +60,7 @@ export function BootLoader({ onDone }: BootLoaderProps) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [phase, lines, pauseDur]);
+  }, [phase, lines, pauseDur, alreadyBooted]);
 
   useEffect(() => {
     if (phase !== 'curtain') return;
@@ -123,7 +126,7 @@ export function BootLoader({ onDone }: BootLoaderProps) {
             <div className="boot-bar-fill" style={{ width: `${Math.round(pct * 100)}%` }} />
           </div>
           <div className="boot-meta">
-            <span className="mono">READY IN {(1.2 * speed - pct * 1.2 * speed).toFixed(2)}s</span>
+            <span className="mono">READY IN {(1.2 * (1 - pct)).toFixed(2)}s</span>
             <span className="mono">{Math.round(pct * 100)}%</span>
             <span className="mono">PRESS ↵ TO ENTER</span>
           </div>
