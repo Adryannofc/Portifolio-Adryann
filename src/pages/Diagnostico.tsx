@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { DIAGNOSTICOS, type DiagnosticoData } from '../data/diagnosticos';
+import { DIAGNOSTICOS, fetchDiagnostico, type DiagnosticoData } from '../data/diagnosticos';
 import { PROJECTS, type ProjectStatus } from '../data/projects';
 import { DiagnosticoNotFound } from './DiagnosticoNotFound';
 import { DiagnosticoExpirado } from './DiagnosticoExpirado';
@@ -72,8 +72,20 @@ const CIRC = 289; // 2π × 46
 
 export function Diagnostico() {
   const { slug } = useParams<{ slug: string }>();
-  const data = DIAGNOSTICOS.find(d => d.slug === slug);
+  const [data, setData] = useState<DiagnosticoData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [fichaOpen, setFichaOpen] = useState(false);
+
+  useEffect(() => {
+    async function load() {
+      const remote = await fetchDiagnostico(slug ?? '');
+      if (remote) { setData(remote); setLoading(false); return; }
+      const local = DIAGNOSTICOS.find(d => d.slug === slug);
+      setData(local ?? null);
+      setLoading(false);
+    }
+    load();
+  }, [slug]);
 
   // Hero
   const scoreRef         = useDiagReveal<HTMLDivElement>(100);
@@ -103,6 +115,7 @@ export function Diagnostico() {
   const ctaRef       = useDiagReveal<HTMLDivElement>();
   const bridgeRef    = useDiagReveal<HTMLDivElement>();
 
+  if (loading) return <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--fg-muted)', fontFamily: 'var(--ff-mono)', fontSize: 13 }}>carregando...</div>;
   if (!data) return <DiagnosticoNotFound />;
   if (!data.ativo) return <DiagnosticoExpirado />;
 

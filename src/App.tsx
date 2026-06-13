@@ -14,6 +14,10 @@ import { Contact } from './components/Contact';
 import { TweaksPanel, type Tweaks } from './components/TweaksPanel';
 import { CaseStudy } from './pages/CaseStudy';
 import { Diagnostico } from './pages/Diagnostico';
+import { AdminLogin } from './pages/AdminLogin';
+import { AdminDashboard } from './pages/AdminDashboard';
+import { AdminDiagnosticoForm } from './pages/AdminDiagnosticoForm';
+import { AuthGuard } from './components/admin/AuthGuard';
 
 const DEFAULT_TWEAKS: Tweaks = {
   theme: 'dark',
@@ -53,6 +57,7 @@ function Home() {
 export default function App() {
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const isAdmin = location.pathname.startsWith('/admin');
   const [booted, setBooted] = useState(!isHome);
   const [tweaks, setTweaks] = useState<Tweaks>(() => readTweakDefaults());
   const [panelOpen, setPanelOpen] = useState(false);
@@ -99,22 +104,29 @@ export default function App() {
   return (
     <>
       {!booted && isHome && <BootLoader onDone={onBootDone} />}
-      {!isTouch && <Cursor />}
-      <Header
-        theme={tweaks.theme}
-        setTheme={(t) => setTweaks({ ...tweaks, theme: t })}
-        showIndex={tweaks.showSectionIndex}
-        mono={tweaks.monoOverlines}
-      />
+      {!isTouch && !isAdmin && <Cursor />}
+      {!isAdmin && (
+        <Header
+          theme={tweaks.theme}
+          setTheme={(t) => setTweaks({ ...tweaks, theme: t })}
+          showIndex={tweaks.showSectionIndex}
+          mono={tweaks.monoOverlines}
+        />
+      )}
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/diagnostico/:slug" element={<Diagnostico />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AuthGuard><AdminDashboard /></AuthGuard>} />
+        <Route path="/admin/diagnostico/novo" element={<AuthGuard><AdminDiagnosticoForm /></AuthGuard>} />
+        <Route path="/admin/diagnostico/:id/editar" element={<AuthGuard><AdminDiagnosticoForm /></AuthGuard>} />
+        <Route path="/admin" element={<AuthGuard><AdminDashboard /></AuthGuard>} />
       </Routes>
 
-      <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} open={panelOpen} />
-      <BottomNav />
+      {!isAdmin && <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} open={panelOpen} />}
+      {!isAdmin && <BottomNav />}
     </>
   );
 }

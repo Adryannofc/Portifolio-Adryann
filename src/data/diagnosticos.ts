@@ -1,3 +1,20 @@
+import { supabase, supabaseReady } from '../lib/supabase';
+
+export async function fetchDiagnostico(slug: string): Promise<DiagnosticoData | null> {
+  if (!slug || !supabaseReady) return null;
+  try {
+    const { data, error } = await supabase
+      .from('diagnosticos')
+      .select('data, ativo')
+      .eq('slug', slug)
+      .single();
+    if (error || !data) return null;
+    return { ...(data.data as DiagnosticoData), ativo: data.ativo };
+  } catch {
+    return null;
+  }
+}
+
 export interface Competitor {
   name: string
   rating: number
