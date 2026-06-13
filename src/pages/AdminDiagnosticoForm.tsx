@@ -469,6 +469,11 @@ export function AdminDiagnosticoForm() {
 Preencha o JSON abaixo com base nos dados da empresa fornecidos.
 Retorne SOMENTE o JSON válido, sem texto adicional e sem comentários.
 
+REGRAS OBRIGATÓRIAS:
+- NÃO use emojis em nenhum campo
+- Use português brasileiro limpo, sem símbolos especiais além de pontuação normal
+- Textos devem ser diretos e profissionais
+
 Valores válidos para cada campo enum:
 - volumeEstimado: "baixo" | "médio" | "alto"
 - categoria (problema): "busca" | "redes" | "reputacao" | "site" | "conversao"

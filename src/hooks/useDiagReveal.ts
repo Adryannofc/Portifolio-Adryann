@@ -1,27 +1,28 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 export function useDiagReveal<T extends HTMLElement>(delay = 0) {
-  const ref = useRef<T>(null)
+  const [node, setNode] = useState<T | null>(null)
+
+  const ref = useCallback((el: T | null) => {
+    setNode(el)
+  }, [])
 
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
+    if (!node) return
     const timer = setTimeout(() => {
       const obs = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            el.setAttribute('data-revealed', 'true')
+            node.setAttribute('data-revealed', 'true')
             obs.disconnect()
           }
         },
         { threshold: 0.10 }
       )
-      obs.observe(el)
+      obs.observe(node)
     }, delay)
-
     return () => clearTimeout(timer)
-  }, [delay])
+  }, [node, delay])
 
   return ref
 }
