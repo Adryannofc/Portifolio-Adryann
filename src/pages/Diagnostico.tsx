@@ -88,6 +88,10 @@ export function Diagnostico() {
   }, [slug]);
 
   useEffect(() => {
+    if (slug) localStorage.setItem('last_diagnostico_slug', slug);
+  }, [slug]);
+
+  useEffect(() => {
     if (!data) return;
     document.querySelectorAll<HTMLElement>(
       '.diag-page [data-anim], .diag-page .diag-pills-wrap, ' +
