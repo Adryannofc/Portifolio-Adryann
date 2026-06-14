@@ -77,9 +77,9 @@ export function Process() {
   const { locale, t } = useI18n();
   const ref = useReveal<HTMLElement>();
   return (
-    <section id="process" className="process" ref={ref} data-screen-label="04 Process">
+    <section id="process" className="process" ref={ref} data-screen-label="05 Process">
       <SectionHead
-        index="04 /"
+        index="05 /"
         eyebrow={t.process.eyebrow}
         title={
           <>

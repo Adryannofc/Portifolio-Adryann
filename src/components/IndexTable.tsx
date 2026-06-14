@@ -22,9 +22,9 @@ export function IndexTable() {
     setExpanded((prev) => (prev === n ? null : n));
 
   return (
-    <section id="index" className="idx" ref={ref} data-screen-label="07 Index">
+    <section id="index" className="idx" ref={ref} data-screen-label="08 Index">
       <SectionHead
-        index="07 /"
+        index="08 /"
         eyebrow={t.index.eyebrow}
         title={
           <>

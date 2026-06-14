@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../hooks/useAuth';
 import { Spinner } from '../components/Spinner';
 import type {
   DiagnosticoData,
@@ -296,7 +295,6 @@ export function AdminDiagnosticoForm() {
   const { id } = useParams<{ id: string }>();
   const isEditing = Boolean(id);
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
@@ -926,19 +924,10 @@ Dados da empresa:
   }
 
   return (
-    <div className="admin-wrap">
-      <header className="admin-header">
-        <Link to="/admin/dashboard" className="admin-header-brand">DIAG / CMS</Link>
-        <div className="admin-header-right">
-          <span className="admin-user-email">{user?.email}</span>
-          <button className="admin-btn admin-btn-sm" onClick={() => signOut()}>Sair</button>
-        </div>
-      </header>
-
-      <div className="admin-content admin-form-wrap">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-          <Link to="/admin/dashboard" style={{ color: 'var(--fg-muted)', fontSize: 13 }}>← Diagnósticos</Link>
-        </div>
+    <div className="admin-content admin-form-wrap">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
+        <Link to="/admin/diagnosticos" style={{ color: 'var(--fg-mute)', fontSize: 13 }}>← Diagnósticos</Link>
+      </div>
 
         <h1 className="admin-page-title">
           {isEditing ? `Editando: ${form.empresa || '...'}` : 'Novo diagnóstico'}
@@ -1037,6 +1026,5 @@ Dados da empresa:
           </>
         )}
       </div>
-    </div>
   );
 }

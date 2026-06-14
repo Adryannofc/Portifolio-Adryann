@@ -12,7 +12,7 @@ export const en = {
     meta: '[ PORTFOLIO · 2026 ]',
     status: 'ACCEPTING PROJECTS · Q2',
     h1: ['I build things', 'software that', 'feels inevitable.'],
-    scroll: 'SCROLL ↓ · 01 / 08',
+    scroll: 'SCROLL ↓ · 01 / 09',
   },
   work: {
     eyebrow: 'SELECTED WORK · 2023 — 2025',
@@ -93,8 +93,12 @@ export const en = {
       avoidingVal: 'Crypto · gambling · AI slop',
     },
   },
+  social: {
+    eyebrow: 'SOCIAL PROOF · CLIENT RESULTS',
+    h2: 'What clients say.',
+  },
   contact: {
-    eyebrow: '08 / CONTACT — LET\'S TALK',
+    eyebrow: '09 / CONTACT — LET\'S TALK',
     h2: ['Got a project', 'that deserves', 'care'],
     elsewhere: 'ELSEWHERE',
     direct: 'DIRECT',

@@ -12,7 +12,7 @@ export const ptBR = {
     meta: '[ PORTFÓLIO · 2026 ]',
     status: 'ACEITANDO PROJETOS · T2',
     h1: ['Você domina', 'o negócio', 'eu domino o digital.'],
-    scroll: 'ROLAR ↓ · 01 / 08',
+    scroll: 'ROLAR ↓ · 01 / 09',
   },
   work: {
     eyebrow: 'TRABALHOS SELECIONADOS · 2023 — 2025',
@@ -93,8 +93,12 @@ export const ptBR = {
       avoidingVal: 'Cripto · apostas · AI slop',
     },
   },
+  social: {
+    eyebrow: 'PROVA SOCIAL · RESULTADOS REAIS',
+    h2: 'O que os clientes dizem.',
+  },
   contact: {
-    eyebrow: '08 / CONTATO — VAMOS FALAR',
+    eyebrow: '09 / CONTATO — VAMOS FALAR',
     h2: ['Seu projeto', 'merece', 'cuidado'],
     elsewhere: 'EM OUTROS LUGARES',
     direct: 'DIRETO',

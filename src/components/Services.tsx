@@ -10,9 +10,9 @@ export function Services() {
   const { t } = useI18n();
   const ref = useReveal<HTMLElement>();
   return (
-    <section id="services" className="services" ref={ref} data-screen-label="03 Services">
+    <section id="services" className="services" ref={ref} data-screen-label="04 Services">
       <SectionHead
-        index="03 /"
+        index="04 /"
         eyebrow={t.services.eyebrow}
         title={
           <>

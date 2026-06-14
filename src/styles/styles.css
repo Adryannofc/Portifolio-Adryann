@@ -705,6 +705,115 @@
 /* ═══════════════════════════════════════════════════════════════
    SERVICES
    ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   SOCIAL PROOF
+   ═══════════════════════════════════════════════════════════════ */
+.social { padding: 0 var(--margin); }
+.social, .services, .process, .about, .idx {
+  max-width: var(--page-max); margin: 0 auto;
+}
+.social-stats {
+  display: flex;
+  gap: var(--s-16);
+  flex-wrap: wrap;
+  margin-top: var(--s-12);
+  padding-bottom: var(--s-12);
+  border-bottom: 1px solid var(--rule);
+}
+.social-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-width: 120px;
+}
+.social-stat__value {
+  font-size: clamp(40px, 5vw, 64px);
+  font-family: var(--ff-mono);
+  font-weight: 400;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.social-stat__label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--fg-mute);
+  text-transform: uppercase;
+}
+.depo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-6);
+  margin-top: var(--s-12);
+}
+.depo-card {
+  background: var(--surface-1);
+  padding: var(--s-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-8);
+  transition: background 320ms var(--ease-out);
+}
+.depo-card:hover { background: var(--surface-2); }
+.depo-quote {
+  margin: 0;
+  flex: 1;
+}
+.depo-quote p {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--fg);
+  margin: 0;
+  font-style: italic;
+}
+.depo-author {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule);
+}
+.depo-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.depo-avatar--initials {
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-0);
+  user-select: none;
+}
+.depo-author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.depo-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: -0.01em;
+}
+.depo-role {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--fg-mute);
+  text-transform: uppercase;
+}
+
+@media (max-width: 720px) {
+  .depo-grid { grid-template-columns: 1fr; }
+  .social-stats { gap: var(--s-10); }
+}
+
 .services { padding: 0 var(--margin); }
 .services, .process, .about, .idx {
   max-width: var(--page-max); margin: 0 auto;

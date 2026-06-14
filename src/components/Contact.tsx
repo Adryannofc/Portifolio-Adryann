@@ -13,7 +13,7 @@ export function Contact() {
   const { t } = useI18n();
   const ref = useReveal<HTMLElement>();
   return (
-    <section id="contact" className="contact" ref={ref} data-screen-label="08 Contact">
+    <section id="contact" className="contact" ref={ref} data-screen-label="09 Contact">
       <div className="contact-inner">
         <Overline>{t.contact.eyebrow}</Overline>
 

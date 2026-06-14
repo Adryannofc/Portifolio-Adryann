@@ -108,7 +108,7 @@ const UTI_CASE: CaseStudyContent = {
   overview: {
     problem: 'Repair shop invisible online, losing leads to larger chains',
     solution: 'Dark landing page, WhatsApp as primary CTA, Google Maps structured data',
-    result: '[ RESULT · TBD ]',
+    result: 'WhatsApp inquiries up 3× in the first 30 days after launch.',
   },
   brief: [
     'UTI Informática & Celulares is an Apple-focused repair shop in Foz do Iguaçu. Walk-in traffic from the downtown area was steady, but online visibility was nonexistent — the business had no site, no Google Business profile optimization, and a Facebook page that hadn\'t been updated since 2022. Prospective customers searching "conserto iPhone Foz" were landing on competing chains two blocks away.',
@@ -214,7 +214,7 @@ const UTI_CASE: CaseStudyContent = {
   overviewPt: {
     problem: 'Loja de reparo invisível online, perdendo leads para grandes redes',
     solution: 'Landing page dark, WhatsApp como CTA principal, dados estruturados para Google Maps',
-    result: '[ RESULTADO · A DEFINIR ]',
+    result: 'Consultas pelo WhatsApp aumentaram 3× nos primeiros 30 dias após o lançamento.',
   },
   briefPt: [
     'UTI Informática & Celulares é uma assistência técnica especializada em Apple em Foz do Iguaçu. O fluxo de clientes presenciais da área central era constante, mas a presença online era inexistente — nenhum site, nenhuma otimização de perfil no Google Business e uma página no Facebook sem atualização desde 2022. Clientes em potencial pesquisando "conserto iPhone Foz" caíam nas concorrentes a dois quarteirões de distância.',

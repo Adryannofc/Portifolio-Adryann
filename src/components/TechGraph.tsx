@@ -481,9 +481,9 @@ export function TechGraph() {
   }, []);
 
   return (
-    <section id="stack" className="stack" ref={ref} data-screen-label="05 Stack">
+    <section id="stack" className="stack" ref={ref} data-screen-label="06 Stack">
       <SectionHead
-        index="05 /"
+        index="06 /"
         eyebrow="STACK · TECH GRAPH"
         title={
           <>

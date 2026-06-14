@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useI18n } from './contexts/I18nContext';
 import { BootLoader } from './components/BootLoader';
 import { BottomNav } from './components/BottomNav';
@@ -7,6 +7,7 @@ import { Cursor } from './components/Cursor';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Work } from './components/Work';
+import { Social } from './components/Social';
 import { Services } from './components/Services';
 import { Process } from './components/Process';
 import { TechGraph } from './components/TechGraph';
@@ -18,8 +19,11 @@ import { SpeedDial } from './components/SpeedDial';
 import { CaseStudy } from './pages/CaseStudy';
 import { Diagnostico } from './pages/Diagnostico';
 import { AdminLogin } from './pages/AdminLogin';
-import { AdminDashboard } from './pages/AdminDashboard';
+import { AdminOverview } from './pages/AdminOverview';
+import { AdminDiagnosticosList } from './pages/AdminDiagnosticosList';
 import { AdminDiagnosticoForm } from './pages/AdminDiagnosticoForm';
+import { AdminLayout } from './components/admin/AdminLayout';
+import { ComingSoon } from './components/admin/ComingSoon';
 import { AuthGuard } from './components/admin/AuthGuard';
 
 const DEFAULT_TWEAKS: Tweaks = {
@@ -48,6 +52,7 @@ function Home() {
     <main>
       <Hero />
       <Work />
+      <Social />
       <Services />
       <Process />
       <TechGraph />
@@ -128,10 +133,17 @@ export default function App() {
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/diagnostico/:slug" element={<Diagnostico />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AuthGuard><AdminDashboard /></AuthGuard>} />
-        <Route path="/admin/diagnostico/novo" element={<AuthGuard><AdminDiagnosticoForm /></AuthGuard>} />
-        <Route path="/admin/diagnostico/:id/editar" element={<AuthGuard><AdminDiagnosticoForm /></AuthGuard>} />
-        <Route path="/admin" element={<AuthGuard><AdminDashboard /></AuthGuard>} />
+        <Route path="/admin" element={<AuthGuard><AdminLayout /></AuthGuard>}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<AdminOverview />} />
+          <Route path="diagnosticos" element={<AdminDiagnosticosList />} />
+          <Route path="diagnostico/novo" element={<AdminDiagnosticoForm />} />
+          <Route path="diagnostico/:id/editar" element={<AdminDiagnosticoForm />} />
+          <Route path="projetos" element={<ComingSoon title="Projetos" description="Gerencie os projetos e cases do portfólio diretamente pelo painel." />} />
+          <Route path="mensagens" element={<ComingSoon title="Mensagens" description="Visualize e responda mensagens recebidas pelo formulário de contato." />} />
+          <Route path="analytics" element={<ComingSoon title="Analytics" description="Veja métricas consolidadas: views, CTAs e conversões ao longo do tempo." />} />
+          <Route path="configuracoes" element={<ComingSoon title="Configurações" description="Preferências do portfólio, dados pessoais e integrações." />} />
+        </Route>
       </Routes>
 
       {!isAdmin && <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} open={panelOpen} />}
