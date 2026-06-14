@@ -30,7 +30,7 @@
 .admin-login-label {
   font-size: 10px;
   letter-spacing: 0.12em;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   text-transform: uppercase;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .admin-btn:hover {
-  border-color: var(--fg-muted);
+  border-color: var(--fg-mute);
   background: var(--ink-1);
 }
 
@@ -94,7 +94,7 @@
   padding: 6px;
   border: none;
   background: transparent;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   cursor: pointer;
   line-height: 0;
   transition: color 0.15s;
@@ -135,7 +135,7 @@
 
 .admin-user-email {
   font-size: 12px;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   font-family: var(--ff-mono);
 }
 
@@ -154,7 +154,7 @@
 
 .admin-page-subtitle {
   font-size: 14px;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   margin: 0 0 32px;
 }
 
@@ -178,7 +178,7 @@
   font-family: var(--ff-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   border-bottom: 1px solid var(--rule);
   white-space: nowrap;
 }
@@ -222,7 +222,7 @@
 
 .admin-badge-inactive {
   background: rgba(160, 160, 160, 0.12);
-  color: var(--fg-muted);
+  color: var(--fg-mute);
 }
 
 /* ── Form Steps ── */
@@ -247,7 +247,7 @@
   font-family: var(--ff-mono);
   font-weight: 500;
   letter-spacing: 0.06em;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   border-right: 1px solid var(--rule);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
@@ -275,7 +275,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   margin: 0 0 20px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--rule);
@@ -308,7 +308,7 @@
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
 }
 
 .admin-input,
@@ -445,13 +445,13 @@
   min-height: 100dvh;
   font-family: var(--ff-mono);
   font-size: 13px;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
 }
 
 .admin-empty {
   padding: 48px;
   text-align: center;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   font-size: 14px;
 }
 
@@ -488,7 +488,7 @@
   font-size: 13px;
   background: transparent;
   border: none;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -500,7 +500,7 @@
 
 .admin-import-hint {
   font-size: 13px;
-  color: var(--fg-muted);
+  color: var(--fg-mute);
   line-height: 1.6;
 }
 
