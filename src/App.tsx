@@ -22,6 +22,7 @@ import { AdminLogin } from './pages/AdminLogin';
 import { AdminOverview } from './pages/AdminOverview';
 import { AdminDiagnosticosList } from './pages/AdminDiagnosticosList';
 import { AdminDiagnosticoForm } from './pages/AdminDiagnosticoForm';
+import { AdminProjetos } from './pages/AdminProjetos';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { ComingSoon } from './components/admin/ComingSoon';
 import { AuthGuard } from './components/admin/AuthGuard';
@@ -139,7 +140,7 @@ export default function App() {
           <Route path="diagnosticos" element={<AdminDiagnosticosList />} />
           <Route path="diagnostico/novo" element={<AdminDiagnosticoForm />} />
           <Route path="diagnostico/:id/editar" element={<AdminDiagnosticoForm />} />
-          <Route path="projetos" element={<ComingSoon title="Projetos" description="Gerencie os projetos e cases do portfólio diretamente pelo painel." />} />
+          <Route path="projetos" element={<AdminProjetos />} />
           <Route path="mensagens" element={<ComingSoon title="Mensagens" description="Visualize e responda mensagens recebidas pelo formulário de contato." />} />
           <Route path="analytics" element={<ComingSoon title="Analytics" description="Veja métricas consolidadas: views, CTAs e conversões ao longo do tempo." />} />
           <Route path="configuracoes" element={<ComingSoon title="Configurações" description="Preferências do portfólio, dados pessoais e integrações." />} />

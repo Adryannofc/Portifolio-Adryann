@@ -91,10 +91,12 @@ export function AdminSidebar({ diagCount }: Props) {
 
         <div className="admin-nav-group">
           <span className="admin-nav-label">Em Breve</span>
-          <span className="admin-nav-link admin-nav-link--soon">
+          <NavLink
+            to="/admin/projetos"
+            className={({ isActive }) => `admin-nav-link${isActive ? ' is-active' : ''}`}
+          >
             <span className="nav-left"><IconProjects /><span>Projetos</span></span>
-            <span className="soon-tag">soon</span>
-          </span>
+          </NavLink>
           <span className="admin-nav-link admin-nav-link--soon">
             <span className="nav-left"><IconMessages /><span>Mensagens</span></span>
             <span className="soon-tag">soon</span>
