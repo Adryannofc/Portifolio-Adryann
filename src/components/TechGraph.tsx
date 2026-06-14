@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { SectionHead } from './Header';
 import { NODES, EDGES, CAT_COLOR, type GraphNode } from '../data/tech-graph';
@@ -15,6 +15,14 @@ export function TechGraph() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tipRef = useRef<HTMLDivElement | null>(null);
   const ref = useReveal<HTMLElement>();
+  const [graphActive, setGraphActive] = useState(false);
+  const graphActiveRef = useRef(false);
+
+  const toggleGraph = () => {
+    const next = !graphActiveRef.current;
+    graphActiveRef.current = next;
+    setGraphActive(next);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -132,12 +140,14 @@ export function TechGraph() {
     let lastTouchY = 0;
 
     const onTouchStart = (e: TouchEvent) => {
+      if (!graphActiveRef.current) return;
       e.preventDefault();
       const t = e.touches[0];
       lastTouchX = t.clientX;
       lastTouchY = t.clientY;
     };
     const onTouchMove = (e: TouchEvent) => {
+      if (!graphActiveRef.current) return;
       e.preventDefault();
       const t = e.touches[0];
       touchPanX += t.clientX - lastTouchX;
@@ -452,10 +462,29 @@ export function TechGraph() {
         <canvas ref={canvasRef} className="graph-canvas" />
         <div ref={tipRef} className="graph-tip mono" />
         <div className="graph-vignette" aria-hidden />
+        {graphActive && (
+          <div className="graph-hand-hint" aria-hidden>
+            <span>👆</span>
+          </div>
+        )}
       </div>
 
       <p className="graph-hint graph-hint-mouse mono">drag · hover · explore</p>
-      <p className="graph-hint graph-hint-touch mono">pan to explore</p>
+      <div className="gt-wrap">
+        <span className="gt-label mono">{graphActive ? 'INTERATIVO' : 'SCROLL'}</span>
+        <label
+          className="gt"
+          aria-label={graphActive ? 'Desativar interação com o grafo' : 'Ativar interação com o grafo'}
+        >
+          <input
+            className="gt-input"
+            type="checkbox"
+            checked={graphActive}
+            onChange={toggleGraph}
+          />
+          <span className="gt-thumb" />
+        </label>
+      </div>
 
       <div className="stack-legend mono">
         <span>

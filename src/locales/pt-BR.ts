@@ -11,7 +11,7 @@ export const ptBR = {
   hero: {
     meta: '[ PORTFÓLIO · 2026 ]',
     status: 'ACEITANDO PROJETOS · T2',
-    h1: ['Você foca', 'no negócio —', 'o digital fica comigo.'],
+    h1: ['Você domina', 'o negócio', 'eu domino o digital.'],
     scroll: 'ROLAR ↓ · 01 / 08',
   },
   work: {
@@ -77,12 +77,12 @@ export const ptBR = {
     eyebrow: 'SOBRE · BIO',
     photoCaption: 'FOZ DO IGUAÇU · BR',
     photoCredit: 'FOTO POR — TBD',
-    quotePre: 'Trato software ',
-    quoteEm: 'como um tipógrafo trata um parágrafo',
-    quotePost: ' — cada detalhe está trabalhando, ou está no caminho.',
+    quotePre: 'Projeto antes de codar. ',
+    quoteEm: 'Penso antes de projetar.',
+    quotePost: '',
     bio: [
-      'Sou Adryann — engenheiro de software de Foz do Iguaçu, na tríplice fronteira. Construo produtos web para clientes que querem a qualidade de um time de produto sem a folha de pagamento de um.',
-      'Os últimos cinco anos foram uma especialização silenciosa: a costura entre intenção de design e código em produção. Trabalho solo ou embarcado, de forma assíncrona, em PT e EN, entregando pequeno toda semana.',
+      'Sou Adryann, desenvolvedor full stack de Foz do Iguaçu. Cinco anos construindo produtos web — do design ao deploy, do frontend ao backend. Trabalho com Java, Spring Boot, React e Next.js, sempre com foco em produto, não só em código.',
+      'Gosto de entender o negócio antes de abrir o editor. O melhor código é o que resolve o problema certo.',
     ],
     facts: {
       languages: 'IDIOMAS',
@@ -95,7 +95,7 @@ export const ptBR = {
   },
   contact: {
     eyebrow: '08 / CONTATO — VAMOS FALAR',
-    h2: ['Tem um projeto', 'que merece', 'cuidado'],
+    h2: ['Seu projeto', 'merece', 'cuidado'],
     elsewhere: 'EM OUTROS LUGARES',
     direct: 'DIRETO',
     based: 'BASEADO EM',

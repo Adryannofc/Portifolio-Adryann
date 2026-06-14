@@ -486,6 +486,7 @@
   font-weight: 400;
   margin-right: 0.1em;
   transform: translateY(-0.08em);
+  font-size:0.7em;
 }
 
 .hero-grid {
@@ -816,7 +817,7 @@
 .about-portrait-cap { display: flex; justify-content: space-between; font-size: 10px; letter-spacing: 0.12em; color: var(--fg-faint); }
 .about-copy { display: flex; flex-direction: column; gap: var(--s-10); }
 .about-quote { font-weight: 600; max-width: 18ch; letter-spacing: -0.025em; line-height: 1.12; }
-.about-em { color: var(--accent); font-style: italic; font-weight: 500; }
+.about-em { color: var(--accent); font-style: italic; font-weight: 500; text-decoration: underline; }
 .about-body { font-size: 16px; line-height: 1.75; color: var(--fg-mute); display: grid; gap: 16px; max-width: 60ch; }
 .about-body p { margin: 0; }
 .about-facts dl { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 0; padding-top: 24px; border-top: 1px solid var(--rule); }
@@ -988,7 +989,7 @@
   margin: 0;
   text-wrap: balance;
 }
-.contact-arrow { color: var(--amber); margin-left: 0.08em; }
+.contact-arrow { color: var(--amber); margin-left: 0.08em; font-size: 0.75em;}
 .contact-row { display: flex; gap: 16px; flex-wrap: wrap; padding-top: var(--s-4); }
 .contact-grid {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
@@ -1337,9 +1338,93 @@ footer,
   .graph-wrap { height: 320px; }
 }
 .graph-hint-touch { display: none; }
+
+/* ─── Graph interactive toggle (mobile only) ─────────────── */
+.gt-wrap { display: none; }
+
 @media (max-width: 767px) {
   .graph-hint-touch { display: block; }
   .graph-hint-mouse { display: none; }
+
+  .gt-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px auto 0;
+  }
+  .gt-label {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    color: var(--fg-faint);
+    min-width: 4.5em;
+    text-align: right;
+  }
+
+  /* Track */
+  .gt {
+    position: relative;
+    display: inline-block;
+    width: 2.6em;
+    height: 1.4em;
+    border-radius: 999px;
+    background: var(--ink-3);
+    border: 1px solid var(--rule-strong);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 250ms ease, background 250ms ease;
+  }
+  .gt:has(.gt-input:checked) {
+    border-color: var(--amber);
+    background: var(--amber-soft);
+  }
+
+  /* Hidden checkbox */
+  .gt-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* Sliding thumb */
+  .gt-thumb {
+    position: absolute;
+    left: 0.2em;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.9em;
+    height: 0.9em;
+    border-radius: 50%;
+    background: var(--fg-faint);
+    transition: left 250ms var(--ease-out), background 250ms ease;
+  }
+  .gt-input:checked ~ .gt-thumb {
+    left: calc(100% - 1.1em);
+    background: var(--amber);
+  }
+}
+
+/* ─── Hand hint when graph is active ─────────────────────── */
+.graph-hand-hint {
+  display: none;
+}
+@media (max-width: 767px) {
+  .graph-hand-hint {
+    display: flex;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    font-size: 28px;
+    pointer-events: none;
+    animation: hand-bounce 1.2s ease-in-out infinite;
+    z-index: 2;
+  }
+}
+@keyframes hand-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
 }
 
 /* ─── IndexTable: accordion rows ─────────────────────────────── */
