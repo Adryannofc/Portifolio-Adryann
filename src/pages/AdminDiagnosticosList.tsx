@@ -94,7 +94,7 @@ export function AdminDiagnosticosList() {
         case 'criado':  va=a.criado_em;  vb=b.criado_em;  break;
         default: return 0;
       }
-      if(typeof va==='number') return (va-vb)*sortDir;
+      if(typeof va==='number' && typeof vb==='number') return (va-vb)*sortDir;
       return String(va).localeCompare(String(vb))*sortDir;
     });
   }, [rows, query, sortKey, sortDir]);
