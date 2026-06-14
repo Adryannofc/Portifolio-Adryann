@@ -58,11 +58,11 @@ const PROJETOS: Projeto[] = [
   },
 ];
 
-const STATUS_BADGE: Record<Status, { cls: string; label: string }> = {
-  andamento:   { cls: 'badge badge-ok', label: 'Em andamento' },
-  concluido:   { cls: 'badge badge-ok', label: 'Concluído' },
-  pausado:     { cls: 'badge badge-warn', label: 'Pausado' },
-  planejamento:{ cls: 'badge', label: 'Planejamento' },
+const STATUS_BADGE: Record<Status, { cls: string; label: string; style?: React.CSSProperties }> = {
+  andamento:    { cls: 'badge badge-ok', label: 'Em andamento' },
+  concluido:    { cls: 'badge badge-ok', label: 'Concluído', style: { background: 'rgba(123,184,114,0.18)', color: '#7BB872' } },
+  pausado:      { cls: 'badge badge-warn', label: 'Pausado' },
+  planejamento: { cls: 'badge', label: 'Planejamento', style: { background: 'rgba(240,238,233,0.06)', color: 'rgba(240,238,233,0.45)' } },
 };
 
 const PROGRESS_CLS: Record<Status, string> = {
@@ -70,7 +70,23 @@ const PROGRESS_CLS: Record<Status, string> = {
 };
 
 function fmtValor(v: number) {
-  return 'R$ ' + v.toLocaleString('pt-BR');
+  return 'R$ ' + v.toLocaleString('pt-BR');
+}
+
+function parsePtDate(str: string): Date | null {
+  const m = str.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return null;
+  return new Date(+m[3], +m[2] - 1, +m[1]);
+}
+
+function getDeadlineInfo(prazo: string, status: Status): { label: string; cls: string } | null {
+  if (status === 'concluido' || status === 'pausado') return null;
+  const d = parsePtDate(prazo);
+  if (!d) return null;
+  const diff = Math.ceil((d.getTime() - Date.now()) / 86400000);
+  if (diff < 0)  return { label: `${Math.abs(diff)}d atrasado`, cls: 'dl-late' };
+  if (diff <= 14) return { label: `${diff}d restantes`, cls: 'dl-soon' };
+  return { label: `${diff}d restantes`, cls: 'dl-ok' };
 }
 
 function useCounter(target: number, active: boolean) {
@@ -79,10 +95,9 @@ function useCounter(target: number, active: boolean) {
     if (!active) return;
     if (target === 0) { setValue(0); return; }
     const start = performance.now();
-    const dur = 700;
     let raf: number;
     const tick = (now: number) => {
-      const p = Math.min((now - start) / dur, 1);
+      const p = Math.min((now - start) / 700, 1);
       setValue(Math.round((1 - Math.pow(1 - p, 3)) * target));
       if (p < 1) raf = requestAnimationFrame(tick);
       else setValue(target);
@@ -93,14 +108,15 @@ function useCounter(target: number, active: boolean) {
   return value;
 }
 
-function ProjectCard({ p, listMode }: { p: Projeto; listMode: boolean }) {
+function ProjectCard({ p }: { p: Projeto }) {
   const barRef = useRef<HTMLDivElement>(null);
   const badge = STATUS_BADGE[p.status];
+  const dl = getDeadlineInfo(p.prazo, p.status);
 
   useEffect(() => {
     const bar = barRef.current;
     if (!bar) return;
-    const target = bar.dataset.pct!;
+    const target = String(p.progresso);
     bar.style.width = '0%';
     const id = requestAnimationFrame(() =>
       requestAnimationFrame(() => { bar.style.width = target + '%'; })
@@ -110,30 +126,38 @@ function ProjectCard({ p, listMode }: { p: Projeto; listMode: boolean }) {
 
   return (
     <div className={`proj-card status-${p.status}`}>
+      {/* header */}
       <div className="proj-card-top">
         <span className={`proj-type-badge${p.tipoClass ? ' ' + p.tipoClass : ''}`}>{p.tipo}</span>
-        <span className={badge.cls} style={p.status === 'concluido' ? { background: 'rgba(123,184,114,0.18)', color: '#7BB872' } : p.status === 'planejamento' ? { background: 'rgba(240,238,233,0.06)', color: 'rgba(240,238,233,0.5)' } : undefined}>
+        <span className={badge.cls} style={badge.style}>
           <span className="badge-dot" />{badge.label}
         </span>
       </div>
+
+      {/* body */}
       <div className="proj-card-body">
         <div className="proj-name">{p.nome}</div>
         <div className="proj-desc">{p.desc}</div>
+
+        {/* progress */}
         <div className="proj-progress-row">
           <div className="proj-progress-track">
             <div
               ref={barRef}
               className={`proj-progress-fill${PROGRESS_CLS[p.status] ? ' ' + PROGRESS_CLS[p.status] : ''}`}
-              data-pct={p.progresso}
               style={{ width: 0 }}
             />
           </div>
           <span className="proj-progress-pct">{p.progresso}%</span>
         </div>
+
+        {/* stack */}
         <div className="proj-stack">
           {p.stack.map(s => <span key={s} className="proj-tag">{s}</span>)}
         </div>
       </div>
+
+      {/* footer */}
       <div className="proj-card-foot">
         <div className="proj-meta">
           <div className="proj-meta-row">
@@ -141,11 +165,14 @@ function ProjectCard({ p, listMode }: { p: Projeto; listMode: boolean }) {
             <span className="proj-meta-val">{p.inicio}</span>
           </div>
           <div className="proj-meta-row">
-            <span>Prazo&nbsp;</span>
+            <span>Prazo</span>
             <span className="proj-meta-val">{p.prazo}</span>
           </div>
+          {dl && (
+            <div className={`proj-deadline ${dl.cls}`}>{dl.label}</div>
+          )}
         </div>
-        <div style={{ display: 'flex', flexDirection: listMode ? 'column' : 'column', alignItems: listMode ? 'flex-start' : 'flex-end', gap: 8 }}>
+        <div className="proj-foot-right">
           <span className="proj-value">{fmtValor(p.valor)}</span>
           <div className="proj-actions">
             <button className="proj-btn primary">Abrir</button>
@@ -160,36 +187,46 @@ function ProjectCard({ p, listMode }: { p: Projeto; listMode: boolean }) {
 export function AdminProjetos() {
   const [filter, setFilter] = useState<Filter>('todos');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [query, setQuery] = useState('');
 
   const counts = useMemo(() => ({
-    todos: PROJETOS.length,
-    andamento: PROJETOS.filter(p => p.status === 'andamento').length,
-    concluido: PROJETOS.filter(p => p.status === 'concluido').length,
-    pausado: PROJETOS.filter(p => p.status === 'pausado').length,
+    todos:        PROJETOS.length,
+    andamento:    PROJETOS.filter(p => p.status === 'andamento').length,
+    concluido:    PROJETOS.filter(p => p.status === 'concluido').length,
+    pausado:      PROJETOS.filter(p => p.status === 'pausado').length,
     planejamento: PROJETOS.filter(p => p.status === 'planejamento').length,
   }), []);
 
   const receita = useMemo(() => PROJETOS.reduce((s, p) => s + p.valor, 0), []);
 
-  const displayed = useMemo(() =>
-    filter === 'todos' ? PROJETOS : PROJETOS.filter(p => p.status === filter),
-    [filter]
-  );
+  const displayed = useMemo(() => {
+    let list = filter === 'todos' ? PROJETOS : PROJETOS.filter(p => p.status === filter);
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      list = list.filter(p =>
+        p.nome.toLowerCase().includes(q) ||
+        p.tipo.toLowerCase().includes(q) ||
+        p.stack.some(s => s.toLowerCase().includes(q))
+      );
+    }
+    return list;
+  }, [filter, query]);
 
-  const cTotal    = useCounter(counts.todos, true);
-  const cAndamento= useCounter(counts.andamento, true);
-  const cConcluido= useCounter(counts.concluido, true);
+  const cTotal     = useCounter(counts.todos, true);
+  const cAndamento = useCounter(counts.andamento, true);
+  const cConcluido = useCounter(counts.concluido, true);
 
   const FILTERS: { key: Filter; label: string }[] = [
-    { key: 'todos',       label: 'Todos' },
-    { key: 'andamento',   label: 'Em andamento' },
-    { key: 'concluido',   label: 'Concluído' },
-    { key: 'pausado',     label: 'Pausado' },
-    { key: 'planejamento',label: 'Planejamento' },
+    { key: 'todos',        label: 'Todos' },
+    { key: 'andamento',    label: 'Em andamento' },
+    { key: 'concluido',    label: 'Concluído' },
+    { key: 'pausado',      label: 'Pausado' },
+    { key: 'planejamento', label: 'Planejamento' },
   ];
 
   return (
     <div className="admin-content">
+      {/* page header */}
       <div className="proj-view-head">
         <div>
           <h1 className="proj-view-title">Projetos</h1>
@@ -212,7 +249,7 @@ export function AdminProjetos() {
         </div>
       </div>
 
-      {/* Stats */}
+      {/* stats */}
       <div className="proj-stats">
         <div className="stat-card">
           <div className="stat-label">Total de Projetos</div>
@@ -238,7 +275,7 @@ export function AdminProjetos() {
         </div>
       </div>
 
-      {/* Filter row */}
+      {/* filter + search row */}
       <div className="proj-filter-row">
         <div className="filter-tabs">
           {FILTERS.map(({ key, label }) => (
@@ -252,16 +289,25 @@ export function AdminProjetos() {
             </button>
           ))}
         </div>
+        <div className="proj-search">
+          <span className="search-icon">⌕</span>
+          <input
+            type="text"
+            placeholder="Buscar projeto..."
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+          />
+        </div>
       </div>
 
-      {/* Cards */}
+      {/* cards */}
       <div className={`proj-grid${viewMode === 'list' ? ' list-mode' : ''}`}>
         {displayed.length === 0 ? (
-          <div className="proj-empty">Nenhum projeto encontrado para este filtro</div>
+          <div className="proj-empty">
+            {query ? 'Nenhum projeto encontrado.' : 'Nenhum projeto para este filtro.'}
+          </div>
         ) : (
-          displayed.map(p => (
-            <ProjectCard key={p.id} p={p} listMode={viewMode === 'list'} />
-          ))
+          displayed.map(p => <ProjectCard key={p.id} p={p} />)
         )}
       </div>
     </div>
