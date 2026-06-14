@@ -133,32 +133,67 @@ export function TechGraph() {
     let dragOffX = 0;
     let dragOffY = 0;
 
-    // Touch pan state (mobile only — moves entire graph view)
+    // Touch state (mobile only)
     let touchPanX = 0;
     let touchPanY = 0;
     let lastTouchX = 0;
     let lastTouchY = 0;
+    let touchDragging: SimNode | null = null;
+    let touchDragOffX = 0;
+    let touchDragOffY = 0;
 
     const onTouchStart = (e: TouchEvent) => {
       if (!graphActiveRef.current) return;
       e.preventDefault();
       const t = e.touches[0];
-      lastTouchX = t.clientX;
-      lastTouchY = t.clientY;
+      const rect = canvas.getBoundingClientRect();
+      const px = t.clientX - rect.left - touchPanX;
+      const py = t.clientY - rect.top - touchPanY;
+      const hit = pick(px, py);
+      if (hit) {
+        touchDragging = hit;
+        dragging = hit;
+        touchDragOffX = hit.x - px;
+        touchDragOffY = hit.y - py;
+        hoverId = hit.id;
+      } else {
+        lastTouchX = t.clientX;
+        lastTouchY = t.clientY;
+      }
     };
     const onTouchMove = (e: TouchEvent) => {
       if (!graphActiveRef.current) return;
       e.preventDefault();
       const t = e.touches[0];
-      touchPanX += t.clientX - lastTouchX;
-      touchPanY += t.clientY - lastTouchY;
-      lastTouchX = t.clientX;
-      lastTouchY = t.clientY;
+      if (touchDragging) {
+        const rect = canvas.getBoundingClientRect();
+        const px = t.clientX - rect.left - touchPanX;
+        const py = t.clientY - rect.top - touchPanY;
+        touchDragging.x = px + touchDragOffX;
+        touchDragging.y = py + touchDragOffY;
+        touchDragging.vx = 0;
+        touchDragging.vy = 0;
+      } else {
+        touchPanX += t.clientX - lastTouchX;
+        touchPanY += t.clientY - lastTouchY;
+        lastTouchX = t.clientX;
+        lastTouchY = t.clientY;
+      }
+    };
+    const onTouchEnd = () => {
+      if (touchDragging) {
+        touchDragging.vx = 0;
+        touchDragging.vy = 0;
+        touchDragging = null;
+        dragging = null;
+        hoverId = null;
+      }
     };
 
     if (isMobile) {
       canvas.addEventListener('touchstart', onTouchStart, { passive: false });
       canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+      canvas.addEventListener('touchend', onTouchEnd);
     }
 
     const pick = (px: number, py: number): SimNode | null => {
@@ -440,6 +475,7 @@ export function TechGraph() {
       if (isMobile) {
         canvas.removeEventListener('touchstart', onTouchStart);
         canvas.removeEventListener('touchmove', onTouchMove);
+        canvas.removeEventListener('touchend', onTouchEnd);
       }
     };
   }, []);
@@ -464,7 +500,12 @@ export function TechGraph() {
         <div className="graph-vignette" aria-hidden />
         {graphActive && (
           <div className="graph-hand-hint" aria-hidden>
-            <span>👆</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 11V6a2 2 0 1 1 4 0v5" />
+              <path d="M13 10a2 2 0 1 1 4 0v3" />
+              <path d="M17 12a2 2 0 1 1 4 0v3a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-1a2 2 0 1 1 4 0" />
+              <path d="M9 11V8a2 2 0 1 0-4 0v5a8 8 0 0 0 8 8h1" />
+            </svg>
           </div>
         )}
       </div>

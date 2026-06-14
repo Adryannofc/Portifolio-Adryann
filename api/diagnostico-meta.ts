@@ -52,7 +52,7 @@ async function fetchDiagnostico(slug: string): Promise<DiagMeta | null> {
   try {
     const res = await fetch(
       `${base}/rest/v1/diagnosticos?slug=eq.${encodeURIComponent(slug)}&select=empresa,ativo,data&limit=1`,
-      { headers: { apikey: key, Authorization: `Bearer ${key}` } },
+      { headers: { apikey: key, Authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(5000) },
     );
     if (!res.ok) return null;
     const rows = (await res.json()) as Array<{ empresa?: string; ativo?: boolean; data?: Record<string, unknown> }>;
@@ -71,21 +71,22 @@ async function fetchDiagnostico(slug: string): Promise<DiagMeta | null> {
 }
 
 export default async function handler(request: Request): Promise<Response> {
+  const reqUrl = new URL(request.url, 'http://n');
+  const slug = reqUrl.searchParams.get('slug') ?? '';
+  const headersAny = request.headers as unknown as { get?: (k: string) => string | null; host?: string };
+  const host =
+    (typeof headersAny.get === 'function' ? headersAny.get('host') : headersAny.host) ??
+    'portifolio-adryann.vercel.app';
+  const origin = `https://${host}`;
+
   try {
-    const reqUrl = new URL(request.url, 'http://n');
-    const slug = reqUrl.searchParams.get('slug') ?? '';
-    const headersAny = request.headers as unknown as { get?: (k: string) => string | null; host?: string };
-    const host =
-      (typeof headersAny.get === 'function' ? headersAny.get('host') : headersAny.host) ??
-      'portifolio-adryann.vercel.app';
-    const origin = `https://${host}`;
 
     // HTML base do app (com os asset paths atuais do build).
     let html: string;
     try {
-      html = await (await fetch(`${origin}/`)).text();
+      html = await (await fetch(`${origin}/`, { signal: AbortSignal.timeout(5000) })).text();
     } catch {
-      return Response.redirect(`${origin}/`, 302);
+      return Response.redirect(`${origin}/diagnostico/${encodeURIComponent(slug)}#app`, 302);
     }
 
     const diag = await fetchDiagnostico(slug);
@@ -111,11 +112,7 @@ export default async function handler(request: Request): Promise<Response> {
           : 'public, max-age=0, s-maxage=30',
       },
     });
-  } catch (err) {
-    const msg = err instanceof Error ? `${err.message}\n${err.stack ?? ''}` : String(err);
-    return new Response(`META_ERROR: ${msg}`, {
-      status: 500,
-      headers: { 'content-type': 'text/plain; charset=utf-8' },
-    });
+  } catch {
+    return Response.redirect(`${origin}/diagnostico/${encodeURIComponent(slug)}#app`, 302);
   }
 }
