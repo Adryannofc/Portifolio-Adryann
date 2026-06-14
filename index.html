@@ -8,22 +8,22 @@
     <link rel="shortcut icon" href="/images/Logo-adryann.svg" type="image/x-icon">
 
     <!-- Open Graph / preview de link (WhatsApp, LinkedIn, Discord) -->
-    <!-- og:image DEVE ser URL absoluta + PNG/JPG leve (< ~600KB). WhatsApp não lê SVG nem imagens pesadas. -->
-    <!-- Requer gerar public/images/og-cover.png (1200x630) a partir de og-cover.svg. -->
+    <!-- og:image é gerada sob demanda pela função /api/og (@vercel/og), 1200x630, cacheada no CDN. -->
+    <!-- Diagnósticos usam /api/og?tipo=diagnostico&empresa=... (injetado por rota em api/diagnostico/[slug]). -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Adryann Felix" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:url" content="https://portifolio-adryann.vercel.app/" />
     <meta property="og:title" content="Adryann Felix — Engenheiro de Software" />
     <meta property="og:description" content="Engenheiro de software de Foz do Iguaçu. Construo produtos web duráveis e cuidadosos, do front ao back." />
-    <meta property="og:image" content="https://portifolio-adryann.vercel.app/images/og-cover.png" />
+    <meta property="og:image" content="https://portifolio-adryann.vercel.app/api/og" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Adryann Felix — Engenheiro de Software" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Adryann Felix — Engenheiro de Software" />
     <meta name="twitter:description" content="Engenheiro de software de Foz do Iguaçu. Construo produtos web duráveis e cuidadosos, do front ao back." />
-    <meta name="twitter:image" content="https://portifolio-adryann.vercel.app/images/og-cover.png" />
+    <meta name="twitter:image" content="https://portifolio-adryann.vercel.app/api/og" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

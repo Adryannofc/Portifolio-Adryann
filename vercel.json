@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/diagnostico/:slug", "destination": "/api/diagnostico-meta?slug=:slug" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
