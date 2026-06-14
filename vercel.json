@@ -1,6 +1,10 @@
 {
   "rewrites": [
-    { "source": "/diagnostico/:slug", "destination": "/api/diagnostico-meta?slug=:slug" },
+    {
+      "source": "/diagnostico/:slug",
+      "has": [{ "type": "header", "key": "user-agent", "value": "(bot|crawl|spider|WhatsApp|facebookexternalhit|LinkedInBot|Twitterbot|TelegramBot|Slackbot|Discordbot|Googlebot|Bingbot|Applebot)" }],
+      "destination": "/api/diagnostico-meta?slug=:slug"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

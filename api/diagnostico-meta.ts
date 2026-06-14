@@ -1,7 +1,6 @@
-// Injeta meta tags Open Graph por rota /diagnostico/:slug (acionada via rewrite no vercel.json).
-// Busca o diagnóstico no Supabase (server-side) e reescreve as tags do index.html base,
-// para que crawlers (WhatsApp, LinkedIn) mostrem um cartão personalizado por empresa.
-// O app React continua montando normalmente — só as tags do <head> mudam.
+// Serve meta tags Open Graph para crawlers que acessam /diagnostico/:slug.
+// Acionada APENAS quando o user-agent é um bot (vercel.json has: user-agent).
+// Usuários reais recebem index.html diretamente via /(.*) → index.html e nunca chegam aqui.
 
 interface MetaValues {
   title: string;
@@ -79,40 +78,47 @@ export default async function handler(request: Request): Promise<Response> {
     'portifolio-adryann.vercel.app';
   const origin = `https://${host}`;
 
-  try {
+  const diag = await fetchDiagnostico(slug);
 
-    // HTML base do app (com os asset paths atuais do build).
-    let html: string;
-    try {
-      html = await (await fetch(`${origin}/`, { signal: AbortSignal.timeout(5000) })).text();
-    } catch {
-      return Response.redirect(`${origin}/diagnostico/${encodeURIComponent(slug)}#app`, 302);
-    }
+  const title = diag
+    ? `Diagnóstico digital — ${diag.empresa}`
+    : 'Diagnóstico de presença digital';
+  const description = diag
+    ? diag.descricao.slice(0, 200)
+    : 'Análise de presença digital para empresas locais.';
+  const image = diag
+    ? `${origin}/api/og?tipo=diagnostico&empresa=${encodeURIComponent(diag.empresa)}${diag.cidade ? `&cidade=${encodeURIComponent(diag.cidade)}` : ''}`
+    : `${origin}/api/og`;
+  const url = `${origin}/diagnostico/${encodeURIComponent(slug)}`;
 
-    const diag = await fetchDiagnostico(slug);
-    if (diag) {
-      const title = `Diagnóstico de presença digital — ${diag.empresa}`;
-      const description = diag.descricao.slice(0, 200);
-      const image =
-        `${origin}/api/og?tipo=diagnostico&empresa=${encodeURIComponent(diag.empresa)}` +
-        (diag.cidade ? `&cidade=${encodeURIComponent(diag.cidade)}` : '');
-      html = injectMeta(html, {
-        title,
-        description,
-        image,
-        url: `${origin}/diagnostico/${encodeURIComponent(slug)}`,
-      });
-    }
+  // HTML mínimo para crawlers (bots não executam JS — só precisam das meta tags).
+  // Usuários reais chegam via /(.*) → index.html e nunca passam por esta função.
+  const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="${escapeHtml(title)}" />
+  <meta property="og:description" content="${escapeHtml(description)}" />
+  <meta property="og:image" content="${escapeHtml(image)}" />
+  <meta property="og:url" content="${escapeHtml(url)}" />
+  <meta property="og:image:alt" content="${escapeHtml(title)}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${escapeHtml(title)}" />
+  <meta name="twitter:description" content="${escapeHtml(description)}" />
+  <meta name="twitter:image" content="${escapeHtml(image)}" />
+</head>
+<body></body>
+</html>`;
 
-    return new Response(html, {
-      headers: {
-        'content-type': 'text/html; charset=utf-8',
-        'cache-control': diag
-          ? 'public, max-age=0, s-maxage=300, stale-while-revalidate=600'
-          : 'public, max-age=0, s-maxage=30',
-      },
-    });
-  } catch {
-    return Response.redirect(`${origin}/diagnostico/${encodeURIComponent(slug)}#app`, 302);
-  }
+  return new Response(html, {
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': diag
+        ? 'public, max-age=0, s-maxage=300, stale-while-revalidate=600'
+        : 'public, max-age=0, s-maxage=30',
+    },
+  });
 }
