@@ -160,6 +160,14 @@ export async function generateOg(searchParams: URLSearchParams): Promise<ImageRe
 }
 
 export default async function handler(request: Request) {
-  const { searchParams } = new URL(request.url);
-  return generateOg(searchParams);
+  try {
+    const searchParams = new URL(request.url, 'http://n').searchParams;
+    return await generateOg(searchParams);
+  } catch (err) {
+    const msg = err instanceof Error ? `${err.message}\n${err.stack ?? ''}` : String(err);
+    return new Response(`OG_ERROR: ${msg}`, {
+      status: 500,
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
+    });
+  }
 }

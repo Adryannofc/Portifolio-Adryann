@@ -71,39 +71,51 @@ async function fetchDiagnostico(slug: string): Promise<DiagMeta | null> {
 }
 
 export default async function handler(request: Request): Promise<Response> {
-  const url = new URL(request.url);
-  const slug = url.searchParams.get('slug') ?? '';
-  const origin = url.origin;
-
-  // HTML base do app (com os asset paths atuais do build).
-  let html: string;
   try {
-    html = await (await fetch(`${origin}/`)).text();
-  } catch {
-    return Response.redirect(`${origin}/`, 302);
-  }
+    const reqUrl = new URL(request.url, 'http://n');
+    const slug = reqUrl.searchParams.get('slug') ?? '';
+    const headersAny = request.headers as unknown as { get?: (k: string) => string | null; host?: string };
+    const host =
+      (typeof headersAny.get === 'function' ? headersAny.get('host') : headersAny.host) ??
+      'portifolio-adryann.vercel.app';
+    const origin = `https://${host}`;
 
-  const diag = await fetchDiagnostico(slug);
-  if (diag) {
-    const title = `Diagnóstico de presença digital — ${diag.empresa}`;
-    const description = diag.descricao.slice(0, 200);
-    const image =
-      `${origin}/api/og?tipo=diagnostico&empresa=${encodeURIComponent(diag.empresa)}` +
-      (diag.cidade ? `&cidade=${encodeURIComponent(diag.cidade)}` : '');
-    html = injectMeta(html, {
-      title,
-      description,
-      image,
-      url: `${origin}/diagnostico/${encodeURIComponent(slug)}`,
+    // HTML base do app (com os asset paths atuais do build).
+    let html: string;
+    try {
+      html = await (await fetch(`${origin}/`)).text();
+    } catch {
+      return Response.redirect(`${origin}/`, 302);
+    }
+
+    const diag = await fetchDiagnostico(slug);
+    if (diag) {
+      const title = `Diagnóstico de presença digital — ${diag.empresa}`;
+      const description = diag.descricao.slice(0, 200);
+      const image =
+        `${origin}/api/og?tipo=diagnostico&empresa=${encodeURIComponent(diag.empresa)}` +
+        (diag.cidade ? `&cidade=${encodeURIComponent(diag.cidade)}` : '');
+      html = injectMeta(html, {
+        title,
+        description,
+        image,
+        url: `${origin}/diagnostico/${encodeURIComponent(slug)}`,
+      });
+    }
+
+    return new Response(html, {
+      headers: {
+        'content-type': 'text/html; charset=utf-8',
+        'cache-control': diag
+          ? 'public, max-age=0, s-maxage=300, stale-while-revalidate=600'
+          : 'public, max-age=0, s-maxage=30',
+      },
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? `${err.message}\n${err.stack ?? ''}` : String(err);
+    return new Response(`META_ERROR: ${msg}`, {
+      status: 500,
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
     });
   }
-
-  return new Response(html, {
-    headers: {
-      'content-type': 'text/html; charset=utf-8',
-      'cache-control': diag
-        ? 'public, max-age=0, s-maxage=300, stale-while-revalidate=600'
-        : 'public, max-age=0, s-maxage=30',
-    },
-  });
 }

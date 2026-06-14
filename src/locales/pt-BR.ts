@@ -11,7 +11,7 @@ export const ptBR = {
   hero: {
     meta: '[ PORTFÓLIO · 2026 ]',
     status: 'ACEITANDO PROJETOS · T2',
-    h1: ['Construo coisas,', 'software que', 'parece inevitável.'],
+    h1: ['Você foca', 'no negócio —', 'o digital fica comigo.'],
     scroll: 'ROLAR ↓ · 01 / 08',
   },
   work: {
