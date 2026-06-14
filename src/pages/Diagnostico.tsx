@@ -94,6 +94,15 @@ export function Diagnostico() {
   }, [slug]);
 
   useEffect(() => {
+    if (!data || !slug) return;
+    fetch('/api/track-view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug, type: 'view' }),
+    }).catch(() => {});
+  }, [data, slug]);
+
+  useEffect(() => {
     if (!data) return;
     document.querySelectorAll<HTMLElement>(
       '.diag-page [data-anim], .diag-page .diag-pills-wrap, ' +
@@ -709,6 +718,7 @@ export function Diagnostico() {
               target="_blank"
               rel="noopener noreferrer"
               className="diag-cta-btn"
+              onClick={() => fetch('/api/track-view', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug, type: 'cta' }) }).catch(() => {})}
             >
               FALAR NO WHATSAPP →
             </a>
@@ -768,6 +778,7 @@ export function Diagnostico() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="diag-bridge-btn diag-bridge-btn--ghost"
+                  onClick={() => fetch('/api/track-view', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug, type: 'cta' }) }).catch(() => {})}
                 >
                   Falar no WhatsApp →
                 </a>

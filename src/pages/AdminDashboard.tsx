@@ -11,6 +11,9 @@ interface DiagRow {
   ativo: boolean;
   criado_em: string;
   atualizado_em: string;
+  totalViews: number;
+  totalCtas: number;
+  ultimaAbertura: string | null;
 }
 
 export function AdminDashboard() {
@@ -25,13 +28,38 @@ export function AdminDashboard() {
 
   async function fetchAll() {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('diagnosticos')
-      .select('id, slug, empresa, ativo, criado_em, atualizado_em')
-      .order('criado_em', { ascending: false });
+    const [diagResult, viewResult] = await Promise.all([
+      supabase
+        .from('diagnosticos')
+        .select('id, slug, empresa, ativo, criado_em, atualizado_em')
+        .order('criado_em', { ascending: false }),
+      supabase
+        .from('diagnostico_views')
+        .select('slug, type, opened_at'),
+    ]);
 
-    if (error) setError(error.message);
-    else setRows(data ?? []);
+    if (diagResult.error) {
+      setError(diagResult.error.message);
+      setLoading(false);
+      return;
+    }
+
+    const stats: Record<string, { views: number; ctas: number; last: string | null }> = {};
+    viewResult.data?.forEach(v => {
+      if (!stats[v.slug]) stats[v.slug] = { views: 0, ctas: 0, last: null };
+      if (v.type === 'view') stats[v.slug].views++;
+      if (v.type === 'cta')  stats[v.slug].ctas++;
+      if (!stats[v.slug].last || v.opened_at > stats[v.slug].last!) stats[v.slug].last = v.opened_at;
+    });
+
+    const enriched: DiagRow[] = (diagResult.data ?? []).map(d => ({
+      ...d,
+      totalViews:     stats[d.slug]?.views ?? 0,
+      totalCtas:      stats[d.slug]?.ctas  ?? 0,
+      ultimaAbertura: stats[d.slug]?.last  ?? null,
+    }));
+
+    setRows(enriched);
     setLoading(false);
   }
 
@@ -90,6 +118,9 @@ export function AdminDashboard() {
                   <th>Empresa</th>
                   <th>Slug</th>
                   <th>Status</th>
+                  <th style={{ textAlign: 'center' }}>Views</th>
+                  <th style={{ textAlign: 'center' }}>CTAs</th>
+                  <th>Última abertura</th>
                   <th>Criado em</th>
                   <th>Ações</th>
                 </tr>
@@ -107,6 +138,17 @@ export function AdminDashboard() {
                       <span className={`admin-badge ${row.ativo ? 'admin-badge-active' : 'admin-badge-inactive'}`}>
                         {row.ativo ? '● Ativo' : '○ Inativo'}
                       </span>
+                    </td>
+                    <td style={{ fontSize: 13, textAlign: 'center', color: row.totalViews > 0 ? 'var(--fg)' : 'var(--fg-muted)' }}>
+                      {row.totalViews > 0 ? row.totalViews : '—'}
+                    </td>
+                    <td style={{ fontSize: 13, textAlign: 'center', color: row.totalCtas > 0 ? 'var(--accent)' : 'var(--fg-muted)' }}>
+                      {row.totalCtas > 0 ? row.totalCtas : '—'}
+                    </td>
+                    <td style={{ fontSize: 12, color: 'var(--fg-muted)' }}>
+                      {row.ultimaAbertura
+                        ? new Date(row.ultimaAbertura).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+                        : '—'}
                     </td>
                     <td style={{ fontSize: 12, color: 'var(--fg-muted)' }}>
                       {new Date(row.criado_em).toLocaleDateString('pt-BR')}
