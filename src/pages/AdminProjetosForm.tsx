@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent } from 'react';
+import { useState, type KeyboardEvent, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 type Status = 'andamento' | 'concluido' | 'pausado' | 'planejamento';
@@ -57,7 +57,7 @@ function Field({
 }: {
   label: string;
   error?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div className="admin-field">
