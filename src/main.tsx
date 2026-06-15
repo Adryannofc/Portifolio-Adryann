@@ -8,6 +8,7 @@ import './styles/bottom-nav.css';
 import './styles/case-study.css';
 import './styles/diagnostico.css';
 import './styles/admin.css';
+import './styles/not-found.css';
 import App from './App';
 
 createRoot(document.getElementById('root')!).render(

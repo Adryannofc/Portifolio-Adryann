@@ -18,6 +18,7 @@ import { TweaksPanel, type Tweaks } from './components/TweaksPanel';
 import { SpeedDial } from './components/SpeedDial';
 import { CaseStudy } from './pages/CaseStudy';
 import { Diagnostico } from './pages/Diagnostico';
+import { NotFound } from './pages/NotFound';
 import { AdminLogin } from './pages/AdminLogin';
 import { AdminOverview } from './pages/AdminOverview';
 import { AdminDiagnosticosList } from './pages/AdminDiagnosticosList';
@@ -27,6 +28,14 @@ import { AdminProjetosForm } from './pages/AdminProjetosForm';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { ComingSoon } from './components/admin/ComingSoon';
 import { AuthGuard } from './components/admin/AuthGuard';
+
+// Known route patterns — anything that matches none of these renders <NotFound />.
+const KNOWN_ROUTES = [
+  /^\/$/,
+  /^\/work\/[^/]+\/?$/,
+  /^\/diagnostico\/[^/]+\/?$/,
+  /^\/admin(\/.*)?$/,
+];
 
 const DEFAULT_TWEAKS: Tweaks = {
   theme: 'dark',
@@ -70,13 +79,16 @@ export default function App() {
   const location = useLocation();
   const isHome = location.pathname === '/';
   const isAdmin = location.pathname.startsWith('/admin');
+  // Catch-all 404: pathname matches none of the known routes below.
+  // (Kept in sync with <Routes>; a layout-route refactor could remove this duplication.)
+  const is404 = !KNOWN_ROUTES.some((re) => re.test(location.pathname));
   const [booted, setBooted] = useState(!isHome);
   const [tweaks, setTweaks] = useState<Tweaks>(() => readTweakDefaults());
   const [panelOpen, setPanelOpen] = useState(false);
 
   useEffect(() => {
-    document.title = t.meta.title;
-  }, [t.meta.title]);
+    document.title = is404 ? t.notFound.title : t.meta.title;
+  }, [is404, t.meta.title, t.notFound.title]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', tweaks.theme);
@@ -121,7 +133,7 @@ export default function App() {
     <>
       {!booted && isHome && <BootLoader onDone={onBootDone} />}
       {!isTouch && !isAdmin && <Cursor />}
-      {!isAdmin && (
+      {!isAdmin && !is404 && (
         <Header
           theme={tweaks.theme}
           setTheme={(t) => setTweaks({ ...tweaks, theme: t })}
@@ -147,11 +159,12 @@ export default function App() {
           <Route path="analytics" element={<ComingSoon title="Analytics" description="Veja métricas consolidadas: views, CTAs e conversões ao longo do tempo." />} />
           <Route path="configuracoes" element={<ComingSoon title="Configurações" description="Preferências do portfólio, dados pessoais e integrações." />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!isAdmin && <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} open={panelOpen} />}
-      {!isAdmin && <SpeedDial />}
-      {!isAdmin && <BottomNav />}
+      {!isAdmin && !is404 && <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} open={panelOpen} />}
+      {!isAdmin && !is404 && <SpeedDial />}
+      {!isAdmin && !is404 && <BottomNav />}
     </>
   );
 }
