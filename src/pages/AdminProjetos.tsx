@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 type Status = 'andamento' | 'concluido' | 'pausado' | 'planejamento';
 type ViewMode = 'grid' | 'list';
@@ -185,6 +186,25 @@ function ProjectCard({ p }: { p: Projeto }) {
 }
 
 export function AdminProjetos() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const successState = (location.state as { success?: boolean; nome?: string } | null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(
+    successState?.success ? `Projeto "${successState.nome}" cadastrado com sucesso.` : null
+  );
+
+  useEffect(() => {
+    if (successState?.success) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!successMsg) return;
+    const t = setTimeout(() => setSuccessMsg(null), 4000);
+    return () => clearTimeout(t);
+  }, [successMsg]);
+
   const [filter, setFilter] = useState<Filter>('todos');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [query, setQuery] = useState('');
@@ -226,6 +246,11 @@ export function AdminProjetos() {
 
   return (
     <div className="admin-content">
+      {/* success toast */}
+      {successMsg && (
+        <div className="admin-success" style={{ marginBottom: 20 }}>{successMsg}</div>
+      )}
+
       {/* page header */}
       <div className="proj-view-head">
         <div>
@@ -245,7 +270,7 @@ export function AdminProjetos() {
               title="Lista"
             >≡</button>
           </div>
-          <button className="btn-primary">+ Novo projeto</button>
+          <Link to="novo" className="btn-primary">+ Novo projeto</Link>
         </div>
       </div>
 

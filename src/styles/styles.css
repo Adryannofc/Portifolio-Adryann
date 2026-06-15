@@ -679,6 +679,10 @@
 }
 .proj-card-role-v { font-size: 11px; color: var(--fg); }
 
+@media (max-width: 720px) {
+  .proj-card-role { display: none; }
+}
+
 .rail-end {
   flex: 0 0 380px;
   height: 520px;
