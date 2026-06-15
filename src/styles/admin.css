@@ -71,6 +71,24 @@
   padding: 32px 56px;
 }
 
+.login-panel-right-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-close {
+  font-family: var(--ff-sans);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--fg-faint);
+  line-height: 1;
+  text-decoration: none;
+  transition: color 0.15s;
+  padding: 2px 4px;
+}
+.login-close:hover { color: var(--fg); }
+
 .login-brand-badge {
   display: inline-flex;
   align-items: center;

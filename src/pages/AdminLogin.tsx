@@ -66,7 +66,10 @@ export function AdminLogin() {
 
       {/* Right form panel */}
       <div className="login-panel-right">
-        <BrandBadge />
+        <div className="login-panel-right-top">
+          <BrandBadge />
+          <a href="/" className="login-close" aria-label="Voltar ao portfólio">×</a>
+        </div>
 
         <div className="login-form-content">
           {view === 'login' ? (
