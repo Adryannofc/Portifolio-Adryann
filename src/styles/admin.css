@@ -1411,7 +1411,7 @@
 
 .proj-grid {
   display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
-  align-items: stretch;
+  align-items: start;
 }
 .proj-grid.list-mode { grid-template-columns: 1fr; gap: 8px; align-items: stretch; }
 
@@ -1468,7 +1468,6 @@
   padding: 12px 18px;
   border-top: 1px solid var(--rule);
   display: flex; align-items: flex-end; justify-content: space-between; gap: 8px;
-  margin-top: auto;
 }
 .proj-meta { display: flex; flex-direction: column; gap: 3px; }
 .proj-meta-row {
