@@ -71,7 +71,6 @@ function DepoCard({
 function MobileCoverflow({ locale }: { locale: string }) {
   const [active, setActive] = useState(0);
   const startX = useRef(0);
-  const swiped = useRef(false);
   const n = TESTIMONIALS.length;
 
   return (
@@ -79,38 +78,26 @@ function MobileCoverflow({ locale }: { locale: string }) {
       className="coverflow reveal"
       onTouchStart={(e) => {
         startX.current = e.touches[0].clientX;
-        swiped.current = false;
       }}
       onTouchEnd={(e) => {
         const dx = e.changedTouches[0].clientX - startX.current;
-        if (Math.abs(dx) > 50) {
-          swiped.current = true;
-          if (dx < 0) setActive((a) => Math.min(a + 1, n - 1));
-          else setActive((a) => Math.max(a - 1, 0));
-        }
+        if (dx < -50) setActive((a) => Math.min(a + 1, n - 1));
+        else if (dx > 50) setActive((a) => Math.max(a - 1, 0));
       }}
     >
-      <div className="coverflow-track">
-        {TESTIMONIALS.map((d, i) => {
-          const offset = i - active;
-          const cls = [
-            'depo-card',
-            'coverflow-slide',
-            offset === 0 ? 'active' : offset < 0 ? 'pre' : 'following',
-          ].join(' ');
-          return (
-            <article
-              key={d.id}
-              className={cls}
-              onClick={() => {
-                if (!swiped.current && offset !== 0) setActive(i);
-              }}
-              aria-hidden={offset !== 0 ? true : undefined}
-            >
-              <DepoCard d={d} locale={locale} />
-            </article>
-          );
-        })}
+      <div
+        className="coverflow-track"
+        style={{ transform: `translateX(-${active * 100}%)` }}
+      >
+        {TESTIMONIALS.map((d, i) => (
+          <article
+            key={d.id}
+            className="depo-card coverflow-slide"
+            aria-hidden={i !== active ? true : undefined}
+          >
+            <DepoCard d={d} locale={locale} />
+          </article>
+        ))}
       </div>
 
       <div className="coverflow-dots">
