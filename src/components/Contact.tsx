@@ -2,6 +2,7 @@
 import { useReveal } from '../hooks/useReveal';
 import { Overline, ULink, Button, Magnetic } from './primitives';
 import { useI18n } from '../contexts/I18nContext';
+import { ContactCodeCard } from './ContactCodeCard';
 
 const WhatsAppIcon = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -15,38 +16,44 @@ export function Contact() {
   return (
     <section id="contact" className="contact" ref={ref} data-screen-label="09 Contact">
       <div className="contact-inner">
-        <Overline>{t.contact.eyebrow}</Overline>
+        <div className="contact-top">
+          <div className="contact-left">
+            <Overline>{t.contact.eyebrow}</Overline>
 
-        <h2 className="contact-display">
-          <span className="mask-reveal">
-            <span>{t.contact.h2[0]}</span>
-          </span>
-          <br />
-          <span
-            className="mask-reveal"
-            style={{ '--reveal-delay': '90ms' } as CSSProperties}
-          >
-            <span>{t.contact.h2[1]}</span>
-          </span>
-          <br />
-          <span
-            className="mask-reveal"
-            style={{ '--reveal-delay': '180ms' } as CSSProperties}
-          >
-            <span>
-              {t.contact.h2[2]}
-              <span className="contact-arrow">&#x27F6;</span>
-            </span>
-          </span>
-        </h2>
+            <h2 className="contact-display">
+              <span className="mask-reveal">
+                <span>{t.contact.h2[0]}</span>
+              </span>
+              <br />
+              <span
+                className="mask-reveal"
+                style={{ '--reveal-delay': '90ms' } as CSSProperties}
+              >
+                <span>{t.contact.h2[1]}</span>
+              </span>
+              <br />
+              <span
+                className="mask-reveal"
+                style={{ '--reveal-delay': '180ms' } as CSSProperties}
+              >
+                <span>
+                  {t.contact.h2[2]}
+                  <span className="contact-arrow">&#x27F6;</span>
+                </span>
+              </span>
+            </h2>
 
-        <div className="contact-row">
-          <Magnetic strength={0.25}>
-            <Button href="https://wa.me/558781209267" variant="primary" arrow>
-              <WhatsAppIcon />
-              WhatsApp
-            </Button>
-          </Magnetic>
+            <div className="contact-row">
+              <Magnetic strength={0.25}>
+                <Button href="https://wa.me/558781209267" variant="primary" arrow>
+                  <WhatsAppIcon />
+                  WhatsApp
+                </Button>
+              </Magnetic>
+            </div>
+          </div>
+
+          {/* <ContactCodeCard /> */}
         </div>
 
         <div className="contact-grid">

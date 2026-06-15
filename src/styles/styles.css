@@ -1150,6 +1150,59 @@
 }
 .contact-inner { position: relative; z-index: 1; }
 .contact-inner { max-width: var(--page-max); margin: 0 auto; display: flex; flex-direction: column; gap: var(--s-12); }
+
+.contact-top {
+  display: grid;
+  grid-template-columns: 1fr min(440px, 42%);
+  gap: var(--s-16);
+  align-items: center;
+}
+.contact-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-12);
+}
+
+/* ─── Contact Code Card ─────────────────────────────── */
+.cc-card {
+  position: relative;
+  font-family: var(--ff-mono);
+  font-size: var(--fs-13);
+  line-height: 1.65;
+  background: var(--ink-2);
+  border: 1px solid rgba(240, 238, 233, 0.07);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  color: var(--cream-2);
+  will-change: height;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+}
+
+.cc-card .cc-waapi,
+.cc-card.cc-show .cc-animejs { position: relative; top: 0; left: 0; }
+
+.cc-card .cc-animejs,
+.cc-card.cc-show .cc-waapi { position: absolute; top: 1.25rem; left: 1.5rem; }
+
+.cc-card .cc-waapi span,
+.cc-card.cc-show .cc-animejs span { display: inline-block; }
+
+.cc-card .cc-animejs span,
+.cc-card.cc-show .cc-waapi span { display: none; }
+
+pre.cc-waapi, pre.cc-animejs { margin: 0; white-space: pre; }
+
+.cc-fn  { color: #7BB872; }
+.cc-str { color: var(--amber); }
+.cc-var { color: var(--cream-0); }
+.cc-kw  { color: rgba(240,238,233,0.5); }
+.cc-op  { color: rgba(240,238,233,0.28); }
+
+@media (max-width: 900px) {
+  .contact-top { grid-template-columns: 1fr; }
+  .cc-card { display: none; }
+}
+
 .contact-display {
   font-size: clamp(3rem, 10vw, 8.5rem);
   line-height: 0.94;
