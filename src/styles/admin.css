@@ -1418,6 +1418,7 @@
 .admin-shell .proj-card {
   background: var(--ink-1); border: 1px solid var(--rule);
   display: flex; flex-direction: column;
+  height: auto;
   transition: border-color 200ms, transform 200ms var(--ease);
   position: relative; overflow: hidden;
 }
