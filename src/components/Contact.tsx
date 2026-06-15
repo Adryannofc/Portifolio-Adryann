@@ -2,7 +2,6 @@
 import { useReveal } from '../hooks/useReveal';
 import { Overline, ULink, Button, Magnetic } from './primitives';
 import { useI18n } from '../contexts/I18nContext';
-import { ContactCodeCard } from './ContactCodeCard';
 
 const WhatsAppIcon = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
