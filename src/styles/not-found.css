@@ -205,6 +205,10 @@
 .tetris-board-wrap {
   border: 1px solid rgba(240, 238, 233, 0.14);
   position: relative;
+  /* Hug the 20-row grid instead of stretching to a taller panel (mobile):
+     prevents dead space below the grid. On desktop the board is the tallest
+     item, so centering is a no-op there. */
+  align-self: center;
 }
 
 .tetris-board {
@@ -513,13 +517,14 @@
   .footer-links { display: none; }
   .p404-header { padding: 0 var(--s-6); }
   .p404-footer { padding: var(--s-5) var(--s-6); }
-  .tetris-board { --cell: 16px; }
-  .next-grid { --nc: 13px; }
+  .p404-main { padding-left: var(--s-4); padding-right: var(--s-4); }
+  .tetris-board { --cell: 20px; }
+  .next-grid { --nc: 14px; }
   .tetris-panel { width: 92px; padding: 0 10px; }
   .stat-num { font-size: 16px; }
 }
 
 @media (max-width: 360px) {
-  .tetris-board { --cell: 14px; }
-  .tetris-panel { width: 82px; }
+  .tetris-board { --cell: 17px; }
+  .tetris-panel { width: 84px; }
 }

@@ -1478,13 +1478,13 @@
 .proj-meta-val { color: var(--fg-mute); }
 
 .proj-deadline {
-  font-family: var(--ff-mono); font-size: 8px; letter-spacing: 0.1em;
-  text-transform: uppercase; padding: 2px 6px; border-radius: 2px;
-  margin-top: 5px; display: inline-block;
+  font-family: var(--ff-mono); font-size: 10px;
+  margin-top: 4px;
 }
-.proj-deadline.dl-late { background: rgba(224,85,85,0.12); color: #E05555; }
-.proj-deadline.dl-soon { background: rgba(224,183,64,0.12); color: var(--warn); }
-.proj-deadline.dl-ok   { background: rgba(240,238,233,0.05); color: var(--fg-faint); }
+.proj-deadline.dl-late      { color: #E05555; }
+.proj-deadline.dl-soon      { color: var(--warn); }
+.proj-deadline.dl-ok        { color: var(--fg-faint); }
+.proj-deadline.dl-concluido { color: var(--ok); }
 
 .proj-foot-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 .proj-value {

@@ -81,13 +81,14 @@ function parsePtDate(str: string): Date | null {
 }
 
 function getDeadlineInfo(prazo: string, status: Status): { label: string; cls: string } | null {
-  if (status === 'concluido' || status === 'pausado') return null;
+  if (status === 'concluido') return { label: 'Entregue ✓', cls: 'dl-concluido' };
+  if (status === 'pausado') return null;
   const d = parsePtDate(prazo);
   if (!d) return null;
   const diff = Math.ceil((d.getTime() - Date.now()) / 86400000);
-  if (diff < 0)  return { label: `${Math.abs(diff)}d atrasado`, cls: 'dl-late' };
-  if (diff <= 14) return { label: `${diff}d restantes`, cls: 'dl-soon' };
-  return { label: `${diff}d restantes`, cls: 'dl-ok' };
+  if (diff < 0)  return { label: `${Math.abs(diff)} dias atrasado`, cls: 'dl-late' };
+  if (diff <= 14) return { label: `${diff} dias restantes`, cls: 'dl-soon' };
+  return { label: `${diff} dias restantes`, cls: 'dl-ok' };
 }
 
 function useCounter(target: number, active: boolean) {
